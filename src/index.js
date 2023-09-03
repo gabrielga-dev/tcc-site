@@ -4,30 +4,9 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import Home from './components/routes/Home';
-import Contact from './components/routes/Contact';
-import ErrorPage from './components/page/ErrorPage';
-import App from "./App";
+import MyEventsRoutes from "./MyEventsRoutes";
 
-const router = createBrowserRouter(
-    [
-        {
-            path: "/",
-            element: <App/>,
-            errorElement: <ErrorPage/>,
-            children: [
-                {
-                    path: "/",
-                    element: <Home/>
-                },
-                {
-                    path: "contact",
-                    element: <Contact/>
-                }
-            ]
-        },
-    ]
-);
+const router = createBrowserRouter(MyEventsRoutes());
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
