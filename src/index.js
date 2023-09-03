@@ -6,13 +6,14 @@ import reportWebVitals from './reportWebVitals';
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import MyEventsRoutes from "./MyEventsRoutes";
 
+
 const router = createBrowserRouter(MyEventsRoutes());
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        <RouterProvider router={router}/>
+            <RouterProvider router={router}/>
     </React.StrictMode>
 );
 
