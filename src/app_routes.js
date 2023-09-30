@@ -15,12 +15,16 @@ import ListUserPage from "./pages/auth/user/list_user.page";
 import DeleteUserPage from "./pages/auth/user/delete_user.page";
 import EditUserPage from "./pages/auth/user/edit_user.page";
 import ProfilePage from "./pages/auth/user/profile.page";
+import {SearchServicesPage} from "./pages/new/both/service/search_service_page";
+import {SearchBandsPage} from "./pages/new/both/service/band/search_band_page";
 
 const AppRoutes = ({token, user}) => {
     return (
         <BrowserRouter>
             <Routes>
                 <Route element={<HomePage/>} path="/"/>
+                <Route element={<SearchServicesPage/>} path="/servicos"/>
+                <Route element={<SearchBandsPage/>} path="/servicos/bandas"/>
                 {
                     (token)
                         ? authRoutes()

@@ -5,6 +5,9 @@ import {connect} from "react-redux";
 import {ActivityIndicatorComponent} from "../../../components/activity_indicator.component";
 import MenuLateralComponent from "../../../components/menu_lateral.component";
 import BarraSuperiorComponent from "../../../components/barraSuperior/barra_superior.component";
+import {Container} from "react-bootstrap";
+import {PaddingStyle} from "../../../style/padding.style";
+import {BreadcrumbComponent} from "../../../components/breadcrumb.component";
 
 const HomeTemplate = ({token, user, updateToken, children, steps}) => {
     const navigate = useNavigate();
@@ -54,6 +57,12 @@ class _HomeTemplate extends React.Component {
                         this.setState({showMenu: !state})
                     }}
                 />
+                <div style={PaddingStyle.makePadding(10)}>
+                    <BreadcrumbComponent passos={this.state.steps}/>
+                </div>
+                <Container>
+                    {this.props.children}
+                </Container>
             </>
         );
     }
