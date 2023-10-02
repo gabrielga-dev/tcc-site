@@ -4,7 +4,7 @@ import {updateToken} from "../../../service/redux/action/token.action";
 import {connect} from "react-redux";
 import {ActivityIndicatorComponent} from "../../../components/activity_indicator.component";
 import MenuLateralComponent from "../../../components/menu_lateral.component";
-import BarraSuperiorComponent from "../../../components/barraSuperior/barra_superior.component";
+import {BarraSuperiorComponent} from "../../../components/barraSuperior/barra_superior.component";
 import {Container} from "react-bootstrap";
 import {PaddingStyle} from "../../../style/padding.style";
 import {BreadcrumbComponent} from "../../../components/breadcrumb.component";
@@ -41,7 +41,7 @@ class _HomeTemplate extends React.Component {
     }
 
     render() {
-        let {authenticatedUser, loading} = this.state
+        let {authenticatedUser, loading, navigateTo} = this.state
         if (loading) {
             return (<ActivityIndicatorComponent/>);
         }

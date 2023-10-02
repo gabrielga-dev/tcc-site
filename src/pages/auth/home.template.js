@@ -1,6 +1,6 @@
 import React from "react";
 import MenuLateralComponent from "../../components/menu_lateral.component";
-import BarraSuperiorComponent from "../../components/barraSuperior/barra_superior.component";
+import {BarraSuperiorComponent} from "../../components/barraSuperior/barra_superior.component";
 import {BreadcrumbComponent} from "../../components/breadcrumb.component";
 import {PaddingStyle} from "../../style/padding.style";
 import {Container} from "react-bootstrap";

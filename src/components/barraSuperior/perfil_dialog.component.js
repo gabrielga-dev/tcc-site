@@ -37,8 +37,9 @@ const PerfilDialogComponent = ({authenticatedUser, showDialog, hideDialog, updat
                             style={StyleConstants.WIDTH_100_PERCENT}
                             onClick={
                                 () => {
-                                    updateToken(null);
-                                    navigate('/');
+                                    updateUser(null)
+                                    updateToken(null)
+                                    navigate('/login')
                                 }
                             }/>
                     </Col>

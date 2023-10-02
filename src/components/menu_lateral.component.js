@@ -40,7 +40,7 @@ function generateLoggedUser(updateToken, updateUser, redirectTo) {
                     {
                         label: 'Procurar',
                         icon: 'pi pi-fw pi-search',
-                        command: () => console.log("B")
+                        command: () => redirectTo('/servicos')
                     },
                     {
                         label: 'Cadastrar',
