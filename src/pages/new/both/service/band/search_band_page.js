@@ -217,9 +217,10 @@ export default class _SearchBandsPage extends React.Component {
                     pagination.page = e.page;
                     this.setState({pagination})
                     this.findBands()
-                }} />
+                }}/>
         );
     }
+
     renderTable() {
         let {isLoading, bands, redirectTo} = this.state;
         if (isLoading) {
@@ -242,7 +243,23 @@ export default class _SearchBandsPage extends React.Component {
                                 }
                             </Col>
                             <Col md={6} sm={6}>
-                                <p className="m-0">{band.description}</p>
+                                <Container>
+                                    <Row>
+                                        <Col>
+                                            <p className="m-0">{band.description}</p>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <div style={{float: "left", marginRight: 8}}>
+                                                <i className="pi pi-map-marker"/>
+                                            </div>
+                                            <div style={{float: "left"}}>
+                                                <div>{band.address.state}, {band.address.city}</div>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                </Container>
                             </Col>
                             <Col md={3} sm={12}>
                                 <Button
