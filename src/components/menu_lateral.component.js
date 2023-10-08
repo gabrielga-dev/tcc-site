@@ -45,7 +45,7 @@ function generateLoggedUser(updateToken, updateUser, redirectTo) {
                     {
                         label: 'Cadastrar',
                         icon: 'pi pi-fw pi-plus',
-                        command: () => console.log("a")
+                        command: () => redirectTo('/servico/criar')
                     },
                     {
                         label: 'Meus serviços',
@@ -92,71 +92,6 @@ function generateNonLoggedUser(updateToken, updateUser, redirectTo) {
             },
         ]
     );
-}
-
-function generateMenuItemsIntern(updateToken, updateUser, redirectTo) {
-    return [
-        {
-            label: 'Projeto',
-            icon: 'pi pi-fw pi-file',
-            items: [
-                {
-                    label: 'Cadastrar',
-                    icon: 'pi pi-fw pi-plus',
-                    command: () => redirectTo('/project/create')
-                },
-                {
-                    label: 'Listar',
-                    icon: 'pi pi-fw pi-list',
-                    command: () => redirectTo('/project/list')
-                },
-                {
-                    label: 'Administrar',
-                    icon: 'pi pi-fw pi-chart-line',
-                    command: () => redirectTo('/project/manage')
-                }
-            ]
-        },
-        {
-            label: 'Usuarios',
-            icon: 'pi pi-fw pi-user',
-            items: [
-                {
-                    label: 'Cadastrar',
-                    icon: 'pi pi-fw pi-user-plus',
-                    command: () => redirectTo('/user/create')
-                },
-                {
-                    label: 'Listar',
-                    icon: 'pi pi-fw pi-users',
-                    command: () => redirectTo('/user/list')
-                }
-            ]
-        },
-        {
-            label: 'Sair',
-            icon: 'pi pi-fw pi-sign-out',
-            command: () => {
-                redirectTo('/')
-                updateUser(null)
-                updateToken(null)
-            }
-        }
-    ];
-}
-
-function generateMenuItemsExtern(updateToken, updateUser, redirectTo) {
-    return [
-        {
-            label: 'Sair',
-            icon: 'pi pi-fw pi-sign-out',
-            command: () => {
-                redirectTo('/')
-                updateUser(null)
-                updateToken(null)
-            }
-        }
-    ];
 }
 
 const myMapDispatchToProps = {

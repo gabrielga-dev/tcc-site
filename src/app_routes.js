@@ -17,6 +17,9 @@ import EditUserPage from "./pages/auth/user/edit_user.page";
 import ProfilePage from "./pages/auth/user/profile.page";
 import {SearchServicesPage} from "./pages/new/both/service/search_service_page";
 import {SearchBandsPage} from "./pages/new/both/service/band/search_band_page";
+import BandProfilePage from "./pages/new/both/service/band/band_profile.page";
+import CreateServicePage from "./pages/new/noauth/service/create_service.page";
+import CreateBandPage from "./pages/new/auth/service/band/create_band.page";
 
 const AppRoutes = ({token, user}) => {
     return (
@@ -25,6 +28,7 @@ const AppRoutes = ({token, user}) => {
                 <Route element={<HomePage/>} path="/"/>
                 <Route element={<SearchServicesPage/>} path="/servicos"/>
                 <Route element={<SearchBandsPage/>} path="/servicos/bandas"/>
+                <Route element={<BandProfilePage/>} path="/servicos/bandas/:uuid"/>
                 {
                     (token)
                         ? authRoutes()
@@ -38,7 +42,8 @@ const AppRoutes = ({token, user}) => {
 
 const authRoutes = () => (
     <>
-        <Route element={<HomePage/>} path="/" exact={true}/>
+        <Route element={<CreateServicePage/>} path="/servico/criar"/>
+        <Route element={<CreateBandPage/>} path="/servico/criar/banda"/>
     </>
 )
 

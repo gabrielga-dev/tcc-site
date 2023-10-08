@@ -18,7 +18,7 @@ import {CityDto} from "../../../../../domain/new/dto/city.dto";
 import {BandFilter} from "../../../../../domain/new/filter/band.filter";
 import axios from "axios";
 import {BandService} from "../../../../../service/new/band.service";
-import {BandDto} from "../../../../../domain/new/dto/band.dto";
+import {BandDto} from "../../../../../domain/new/dto/band/band.dto";
 import {ActivityIndicatorComponent} from "../../../../../components/activity_indicator.component";
 import {Avatar} from "primereact/avatar";
 import {FileService} from "../../../../../service/new/file.service";
@@ -28,7 +28,7 @@ import {PageableDto} from "../../../../../domain/new/dto/page/pageable.dto";
 import {Paginator} from "primereact/paginator";
 
 
-export const SearchBandsPage = ({token, updateToken, user}) => {
+export const SearchBandsPage = () => {
     const toast = useRef(null);
     const navigate = useNavigate();
 
@@ -89,7 +89,7 @@ export default class _SearchBandsPage extends React.Component {
     }
 
     render() {
-        let {redirectTo, filter} = this.state
+        let {filter} = this.state
         let {cities, states} = this.state
         return (
             <HomeTemplate steps={['Serviços', 'Bandas']}>
@@ -155,7 +155,6 @@ export default class _SearchBandsPage extends React.Component {
                                             onClickSecond={
                                                 () => {
                                                     this.setState({filter: new BandFilter()});
-                                                    console.log(2)
                                                 }
                                             }
                                             onClickThird={() => {
@@ -222,7 +221,7 @@ export default class _SearchBandsPage extends React.Component {
         );
     }
     renderTable() {
-        let {isLoading, bands} = this.state;
+        let {isLoading, bands, redirectTo} = this.state;
         if (isLoading) {
             return (<ActivityIndicatorComponent/>)
         } else if (!!!bands || (bands.length === 0)) {
@@ -237,9 +236,9 @@ export default class _SearchBandsPage extends React.Component {
                         <Row>
                             <Col md={3} sm={6}>
                                 {
-                                    !!!band.profile
+                                    !!!band.profilePictureUuid
                                         ? (<Avatar label={band.name[0]} size="xlarge"/>)
-                                        : (<Avatar image={FileService.GET_IMAGE_URL(band.profile)}/>)
+                                        : (<Avatar image={FileService.GET_IMAGE_URL(band.profilePictureUuid)}/>)
                                 }
                             </Col>
                             <Col md={6} sm={6}>
@@ -250,7 +249,7 @@ export default class _SearchBandsPage extends React.Component {
                                     icon=" pi pi-search"
                                     style={StyleConstants.WIDTH_100_PERCENT}
                                     label="Ver banda"
-                                    onClick={() => console.log("AAAHH")}
+                                    onClick={() => redirectTo(`/servicos/bandas/${band.uuid}`)}
                                 />
                             </Col>
                         </Row>
