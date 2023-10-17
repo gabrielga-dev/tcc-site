@@ -50,7 +50,7 @@ function generateLoggedUser(updateToken, updateUser, redirectTo) {
                     {
                         label: 'Meus serviços',
                         icon: 'pi pi-fw pi-list',
-                        command: () => console.log("a")
+                        command: () => redirectTo('/meus-servicos')
                     },
                 ]
             },

@@ -12,6 +12,13 @@ export const BandService = {
         }
         return axios.get(url, BaseService.HEADERS);
     },
+    FIND_AUTHENTICATED_PERSON_BANDS: (bandFilter, pagination, token) => {
+        let url = `${BASE_URL_BAND}/v1/band/my-bands?${pagination.toRequestParameters()}`;
+        if (!!bandFilter) {
+            url = `${url}&${bandFilter.toRequestParameters()}`
+        }
+        return axios.get(url, BaseService.MAKE_HEADERS(token));
+    },
     FIND_BAND_BY_UUID: (bandUuid) => {
         return axios.get(`${BASE_URL_BAND}/v1/band/uuid/${bandUuid}`, BaseService.HEADERS);
     },

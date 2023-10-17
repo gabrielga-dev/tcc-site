@@ -1,9 +1,7 @@
-export class BandFilter {
+export class OwnBandFilter {
     name;
-    style;
-    state;
-    city;
-    country = 'BR'
+    startDate;
+    endDate;
 
     constructor(){
 
@@ -12,9 +10,8 @@ export class BandFilter {
     toRequestParameters(){
         return [
             this.toParam(this.name, 'name', this.name),
-            this.toParam(this.city, 'cityId', this.city?.code),
-            this.toParam(this.state, 'stateIso', this.state?.code),
-            this.toParam(this.country, 'countryIso', this.country),
+            this.toParam(this.startDate, 'creationDateStartMilliseconds', this.startDate?.getTime() / 1000),
+            this.toParam(this.endDate, 'creationDateEndMilliseconds', this.endDate?.getTime() / 1000),
             ].filter(v => (v !== '')).join('&');
     }
 
