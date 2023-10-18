@@ -5,6 +5,8 @@ export class BandProfileDto {
     name;
     description;
     active;
+    profilePictureUuid;
+    ownerUuid;
     creationDate;
     musicians;
     address;
@@ -17,7 +19,9 @@ export class BandProfileDto {
             this.name = data.name;
             this.description = data.description;
             this.active = data.active;
-            this.creationDate = new Date(data.creationDateMilliseconds);
+            this.profilePictureUuid = data.profilePictureUuid;
+            this.ownerUuid = data.ownerUuid;
+            this.creationDate = new Date(data['creationDateMilliseconds']);
             this.musicians = data.musicians.map(musician => (new Musician(musician)));
             this.address = new AddressDto(data.address);
             this.contacts = data.contacts.map(contact => (new Contact(contact)));

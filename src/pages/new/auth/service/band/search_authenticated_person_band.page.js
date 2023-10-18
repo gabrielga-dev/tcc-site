@@ -273,7 +273,7 @@ class _SearchAuthenticatedPersonBandsPage extends React.Component {
                                                                         <div>
                                                                             {
                                                                                 band.active
-                                                                                ? 'Atualizada ' : 'Deletada '
+                                                                                ? 'Atualizada ' : 'Desativada '
                                                                             }
                                                                             em {
                                                                                 DateUtil.DATE_TO_STRING(

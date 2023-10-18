@@ -332,7 +332,7 @@ class _CreateBandPage extends React.Component {
                                             this.state.showToast(ToastUtils.BUILD_TOAST_FORM_ERROR(errors[0]))
                                         } else {
                                             let newContact = new ContactForm();
-                                            newContact.type = contact.type.name;
+                                            newContact.type = contact.type.code;
                                             newContact.content = contact.content;
 
                                             contacts.push(newContact)
@@ -370,12 +370,9 @@ class _CreateBandPage extends React.Component {
         let {formValidator, band, token, navigateTo} = this.state;
         let errors = formValidator.validate(band);
         errors = errors.concat(formValidator.validate(band.address))
-        console.log(band)
-        console.log(errors)
         if (errors.length > 0) {
             this.state.showToast(ToastUtils.BUILD_TOAST_FORM_ERROR(errors[0]))
         } else {
-            this.setState({isLoading: true});
             BandService.CREATE(band, token)
                 .then(
                     () => {

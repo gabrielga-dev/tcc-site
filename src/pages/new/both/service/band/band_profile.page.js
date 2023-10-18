@@ -15,6 +15,8 @@ import {Card} from "primereact/card";
 import {Image} from "primereact/image";
 import {TabPanel, TabView} from "primereact/tabview";
 import {MarginStyle} from "../../../../../style/margin.style";
+import {Button} from "primereact/button";
+import {StyleConstants} from "../../../../../service/style.constants";
 
 const BandProfilePage = ({token, user}) => {
     let {uuid} = useParams();
@@ -31,6 +33,7 @@ const BandProfilePage = ({token, user}) => {
     return (
         <_BandProfilePage
             token={token}
+            user={user}
             navigateTo={redirectTo}
             authenticatedUser={user}
             bandUuid={uuid}
@@ -48,6 +51,7 @@ class _BandProfilePage extends React.Component {
 
             bandUuid: props.bandUuid,
             band: new BandProfileDto(),
+            user: props.user,
             bandName: 'Banda',
 
             token: props.token,
@@ -117,6 +121,7 @@ class _BandProfilePage extends React.Component {
                         <Col/>
                     </Row>
                     <hr/>
+                    {this.renderOwnerButtons()}
                     <Row>
                         <Col>
                             <TabView activeIndex={0}>
@@ -136,6 +141,33 @@ class _BandProfilePage extends React.Component {
                 </Container>
             </Card>
         );
+    }
+
+    renderOwnerButtons(){
+        let {band, user} = this.state;
+        if (!user || (user.uuid !== band.ownerUuid)) {
+            return (<p>{user?1:2}</p>);
+        }
+        return(
+            <Row>
+                <Col>
+                    <Button
+                        label="Editar"
+                        icon="pi pi-pencil"
+                        style={StyleConstants.WIDTH_100_PERCENT}
+                        className="p-button-warning"
+                    />
+                </Col>
+                <Col>
+                    <Button
+                        label="Desativar"
+                        icon="pi pi-trash"
+                        style={StyleConstants.WIDTH_100_PERCENT}
+                        className="p-button-danger"
+                    />
+                </Col>
+            </Row>
+        )
     }
 
     renderMusicians() {
