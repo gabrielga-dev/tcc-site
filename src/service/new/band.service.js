@@ -24,5 +24,19 @@ export const BandService = {
     },
     CREATE: (band, token) => (
         axios.post(`${BASE_URL_BAND}/v1/band`, band, BaseService.MAKE_HEADERS(token))
-    )
+    ),
+    UPDATE: (bandUuid, band, token) => (
+        axios.put(`${BASE_URL_BAND}/v1/band/${bandUuid}`, band, BaseService.MAKE_HEADERS(token))
+    ),
+    TOGGLE_BAND_ACTIVITY_FLAG: (bandUuid, token) => (
+        axios.delete(`${BASE_URL_BAND}/v1/band/uuid/${bandUuid}`, BaseService.MAKE_HEADERS(token))
+    ),
+    UPLOAD_PROFILE_PICTURE: (bandUuid, data, token) => {
+        const form = new FormData();
+        form.append('picture', data);
+        return axios.post(`${BASE_URL_BAND}/v1/band/uuid/${bandUuid}/picture`, form, BaseService.MAKE_HEADERS(token));
+    },
+    REMOVE_PROFILE_PICTURE: (bandUuid, token) => (
+        axios.delete(`${BASE_URL_BAND}/v1/band/uuid/${bandUuid}/picture`, BaseService.MAKE_HEADERS(token))
+    ),
 }

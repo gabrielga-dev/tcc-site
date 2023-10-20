@@ -1,4 +1,6 @@
 import {AddressDto} from "../address.dto";
+import {BandForm} from "../../form/band/band.form";
+import {ContactForm} from "../../form/band/contact.form";
 
 export class BandProfileDto {
     uuid;
@@ -28,6 +30,18 @@ export class BandProfileDto {
             this.numberOfMusics = data.numberOfMusics;
         }
     }
+
+    toForm(){
+        let form = new BandForm();
+        form.name = this.name;
+        form.description = this.description;
+
+        form.address = this.address.toForm();
+
+        form.contacts = this.contacts.map(c => (c.toForm()));
+
+        return form;
+    }
 }
 
 class Musician {
@@ -51,7 +65,16 @@ class Contact {
     content;
 
     constructor(data) {
+        this.uuid = data.uuid;
         this.type = data.type;
         this.content = data.content;
+    }
+
+    toForm(){
+        let form = new ContactForm();
+        form.uuid = this.uuid;
+        form.type = this.type;
+        form.content = this.content;
+        return form;
     }
 }

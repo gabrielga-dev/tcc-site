@@ -14,9 +14,10 @@ import {FileService} from "../../../../../service/new/file.service";
 import {Card} from "primereact/card";
 import {Image} from "primereact/image";
 import {TabPanel, TabView} from "primereact/tabview";
-import {MarginStyle} from "../../../../../style/margin.style";
 import {Button} from "primereact/button";
 import {StyleConstants} from "../../../../../service/style.constants";
+import {MarginStyle} from "../../../../../style/margin.style";
+import {ConfirmDialog} from "primereact/confirmdialog";
 
 const BandProfilePage = ({token, user}) => {
     let {uuid} = useParams();
@@ -59,6 +60,8 @@ class _BandProfilePage extends React.Component {
 
             navigateTo: props.navigateTo,
             showToast: props.showToast,
+
+            disableBandPopUpVisible: false,
         }
     }
 
@@ -143,31 +146,61 @@ class _BandProfilePage extends React.Component {
         );
     }
 
-    renderOwnerButtons(){
-        let {band, user} = this.state;
+    renderOwnerButtons() {
+        let {band, user, navigateTo} = this.state;
         if (!user || (user.uuid !== band.ownerUuid)) {
-            return (<p>{user?1:2}</p>);
+            return null;
         }
-        return(
+        return (
             <Row>
                 <Col>
                     <Button
+                        id="disable-band-button"
                         label="Editar"
                         icon="pi pi-pencil"
                         style={StyleConstants.WIDTH_100_PERCENT}
                         className="p-button-warning"
+                        onClick={() => navigateTo(`/servicos/bandas/${band.uuid}/editar`)}
                     />
                 </Col>
                 <Col>
                     <Button
-                        label="Desativar"
-                        icon="pi pi-trash"
+                        label={band.active ? "Desativar" : "Ativar"}
+                        icon={band.active ? "pi pi-trash" : "pi pi-check"}
                         style={StyleConstants.WIDTH_100_PERCENT}
-                        className="p-button-danger"
+                        className={band.active ? "p-button-danger" : "p-button-success"}
+                        onClick={() => this.setState({disableBandPopUpVisible: true})}
+                    />
+                    <ConfirmDialog
+                        visible={this.state.disableBandPopUpVisible}
+                        onHide={() => this.setState({disableBandPopUpVisible: false})}
+                        message={
+                            band.active ? "Você deseja mesmo desabilitar esta banda?"
+                                : "Você deseja mesmo habilitar esta banda?"}
+                        header="Confirmar"
+                        icon="pi pi-exclamation-triangle"
+
+                        acceptIcon={band.active ? "pi pi-trash" : "pi pi-check"}
+                        rejectIcon="pi pi-times"
+
+                        accept={() => this.toggleBandActivityFlag()}
+                        reject={() => console.log(2)}
                     />
                 </Col>
             </Row>
         )
+    }
+
+    toggleBandActivityFlag() {
+        let {band, token, navigateTo} = this.state;
+        this.setState({isLoading: true});
+        BandService.TOGGLE_BAND_ACTIVITY_FLAG(band.uuid, token)
+            .then(
+                response => {
+                    navigateTo('/')
+                }
+            ).catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
+            .finally(() => this.setState({isLoading: false}))
     }
 
     renderMusicians() {
@@ -182,7 +215,7 @@ class _BandProfilePage extends React.Component {
                                 <Col style={STYLE_ALIGN_ITEM_CENTER}>
                                     {
                                         !!!musician.profilePictureUuid
-                                            ? (<Avatar label={musician.firstName[0]} size="large"/>)
+                                            ? (<Avatar label={musician.firstName[0]} size=" large"/>)
                                             : (
                                                 <Image
                                                     src={FileService.GET_IMAGE_URL(band.profilePictureUuid)}

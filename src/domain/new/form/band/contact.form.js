@@ -1,4 +1,5 @@
 export class ContactForm {
+    uuid;
     type;
     content;
 

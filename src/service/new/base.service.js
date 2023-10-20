@@ -11,7 +11,7 @@ export const BaseService = {
     MAKE_HEADERS: (token) => ({
         headers: {
             'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+            // 'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
             'Authorization': 'Bearer ' + token,
             'API-KEY': API_CONSTANTS.API_KEY
         }
