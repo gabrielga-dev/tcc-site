@@ -143,7 +143,7 @@ class _EditBandPage extends React.Component {
     }
 
     render() {
-        let {band, profilePictureUuid, isLoading} = this.state
+        let {band, isLoading} = this.state
         let {states, cities} = this.state
         let {contact, selectedContactType, contactTypes} = this.state
         if (isLoading || !states || !cities) {
@@ -151,7 +151,6 @@ class _EditBandPage extends React.Component {
         }
         return (
             <HomeTemplate steps={['Serviços', 'Bandas', band.name, 'Editar']}>
-                <p>{JSON.stringify(this.state.selectedCity)}</p>
                 <Card>
                     <Container>
                         <Row>
@@ -459,32 +458,6 @@ class _EditBandPage extends React.Component {
                 </Row>
             </Row>
         );
-    }
-
-    removeProfilePicture() {
-        let {bandUuid, token, showToast} = this.state;
-        this.setState({isProfilePictureLoading: true})
-        BandService.REMOVE_PROFILE_PICTURE(bandUuid, token)
-            .then(
-                response => {
-                    this.setState({profilePictureUuid: null});
-                    showToast(ToastUtils.BUILD_TOAST_SUCCESS_BODY('Imagem Removida com sucesso!'))
-                }
-            ).catch(error => showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
-            .finally(() => this.setState({isProfilePictureLoading: false}))
-    }
-
-    uploadProfilePicture(picture) {
-        let {bandUuid, token, showToast} = this.state;
-        this.setState({isProfilePictureLoading: true})
-        BandService.UPLOAD_PROFILE_PICTURE(bandUuid, picture.files[0], token)
-            .then(
-                response => {
-                    this.setState({profilePictureUuid: response.data.uuid});
-                    showToast(ToastUtils.BUILD_TOAST_SUCCESS_BODY('Imagem adicionada com sucesso!'))
-                }
-            ).catch(error => showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
-            .finally(() => this.setState({isProfilePictureLoading: false}))
     }
 
     submitBand() {

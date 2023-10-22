@@ -12,6 +12,8 @@ import CreateBandPage from "./pages/new/auth/service/band/create_band.page";
 import {SearchAuthenticatedServices} from "./pages/new/auth/service/search_authenticated_person_service.page";
 import SearchAuthenticatedPersonBandsPage from "./pages/new/auth/service/band/search_authenticated_person_band.page";
 import EditBandPage from "./pages/new/auth/service/band/edit_band.page";
+import CreateMusicianPage from "./pages/new/auth/service/band/musician/create_musician.page";
+import UploadMusicianProfilePage from "./pages/new/auth/service/band/musician/musician_profile_picture.page";
 
 const AppRoutes = ({token, user}) => {
     return (
@@ -39,6 +41,9 @@ const authRoutes = () => (
         <Route element={<CreateServicePage/>} path="/servico/criar"/>
         <Route element={<CreateBandPage/>} path="/servico/criar/banda"/>
         <Route element={<EditBandPage/>} path="/servicos/bandas/:uuid/editar"/>
+        <Route element={<CreateMusicianPage/>} path="/servicos/bandas/:uuid/adicionar-musico"/>
+        <Route element={<UploadMusicianProfilePage/>} path="/servicos/bandas/:bandUuid/musico/:musicianUuid/imagem"/>
+        <Route element={<UploadMusicianProfilePage/>} path="/servicos/bandas/:bandUuid/musico/:musicianUuid/editar"/>
     </>
 )
 

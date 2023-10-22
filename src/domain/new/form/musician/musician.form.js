@@ -1,21 +1,22 @@
-export class AddressForm {
-    street = 'TESTe';
-    neighbour = 'TESTe';
-    complement = 'TESTe';
-    cityId;
-    stateIso;
-    countryIso;
-    zipCode = '35.570-000';
+import {AddressForm} from "../address.form";
+
+export class MusicianForm {
+    firstName;
+    lastName;
+    birthday;
+    cpf;
+    email;
+    address;
 
     constructor() {
-        this.countryIso = 'BR';
+        this.address = new AddressForm();
     }
 
     getValidations() {
         return [
             {
-                'fieldName': 'street',
-                'translation': 'Rua e Número',
+                'fieldName': 'firstName',
+                'translation': 'nome',
                 'validations': [
                     {
                         'type': 'not_null'
@@ -23,61 +24,50 @@ export class AddressForm {
                     {
                         'type': 'size',
                         'min': 3,
-                        'max': 50
+                        'max': 75
                     }
                 ]
             },
             {
-                'fieldName': 'neighbour',
-                'translation': 'bairro',
+                'fieldName': 'lastName',
+                'translation': 'sobrenome',
                 'validations': [
                     {
                         'type': 'not_null'
                     },
                     {
                         'type': 'size',
-                        'min': 3,
-                        'max': 50
+                        'min': 1,
+                        'max': 150
                     }
                 ]
             },
             {
-                'fieldName': 'complement',
-                'translation': 'complemento',
-                'validations': [
-                    {
-                        'type': 'size',
-                        'min': 3,
-                        'max': 10
-                    }
-                ]
-            },
-            {
-                'fieldName': 'cityId',
-                'translation': 'cidade',
+                'fieldName': 'birthday',
+                'translation': 'data de nascimento',
                 'validations': [
                     {
                         'type': 'not_null'
-                    },
+                    }
                 ]
             },
             {
-                'fieldName': 'stateIso',
-                'translation': 'estado',
+                'fieldName': 'cpf',
+                'translation': 'CPF',
                 'validations': [
                     {
                         'type': 'not_null'
                     },
                     {
                         'type': 'size',
-                        'min': 2,
-                        'max': 2
+                        'min': 14,
+                        'max': 14
                     }
                 ]
             },
             {
-                'fieldName': 'zipCode',
-                'translation': 'CEP',
+                'fieldName': 'email',
+                'translation': 'email',
                 'validations': [
                     {
                         'type': 'not_null'
@@ -85,10 +75,10 @@ export class AddressForm {
                     {
                         'type': 'size',
                         'min': 5,
-                        'max': 25
+                        'max': 100
                     }
                 ]
-            }
+            },
         ]
     }
 }

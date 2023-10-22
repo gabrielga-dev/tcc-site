@@ -42,12 +42,17 @@ export class BandProfileDto {
 
         return form;
     }
+
+    removeMusician(musicianUuid){
+        this.musicians = this.musicians.filter(m => m.uuid !== musicianUuid);
+    }
 }
 
 class Musician {
     uuid;
     firstName;
     lastName;
+    avatarUuid;
     age;
     creationDate;
 
@@ -55,8 +60,9 @@ class Musician {
         this.uuid = data.uuid;
         this.firstName = data.firstName;
         this.lastName = data.lastName;
+        this.avatarUuid = data.avatarUuid;
         this.age = data.age;
-        this.creationDate = new Date(data.creationDateMilliseconds);
+        this.creationDate = new Date(data['creationDateMilliseconds']);
     }
 }
 

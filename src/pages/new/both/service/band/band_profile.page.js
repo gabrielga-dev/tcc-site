@@ -18,6 +18,12 @@ import {Button} from "primereact/button";
 import {StyleConstants} from "../../../../../service/style.constants";
 import {MarginStyle} from "../../../../../style/margin.style";
 import {ConfirmDialog} from "primereact/confirmdialog";
+import {MusicianForm} from "../../../../../domain/new/form/musician/musician.form";
+import axios from "axios";
+import {LocationService} from "../../../../../service/new/location.service";
+import {StateDto} from "../../../../../domain/new/dto/state.dto";
+import {Toast} from "primereact/toast";
+import {MusicianService} from "../../../../../service/new/musician.service";
 
 const BandProfilePage = ({token, user}) => {
     let {uuid} = useParams();
@@ -32,14 +38,17 @@ const BandProfilePage = ({token, user}) => {
         navigate(route);
     };
     return (
-        <_BandProfilePage
-            token={token}
-            user={user}
-            navigateTo={redirectTo}
-            authenticatedUser={user}
-            bandUuid={uuid}
-            showToast={showToast}
-        />
+        <>
+            <Toast ref={toast}/>
+            <_BandProfilePage
+                token={token}
+                user={user}
+                navigateTo={redirectTo}
+                authenticatedUser={user}
+                bandUuid={uuid}
+                showToast={showToast}
+            />
+        </>
     );
 }
 
@@ -62,21 +71,38 @@ class _BandProfilePage extends React.Component {
             showToast: props.showToast,
 
             disableBandPopUpVisible: false,
+
+            //create musician
+            isCreateMusicianModalVisible: true,
+            musician: new MusicianForm(),
+            profilePictureUuid: null,
+
+            states: [],
+            selectedState: null,
+            cities: [],
+            selectedCity: null,
         }
     }
 
     componentDidMount() {
         this.setState({isLoading: true})
-        BandService.FIND_BAND_BY_UUID(this.state.bandUuid)
-            .then(
-                response => {
-                    //band
-                    let band = new BandProfileDto(response.data)
-                    this.setState({band, bandName: band.name})
-                }
-            ).catch(error => {
-            this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error))
-        }).finally(() => this.setState({isLoading: false}))
+        axios.all(
+            [
+                BandService.FIND_BAND_BY_UUID(this.state.bandUuid),
+                LocationService.GET_BRAZIL_STATES()
+            ]
+        ).then(
+            responses => {
+                //band
+                let band = new BandProfileDto(responses[0].data)
+                this.setState({band, bandName: band.name})
+
+                //states
+                let newStates = responses[1].data.map(s => (new StateDto(s)))
+                this.setState({states: newStates})
+            }
+        ).catch(errors => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(errors[0]))
+        ).finally(() => this.setState({isLoading: false}))
     }
 
     render() {
@@ -204,21 +230,22 @@ class _BandProfilePage extends React.Component {
     }
 
     renderMusicians() {
-        let {band} = this.state
+        let {band, bandUuid, user, navigateTo} = this.state
+        let isBandOwner = (user && (user.uuid === band.ownerUuid));
 
         let cols = band.musicians.map(
             musician => (
-                <Col lg={3} md={6} sm={12} style={MarginStyle.makeMargin(0, 5, 0, 5)}>
+                <Col key={musician.uuid} lg={3} md={6} sm={12} style={MarginStyle.makeMargin(0, 5, 0, 5)}>
                     <Card>
                         <Container>
                             <Row>
                                 <Col style={STYLE_ALIGN_ITEM_CENTER}>
                                     {
-                                        !!!musician.profilePictureUuid
+                                        !!!musician.avatarUuid
                                             ? (<Avatar label={musician.firstName[0]} size=" large"/>)
                                             : (
                                                 <Image
-                                                    src={FileService.GET_IMAGE_URL(band.profilePictureUuid)}
+                                                    src={FileService.GET_IMAGE_URL(musician.avatarUuid)}
                                                     alt={`Imagem do integrante ${musician.name}`}
                                                     width="100"
                                                     height="100"
@@ -235,19 +262,113 @@ class _BandProfilePage extends React.Component {
                                     <h6>{`${musician.age} anos`}</h6>
                                 </Col>
                             </Row>
+                            <Row>
+                                {
+                                    isBandOwner
+                                        ? (
+                                            <>
+                                                <Col>
+                                                    <Button
+                                                        style={StyleConstants.WIDTH_100_PERCENT}
+                                                        icon="pi pi-pencil"
+                                                        className="p-button-warning"
+                                                        onClick={() => this.updateMusician(musician.uuid)}
+                                                    />
+                                                </Col>
+                                                <Col>
+                                                    <Button
+                                                        style={StyleConstants.WIDTH_100_PERCENT}
+                                                        icon="pi pi-trash"
+                                                        className="p-button-danger"
+                                                        onClick={() => this.deleteMusician(musician.uuid)}
+                                                    />
+                                                </Col>
+                                            </>
+                                        )
+                                        : null
+                                }
+                            </Row>
                         </Container>
                     </Card>
                 </Col>
             )
         )
 
+        let {isDeleteMusicianVisible, selectedMusician} = this.state
+
         return (
             <Container>
+                <Row>
+                    <Col md={4} sm={12}>
+                        {
+                            isBandOwner
+                                ? (
+                                    <Button
+                                        style={StyleConstants.WIDTH_100_PERCENT}
+                                        icon="pi pi-user-plus"
+                                        label="Adicionar"
+                                        onClick={() => navigateTo(`/servicos/bandas/${bandUuid}/adicionar-musico`)}
+                                    />
+                                )
+                                : null
+                        }
+                    </Col>
+                </Row>
+                <br/>
+                <ConfirmDialog
+                    visible={isDeleteMusicianVisible}
+                    onHide={() => this.setState({isDeleteMusicianVisible: false})}
+                    message={`Você quer mesmo excluir o dado de ${selectedMusician?.firstName}?`}
+                    header="Excluir músico?"
+                    icon="pi pi-exclamation-triangle"
+
+                    acceptLabel="Sim"
+                    acceptClassName="p-button-danger"
+                    rejectLabel="Não"
+                    rejectClassName="p-button-info"
+
+
+                    accept={() => this.acceptExclusion()}
+                    reject={() => this.setState({selectedMusician: null, isDeleteMusicianVisible: false})}
+                />
                 <Row>
                     {cols}
                 </Row>
             </Container>
         )
+    }
+
+    updateMusician(musicianUuid) {
+        let {navigateTo, band} = this.state;
+        navigateTo(`/servicos/bandas/${band.uuid}/musico/${musicianUuid}/editar`);
+    }
+
+    deleteMusician(musicianUuid) {
+        let {band} = this.state;
+        let selectedMusician = band.musicians.filter(m => (m.uuid === musicianUuid))[0];
+        this.setState({
+            selectedMusician,
+            isDeleteMusicianVisible: true
+        });
+    }
+
+    acceptExclusion() {
+        let {showToast} = this.state;
+        let {selectedMusician, band, token} = this.state;
+        this.setState({isLoading: true});
+        MusicianService.DELETE(band.uuid, selectedMusician.uuid, token)
+            .then(
+                () => {
+                    band.removeMusician(selectedMusician.uuid);
+                    this.setState({band})
+                    showToast(ToastUtils.BUILD_TOAST_SUCCESS_BODY("Músico removido com sucesso!"));
+                }
+            ).catch(error => showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
+            .finally(
+                () => {
+                    this.setState({isLoading: false, selectedMusician: null, isDeleteMusicianVisible: false});
+                }
+            )
     }
 }
 
