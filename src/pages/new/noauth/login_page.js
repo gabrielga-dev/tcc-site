@@ -3,14 +3,11 @@ import React, {useRef} from "react";
 import {InputText} from 'primereact/inputtext';
 import {Password} from 'primereact/password';
 import {Card} from 'primereact/card';
-
-import {FlexStyle} from "../../../style/flex.style";
 import {Button} from "primereact/button";
 
 import "primeflex/primeflex.css"
 import {MarginStyle} from "../../../style/margin.style";
 import {UserService} from "../../../service/new/user.service";
-import {Login_form} from "../../../domain/new/form/user/login_form";
 import {Toast} from "primereact/toast";
 import {Container} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
@@ -18,6 +15,8 @@ import {ToastUtils} from "../../../util/toast.utils";
 import {updateToken} from "../../../service/redux/action/token.action";
 import {connect} from "react-redux";
 import {updateUser} from "../../../service/redux/action/user.action";
+import {Divider} from "primereact/divider";
+import {UserAuthRequest} from "../../../domain/new/person/request/user_auth_request";
 
 const LoginPage = ({updateToken, updateUser}) => {
     const toast = useRef(null);
@@ -26,7 +25,7 @@ const LoginPage = ({updateToken, updateUser}) => {
     const showToast = (body) => {
         toast.current.show(body);
     };
-    const redirectTo = (route) => {
+    const navigateTo = (route) => {
         navigate(route);
     };
     return (
@@ -34,7 +33,7 @@ const LoginPage = ({updateToken, updateUser}) => {
             <Toast ref={toast}/>
             <_LoginPage
                 showToast={showToast}
-                redirectTo={redirectTo}
+                navigateTo={navigateTo}
                 updateToken={updateToken}
                 updateUser={updateUser}
             />
@@ -46,95 +45,96 @@ class _LoginPage extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            email: 'exemplo@email.com',
-            senha: '12345678',
+            request: new UserAuthRequest(),
             showToast: props.showToast,
-            redirectTo: props.redirectTo,
+            navigateTo: props.navigateTo,
             updateToken: props.updateToken,
             updateUser: props.updateUser,
         }
     }
 
-    setEmail(valor) {
-        this.setState({email: valor})
+    setUsername(value) {
+        let {request} = this.state
+        request.username = value;
+        this.setState({request})
     }
 
-    setSenha(valor) {
-        this.setState({senha: valor})
+    setPassword(value) {
+        let {request} = this.state
+        request.password = value;
+        this.setState({request})
     }
 
     render() {
-        let {email, senha, toast} = this.state
+        let {username, password} = this.state.request
+        let {navigateTo} = this.state
         return (
-            <>
-                <Toast ref={toast}/>
-                <Container>
-                    <br/>
-                    <div style={MarginStyle.makeMargin(0, 10, 0, 0)}
-                         className="flex flex-row flex-wrap justify-content-center">
-                        <Card header={this.renderHeader()}>
-                            <div style={FlexStyle.makeFlex(1)}>
-                                <form onSubmit={(e) => this.submitLogin(e)} className="p-fluid">
-                                    <div style={MarginStyle.makeMargin(0, 10, 0, 10)}>
-                                        <h5>Email:</h5>
-                                        <InputText
-                                            value={email}
-                                            maxLength={100}
-                                            onChange={(e) => this.setEmail(e.target.value)}
-                                        />
-                                    </div>
-                                    <div style={MarginStyle.makeMargin(0, 10, 0, 10)}>
-                                        <h5>Senha:</h5>
-                                        <Password
-                                            value={senha}
-                                            maxLength={100}
-                                            onChange={(e) => this.setSenha(e.target.value)}
-                                            toggleMask={true}
-                                            feedback={false}
-                                        />
-                                    </div>
-                                    <Button type="submit" label="Enviar" icon="pi pi-check" iconPos="left"/>
-                                    <a href="/cadastre-se">Crie sua conta!</a>
-                                    <div
-                                        className="flex flex-row flex-wrap"
-                                        style={MarginStyle.makeMargin(0, 10, 0, 0)}
-                                    >
-                                    </div>
-                                </form>
-                            </div>
-                        </Card>
-                    </div>
-                </Container>
-            </>
+            <Container>
+                <Card header={this.renderHeader()}>
+                    <form onSubmit={(e) => this.submitLogin(e)} className="p-fluid">
+                        <div style={MarginStyle.makeMargin(0, 10, 0, 10)}>
+                            <h5>Email:</h5>
+                            <InputText
+                                value={username}
+                                maxLength={100}
+                                onChange={(e) => this.setUsername(e.target.value)}
+                            />
+                        </div>
+                        <div style={MarginStyle.makeMargin(0, 10, 0, 10)}>
+                            <h5>Senha:</h5>
+                            <Password
+                                value={password}
+                                maxLength={100}
+                                onChange={(e) => this.setPassword(e.target.value)}
+                                toggleMask={true}
+                                feedback={false}
+                            />
+                        </div>
+                        <Button type="submit" label="Enviar"/>
+                        <Divider type="dashed" align="center">
+                            <span>ou</span>
+                        </Divider>
+                        <Button
+                            label="Crie sua conta!"
+                            className="p-button-outlined"
+                            onClick={() => navigateTo('/tipos-cadastro')}
+                        />
+                        <Button
+                            label="Esqueci minha senha!"
+                            className="p-button-text p-button-danger"
+                            onClick={() => navigateTo('/esqueci-senha')}
+                        />
+                        <a href="/cadastre-se"></a>
+                    </form>
+                </Card>
+            </Container>
         )
     }
 
     renderHeader() {
         return (
-            <>
-                <br/>
-                <h3 align="center">Login</h3>
-            </>
+            <div style={{marginTop: 25}}>
+                <p align="center" style={{fontSize: 40}}>Login</p>
+            </div>
         );
     }
 
     submitLogin(e) {
-        let {email, senha, redirectTo} = this.state
-        UserService.LOGIN(
-            new Login_form(email, senha)
-        ).then(
+        let {navigateTo} = this.state
+        UserService.LOGIN(this.state.request).then(
             response => {
+                e.preventDefault()
                 this.state.showToast(
                     ToastUtils.BUILD_TOAST_SUCCESS_BODY("Login efetuado com sucesso!")
                 )
-                this.setSenha('')
-                this.setEmail('')
+                this.setPassword('')
+                this.setUsername('')
                 UserService.GET_AUTHENTICATED_USER(response.data.token)
                     .then(
                         responseAuthUser => {
                             this.state.updateUser(responseAuthUser.data)
                             this.state.updateToken(response.data.token)
-                            redirectTo("/")
+                            navigateTo("/")
                         }
                     ).catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)));
             }

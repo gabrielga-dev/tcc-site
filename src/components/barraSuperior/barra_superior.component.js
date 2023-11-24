@@ -6,7 +6,6 @@ import {Button} from "primereact/button";
 import './remove_navbar_button.css'
 import PerfilDialogComponent from "./perfil_dialog.component";
 import {Col, Container, Row} from "react-bootstrap";
-import {StyleConstants} from "../../service/style.constants";
 import {useNavigate} from "react-router-dom";
 
 export const BarraSuperiorComponent = ({openLateralMenu, authenticatedUser}) => {
@@ -22,6 +21,7 @@ export const BarraSuperiorComponent = ({openLateralMenu, authenticatedUser}) => 
         />
     );
 }
+
 class _BarraSuperiorComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -88,7 +88,7 @@ class _BarraSuperiorComponent extends React.Component {
                         <Button
                             label="Cadastre-se"
                             className="p-button-text p-button-sm"
-                            onClick={() => redirectTo('/cadastre-se')}
+                            onClick={() => redirectTo('/tipos-cadastro')}
                         />
                     </Col>
                 </Row>
