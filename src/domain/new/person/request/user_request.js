@@ -1,10 +1,10 @@
-export class User_form {
-    firstName;
-    lastName;
-    cpf;
-    email;
-    password;
-    passwordRepeated;
+export class UserRequest {
+    firstName = 'testador';
+    lastName = 'test test';
+    cpf = '984.237.250-22';
+    email = 'dealmeida.gabriel.d@gmail.com';
+    password = '123456789';
+    passwordRepeated = '123456789';
 
     getValidations() {
         return [

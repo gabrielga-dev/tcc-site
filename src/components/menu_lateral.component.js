@@ -73,7 +73,7 @@ function generateNonLoggedUser(updateToken, updateUser, redirectTo) {
             {
                 label: 'Cadastre-se',
                 icon: 'pi pi-fw pi-user-plus',
-                command: () => redirectTo('/cadastre-se')
+                command: () => redirectTo('/tipos-cadastro')
             },
             {
                 label: 'Login',

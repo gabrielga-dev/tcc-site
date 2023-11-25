@@ -160,7 +160,7 @@ class _UploadMusicianProfile extends React.Component {
         MusicianService.UPLOAD_PROFILE_PICTURE(musicianUuid, picture.files[0], token)
             .then(
                 response => {
-                    this.setState({avatarUuid: response.data['fileUuid']});
+                    this.setState({avatarUuid: response.data.uuid});
                     showToast(ToastUtils.BUILD_TOAST_SUCCESS_BODY('Imagem adicionada com sucesso!'))
                 }
             ).catch(error => showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
