@@ -6,7 +6,7 @@ import {Password} from "primereact/password";
 import {Button} from "primereact/button";
 import {Toast} from 'primereact/toast';
 import {UserRequest} from "../../../domain/new/person/request/user_request";
-import {UserService} from "../../../service/new/user.service";
+import {UserService} from "../../../service/new/ms_auth/user.service";
 import ValidationUtil from "../../../util/validation/validation.util";
 import {useNavigate} from 'react-router-dom';
 import {ToastUtils} from "../../../util/toast.utils";
@@ -46,7 +46,7 @@ export default class _CreateAccountPage extends React.Component {
 
     getRegistrationTypeLabel() {
         let splitUrl = window.location.href.split('/');
-        let type = splitUrl[(splitUrl.length - 1)]
+        let type = splitUrl[(splitUrl.length - 1)].split('?')[0]
         return type.charAt(0).toUpperCase() + type.slice(1)
     }
 
@@ -56,7 +56,6 @@ export default class _CreateAccountPage extends React.Component {
     }
 
     render() {
-        let {show, toastBody} = this.state;
         return (
             <HomeTemplate steps={['Cadastrar', this.getRegistrationTypeLabel()]}>
                 <Card>

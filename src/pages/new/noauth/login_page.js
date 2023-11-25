@@ -7,7 +7,7 @@ import {Button} from "primereact/button";
 
 import "primeflex/primeflex.css"
 import {MarginStyle} from "../../../style/margin.style";
-import {UserService} from "../../../service/new/user.service";
+import {UserService} from "../../../service/new/ms_auth/user.service";
 import {Toast} from "primereact/toast";
 import {Container} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";

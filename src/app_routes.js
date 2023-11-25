@@ -15,6 +15,7 @@ import EditBandPage from "./pages/new/auth/service/band/edit_band.page";
 import CreateMusicianPage from "./pages/new/auth/service/band/musician/create_musician.page";
 import UploadMusicianProfilePage from "./pages/new/auth/service/band/musician/musician_profile_picture.page";
 import {SelectPersonRolePage} from "./pages/new/noauth/select_person_role.page";
+import {ValidateEmailPage} from "./pages/new/noauth/validate_email.page";
 
 const AppRoutes = ({token, user}) => {
     return (
@@ -56,6 +57,8 @@ const nonAuthRoutes = () => (
         <Route element={<CreateAccountPage/>} path="/cadastro/musico"/>
 
         <Route element={<LoginPage/>} path="/login"/>
+
+        <Route element={<ValidateEmailPage/>} path="/verificar/:validation_uuid"/>
     </>
 )
 
