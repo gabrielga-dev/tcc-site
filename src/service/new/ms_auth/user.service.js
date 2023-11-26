@@ -12,5 +12,13 @@ export const UserService = {
         return axios.post(`${BASE_URL_USER}/v1/person`, payload, headers);
     },
     LOGIN: (payload) => (axios.post(`${BASE_URL_USER}/v1/person/token`, payload, BaseService.HEADERS)),
-    GET_AUTHENTICATED_USER: (token) => (axios.get(`${BASE_URL_USER}/v1/person`, BaseService.MAKE_HEADERS(token)))
+    GET_AUTHENTICATED_USER: (token) => (axios.get(`${BASE_URL_USER}/v1/person`, BaseService.MAKE_HEADERS(token))),
+
+    CHANGE_PASSWORD: (emailValidationUuid, request) => (
+        axios.patch(
+            `${BASE_URL_USER}/v1/person/change-password/${emailValidationUuid}`,
+            request,
+            BaseService.HEADERS
+        )
+    ),
 }

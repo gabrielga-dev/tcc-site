@@ -2,13 +2,13 @@ import React, {useRef} from "react";
 import {Card} from "primereact/card";
 import {Toast} from 'primereact/toast';
 import {useNavigate, useParams} from 'react-router-dom';
-import HomeTemplate from "../template/home_template";
+import HomeTemplate from "../../template/home_template";
 import {Col, Container, Row} from "react-bootstrap";
-import {ActivityIndicatorComponent} from "../../../components/activity_indicator.component";
+import {ActivityIndicatorComponent} from "../../../../components/activity_indicator.component";
 import {Button} from "primereact/button";
-import {StyleConstants} from "../../../service/style.constants";
-import {EmaiValidationService} from "../../../service/new/ms_auth/email_validation.service";
-import {ToastUtils} from "../../../util/toast.utils";
+import {StyleConstants} from "../../../../service/style.constants";
+import {EmailValidationService} from "../../../../service/new/ms_auth/email_validation.service";
+import {ToastUtils} from "../../../../util/toast.utils";
 
 export const ValidateEmailPage = () => {
     const toast = useRef(null);
@@ -54,7 +54,7 @@ export default class _ValidateEmailPage extends React.Component {
 
     componentDidMount() {
         let {validationUuid, showToast} = this.state;
-        EmaiValidationService.CHECK_IF_EMAIL_VALIDATION_EXISTS(validationUuid)
+        EmailValidationService.CHECK_IF_EMAIL_VALIDATION_EXISTS(validationUuid)
             .then(
                 response => {
                     this.validateEmailValidation()
@@ -73,7 +73,7 @@ export default class _ValidateEmailPage extends React.Component {
 
     validateEmailValidation() {
         let {validationUuid, showToast} = this.state;
-        EmaiValidationService.VALIDATE(validationUuid)
+        EmailValidationService.VALIDATE(validationUuid)
             .then(
                 response => this.setState({validationStatus: 6})
             ).catch(

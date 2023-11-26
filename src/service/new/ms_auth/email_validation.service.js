@@ -4,7 +4,7 @@ import {BaseService} from "../base.service";
 
 const BASE_URL_MS_AUTH = `${API_CONSTANTS.API_BASE_URL}/auth`;
 
-export const EmaiValidationService = {
+export const EmailValidationService = {
 
     CHECK_IF_EMAIL_VALIDATION_EXISTS: (emailValidationUuid) => (
         axios.get(`${BASE_URL_MS_AUTH}/v1/email-validation/${emailValidationUuid}`, BaseService.HEADERS)
@@ -14,6 +14,14 @@ export const EmaiValidationService = {
         axios.patch(
             `${BASE_URL_MS_AUTH}/v1/email-validation/person-creation/${emailValidationUuid}`,
             {},
+            BaseService.HEADERS
+        )
+    ),
+
+    REQUEST_PASSWORD_CHANGE: (passwordChangeRequest) => (
+        axios.post(
+            `${BASE_URL_MS_AUTH}/v1/email-validation/change-password/request`,
+            passwordChangeRequest,
             BaseService.HEADERS
         )
     ),
