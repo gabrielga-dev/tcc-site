@@ -5,15 +5,15 @@ import {InputText} from "primereact/inputtext";
 import {Password} from "primereact/password";
 import {Button} from "primereact/button";
 import {Toast} from 'primereact/toast';
-import {UserRequest} from "../../../domain/new/person/request/user_request";
-import {UserService} from "../../../service/new/ms_auth/user.service";
-import ValidationUtil from "../../../util/validation/validation.util";
+import {UserRequest} from "../../../../domain/new/person/request/user_request";
+import {UserService} from "../../../../service/new/ms_auth/user.service";
+import ValidationUtil from "../../../../util/validation/validation.util";
 import {useNavigate} from 'react-router-dom';
-import {ToastUtils} from "../../../util/toast.utils";
+import {ToastUtils} from "../../../../util/toast.utils";
 import {InputMask} from "primereact/inputmask";
-import HomeTemplate from "../template/home_template";
+import HomeTemplate from "../../template/home_template";
 import {Divider} from "primereact/divider";
-import {RoleEnum} from "../../../domain/new/enum/role.enum";
+import {RoleEnum} from "../../../../domain/new/enum/role.enum";
 
 export const CreateAccountPage = () => {
     const toast = useRef(null);

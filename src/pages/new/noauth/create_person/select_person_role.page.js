@@ -1,10 +1,10 @@
 import {useNavigate} from "react-router-dom";
 import React, {useRef} from "react";
-import HomeTemplate from "../template/home_template";
+import HomeTemplate from "../../template/home_template";
 import {Col, Row} from "react-bootstrap";
 import {Card} from "primereact/card";
 import {Button} from "primereact/button";
-import {StyleConstants} from "../../../service/style.constants";
+import {StyleConstants} from "../../../../service/style.constants";
 import {Accordion, AccordionTab} from "primereact/accordion";
 
 export const SelectPersonRolePage = () => {

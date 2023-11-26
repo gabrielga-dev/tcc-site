@@ -1,6 +1,6 @@
 import React from "react";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import {CreateAccountPage} from "./pages/new/noauth/create_account.page";
+import {CreateAccountPage} from "./pages/new/noauth/create_person/create_account.page";
 import {connect} from "react-redux";
 import LoginPage from "./pages/new/noauth/login_page";
 import HomePage from "./pages/new/both/home_page";
@@ -14,8 +14,10 @@ import SearchAuthenticatedPersonBandsPage from "./pages/new/auth/service/band/se
 import EditBandPage from "./pages/new/auth/service/band/edit_band.page";
 import CreateMusicianPage from "./pages/new/auth/service/band/musician/create_musician.page";
 import UploadMusicianProfilePage from "./pages/new/auth/service/band/musician/musician_profile_picture.page";
-import {SelectPersonRolePage} from "./pages/new/noauth/select_person_role.page";
-import {ValidateEmailPage} from "./pages/new/noauth/validate_email.page";
+import {SelectPersonRolePage} from "./pages/new/noauth/create_person/select_person_role.page";
+import {ValidateEmailPage} from "./pages/new/noauth/validate_email/validate_email.page";
+import {RequestPasswordChangePage} from "./pages/new/noauth/password_change/request_password_change.page";
+import {ChangePasswordPage} from "./pages/new/noauth/password_change/change_password.page";
 
 const AppRoutes = ({token, user}) => {
     return (
@@ -59,6 +61,8 @@ const nonAuthRoutes = () => (
         <Route element={<LoginPage/>} path="/login"/>
 
         <Route element={<ValidateEmailPage/>} path="/verificar/:validation_uuid"/>
+        <Route element={<RequestPasswordChangePage/>} path="/esqueci-senha"/>
+        <Route element={<ChangePasswordPage/>} path="/mudar-senha/:validation_uuid"/>
     </>
 )
 
