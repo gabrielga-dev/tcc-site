@@ -1,4 +1,4 @@
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import React, {useRef} from "react";
 import HomeTemplate from "../../../template/home_template";
 import {updateToken} from "../../../../../service/redux/action/token.action";
@@ -10,11 +10,10 @@ import {Button} from "primereact/button";
 import {Divider} from "primereact/divider";
 import ProfileInformationPage from "./profile_information.page";
 import {Toast} from "primereact/toast";
+import ChangePersonEmailPage from "./change_person_email.page";
 
 const AuthenticatedPersonProfilePage = ({token, user}) => {
     const toast = useRef(null);
-
-    let {uuid} = useParams();
 
     const showToast = (body) => {
         toast.current.show(body);
@@ -32,7 +31,6 @@ const AuthenticatedPersonProfilePage = ({token, user}) => {
                 token={token}
                 navigateTo={navigateTo}
                 authenticatedUser={user}
-                bandUuid={uuid}
                 showToast={showToast}
             />
         </>
@@ -120,7 +118,7 @@ class _AuthenticatedPersonProfilePage extends React.Component {
             case 1:
                 return (<ProfileInformationPage showToast={showToast}/>);
             case 2:
-                return (<h1>2</h1>);
+                return (<ChangePersonEmailPage showToast={showToast}/>);
             case 3:
                 return (<h1>3</h1>);
         }
