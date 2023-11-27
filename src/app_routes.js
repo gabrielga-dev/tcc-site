@@ -18,6 +18,7 @@ import {SelectPersonRolePage} from "./pages/new/noauth/create_person/select_pers
 import {ValidateEmailPage} from "./pages/new/noauth/validate_email/validate_email.page";
 import {RequestPasswordChangePage} from "./pages/new/noauth/password_change/request_password_change.page";
 import {ChangePasswordPage} from "./pages/new/noauth/password_change/change_password.page";
+import AuthenticatedPersonProfilePage from "./pages/new/auth/person/profile/authenticated_person_profile.page";
 
 const AppRoutes = ({token, user}) => {
     return (
@@ -40,6 +41,8 @@ const AppRoutes = ({token, user}) => {
 
 const authRoutes = () => (
     <>
+        <Route element={<AuthenticatedPersonProfilePage/>} path="/meu-perfil"/>
+
         <Route element={<SearchAuthenticatedServices/>} path="/meus-servicos"/>
         <Route element={<SearchAuthenticatedPersonBandsPage/>} path="/meus-servicos/banda"/>
         <Route element={<CreateServicePage/>} path="/servico/criar"/>

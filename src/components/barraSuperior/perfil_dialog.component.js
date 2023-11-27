@@ -9,22 +9,36 @@ import {StyleConstants} from "../../service/style.constants";
 import {updateUser} from "../../service/redux/action/user.action";
 
 const PerfilDialogComponent = ({authenticatedUser, showDialog, hideDialog, updateToken, updateUser}) => {
-    const navigate = useNavigate();
+    const navigateTo = useNavigate();
     return (
-        <Dialog visible={showDialog} onHide={hideDialog} draggable={false}>
+        <Dialog
+            header="Opções"
+            visible={showDialog}
+            onHide={hideDialog}
+            draggable={false}
+            style={{width: '50%', marginLeft: '25%', marginRight: '25%'}}
+        >
             <Container>
                 <Row>
                     <Col>
-                        <h4>{`${authenticatedUser.firstName} ${authenticatedUser.lastName}`}</h4>
+                        <h5>{`${getSalutation()}, ${authenticatedUser.firstName}!`}</h5>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <p>Você, atualmente, está com as seguintes permissão:</p>
+                        <ul>
+                            {getPermissions(authenticatedUser)}
+                        </ul>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
                         <Button
-                            label="Perfil"
+                            label="Minha conta"
                             icon="pi pi-user"
                             style={StyleConstants.WIDTH_100_PERCENT}
-                            onClick={() => navigate('/profile')}
+                            onClick={() => navigateTo('/meu-perfil')}
                         />
                     </Col>
                 </Row>
@@ -39,7 +53,7 @@ const PerfilDialogComponent = ({authenticatedUser, showDialog, hideDialog, updat
                                 () => {
                                     updateUser(null)
                                     updateToken(null)
-                                    navigate('/login')
+                                    navigateTo('/login')
                                 }
                             }/>
                     </Col>
@@ -49,6 +63,32 @@ const PerfilDialogComponent = ({authenticatedUser, showDialog, hideDialog, updat
     );
 }
 
+const getSalutation = () => {
+    const now = new Date();
+    const hour = now.getHours();
+
+    let salutation;
+
+    if (hour >= 5 && hour < 12) {
+        salutation = 'Bom dia';
+    } else if (hour >= 12 && hour < 18) {
+        salutation = 'Boa tarde';
+    } else {
+        salutation = 'Boa noite';
+    }
+
+    return salutation;
+}
+
+const getPermissions = (person) => {
+    if (person.roles.some(role => (role.name === 'BAND'))) {
+        return (<li>Responsável por bandas</li>);
+    } else if (person.roles.some(role => (role.name === 'MUSICIAN'))) {
+        return (<li>Músico autônomo</li>);
+    } else if (person.roles.some(role => (role.name === 'CONTRACTOR'))) {
+        return (<li>Contratante de serviços</li>);
+    }
+}
 
 const myMapDispatchToProps = {
     updateToken: updateToken,
