@@ -15,6 +15,7 @@ import {ActivityIndicatorComponent} from "../../../components/activity_indicator
 import {EmailValidationService} from "../../../service/new/ms_auth/email_validation.service";
 import {ToastUtils} from "../../../util/toast.utils";
 import {UserService} from "../../../service/new/ms_auth/user.service";
+import {AuthConstants} from "../../../util/auth.constants";
 
 const ChangeEmailPage = ({token, user, updateToken, updateUser}) => {
     const toast = useRef(null);
@@ -157,6 +158,8 @@ class _ChangeEmailPage extends React.Component {
                         () => {
                             updateUser(null);
                             updateToken(null);
+                            localStorage.removeItem(AuthConstants.TOKEN);
+                            localStorage.removeItem(AuthConstants.USER);
                             navigateTo('/login');
                         }, 2500
                     );

@@ -47,7 +47,7 @@ class _HomePage extends React.Component {
     }
 
     render() {
-        return(
+        return (
             <>
                 <HomeTemplate steps={['Home']}>
                     <h1>Hello</h1>

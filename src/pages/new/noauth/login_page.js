@@ -134,8 +134,12 @@ class _LoginPage extends React.Component {
                     .then(
                         responseAuthUser => {
 
+                            console.log(JSON.parse(JSON.stringify(responseAuthUser.data)))
                             localStorage.setItem(AuthConstants.TOKEN, response.data.token);
-                            localStorage.setItem(AuthConstants.USER, responseAuthUser.data);
+                            localStorage.setItem(
+                                AuthConstants.USER,
+                                JSON.stringify(responseAuthUser.data)
+                            );
 
                             this.state.updateUser(responseAuthUser.data)
                             this.state.updateToken(response.data.token)

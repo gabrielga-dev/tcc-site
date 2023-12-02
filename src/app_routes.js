@@ -25,13 +25,21 @@ import {updateToken} from "./service/redux/action/token.action";
 import {updateUser} from "./service/redux/action/user.action";
 
 const AppRoutes = ({token, user, updateToken, updateUser}) => {
+    let currentToken = token;
+
+    if(!token && (token !== localStorage.getItem(AuthConstants.TOKEN))){
+
+        updateUser(JSON.parse(localStorage.getItem(AuthConstants.USER)));
+        updateToken(localStorage.getItem(AuthConstants.TOKEN));
+        currentToken = localStorage.getItem(AuthConstants.TOKEN);
+    }
     return (
         <BrowserRouter>
             <Routes>
                 <Route element={<HomePage/>} path="/"/>
                 <Route element={<ChangeEmailPage/>} path="/mudar-email"/>
                 {
-                    (token)
+                    (currentToken)
                         ? authRoutes()
                         : nonAuthRoutes()
                 }
@@ -47,6 +55,7 @@ const AppRoutes = ({token, user, updateToken, updateUser}) => {
 const authRoutes = () => (
     <>
         <Route element={<AuthenticatedPersonProfilePage/>} path="/meu-perfil"/>
+        <Route element={<ChangeEmailPage/>} path="/mudar-email/:validation_uuid"/>
 
         <Route element={<SearchAuthenticatedServices/>} path="/meus-servicos"/>
         <Route element={<SearchAuthenticatedPersonBandsPage/>} path="/meus-servicos/banda"/>
@@ -71,7 +80,6 @@ const nonAuthRoutes = () => (
         <Route element={<ValidateEmailPage/>} path="/verificar/:validation_uuid"/>
         <Route element={<RequestPasswordChangePage/>} path="/esqueci-senha"/>
         <Route element={<ChangePasswordPage/>} path="/mudar-senha/:validation_uuid"/>
-        <Route element={<ChangeEmailPage/>} path="/mudar-email/:validation_uuid"/>
     </>
 )
 

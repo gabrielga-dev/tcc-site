@@ -7,6 +7,7 @@ import {updateToken} from "../service/redux/action/token.action";
 import {connect} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {updateUser} from "../service/redux/action/user.action";
+import {AuthConstants} from "../util/auth.constants";
 
 const MenuLateralComponent = ({showMenu = false, toggleVisionMenu, updateToken, updateUser, user}) => {
     const navigate = useNavigate();
@@ -60,6 +61,8 @@ function generateLoggedUser(updateToken, updateUser, redirectTo) {
                 command: () => {
                     updateUser(null)
                     updateToken(null)
+                    localStorage.removeItem(AuthConstants.TOKEN);
+                    localStorage.removeItem(AuthConstants.USER);
                     redirectTo("/login")
                 }
             },

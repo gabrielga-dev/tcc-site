@@ -7,6 +7,7 @@ import {connect} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {StyleConstants} from "../../service/style.constants";
 import {updateUser} from "../../service/redux/action/user.action";
+import {AuthConstants} from "../../util/auth.constants";
 
 const PerfilDialogComponent = ({authenticatedUser, showDialog, hideDialog, updateToken, updateUser}) => {
     const navigateTo = useNavigate();
@@ -53,6 +54,8 @@ const PerfilDialogComponent = ({authenticatedUser, showDialog, hideDialog, updat
                                 () => {
                                     updateUser(null)
                                     updateToken(null)
+                                    localStorage.removeItem(AuthConstants.TOKEN);
+                                    localStorage.removeItem(AuthConstants.USER);
                                     navigateTo('/login')
                                 }
                             }/>
