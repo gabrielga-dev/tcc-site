@@ -25,4 +25,11 @@ export const UserService = {
             BaseService.HEADERS
         )
     ),
+    CHANGE_EMAIL: (emailChangeValidationUuid, request, token) => (
+        axios.patch(
+            `${BASE_URL_USER}/v1/person/change-email/${emailChangeValidationUuid}`,
+            request,
+            BaseService.MAKE_HEADERS(token)
+        )
+    ),
 }

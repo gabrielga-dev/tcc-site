@@ -19,20 +19,25 @@ import {ValidateEmailPage} from "./pages/new/noauth/validate_email/validate_emai
 import {RequestPasswordChangePage} from "./pages/new/noauth/password_change/request_password_change.page";
 import {ChangePasswordPage} from "./pages/new/noauth/password_change/change_password.page";
 import AuthenticatedPersonProfilePage from "./pages/new/auth/person/profile/authenticated_person_profile.page";
+import ChangeEmailPage from "./pages/new/both/change_email.page";
+import {AuthConstants} from "./util/auth.constants";
+import {updateToken} from "./service/redux/action/token.action";
+import {updateUser} from "./service/redux/action/user.action";
 
-const AppRoutes = ({token, user}) => {
+const AppRoutes = ({token, user, updateToken, updateUser}) => {
     return (
         <BrowserRouter>
             <Routes>
                 <Route element={<HomePage/>} path="/"/>
-                <Route element={<SearchServicesPage/>} path="/servicos"/>
-                <Route element={<SearchBandsPage/>} path="/servicos/bandas"/>
-                <Route element={<BandProfilePage/>} path="/servicos/bandas/:uuid"/>
+                <Route element={<ChangeEmailPage/>} path="/mudar-email"/>
                 {
                     (token)
                         ? authRoutes()
                         : nonAuthRoutes()
                 }
+                <Route element={<SearchServicesPage/>} path="/servicos"/>
+                <Route element={<SearchBandsPage/>} path="/servicos/bandas"/>
+                <Route element={<BandProfilePage/>} path="/servicos/bandas/:uuid"/>
                 <Route element={<h1>Página não encontrada</h1>} path="*"/>
             </Routes>
         </BrowserRouter>
@@ -66,6 +71,7 @@ const nonAuthRoutes = () => (
         <Route element={<ValidateEmailPage/>} path="/verificar/:validation_uuid"/>
         <Route element={<RequestPasswordChangePage/>} path="/esqueci-senha"/>
         <Route element={<ChangePasswordPage/>} path="/mudar-senha/:validation_uuid"/>
+        <Route element={<ChangeEmailPage/>} path="/mudar-email/:validation_uuid"/>
     </>
 )
 
@@ -76,4 +82,9 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(AppRoutes);
+const myMapDispatchToProps = {
+    updateToken: updateToken,
+    updateUser: updateUser,
+};
+
+export default connect(mapStateToProps, myMapDispatchToProps)(AppRoutes);
