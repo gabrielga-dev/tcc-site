@@ -18,11 +18,7 @@ const MenuLateralComponent = ({showMenu = false, toggleVisionMenu, updateToken, 
 
             <Button icon="pi pi-home" style={{width: '100%'}} onClick={() => redirectTo('/')}/>
             <PanelMenu
-                model={
-                    user
-                        ? generateLoggedUser(updateToken, updateUser, redirectTo)
-                        : generateNonLoggedUser(updateToken, updateUser, redirectTo)
-                }
+                model={GET_MENU_OPTIONS(updateToken, updateUser, redirectTo, user)}
                 style={{width: '100%'}}
             />
 
@@ -30,42 +26,17 @@ const MenuLateralComponent = ({showMenu = false, toggleVisionMenu, updateToken, 
     );
 }
 
-function generateLoggedUser(updateToken, updateUser, redirectTo) {
-    return (
-        [
-            {
-                label: 'Serviços',
-                icon: 'pi pi-fw pi-briefcase',
-                items: [
-                    {
-                        label: 'Procurar',
-                        icon: 'pi pi-fw pi-search',
-                        command: () => redirectTo('/servicos')
-                    },
-                    {
-                        label: 'Cadastrar',
-                        icon: 'pi pi-fw pi-plus',
-                        command: () => redirectTo('/servico/criar')
-                    },
-                    {
-                        label: 'Meus serviços',
-                        icon: 'pi pi-fw pi-list',
-                        command: () => redirectTo('/meus-servicos')
-                    },
-                ]
-            },
-            {
-                label: 'Sair',
-                icon: 'pi pi-fw pi-sign-out',
-                command: () => {
-                    updateUser(null)
-                    updateToken(null)
-                    redirectTo("/login")
-                }
-            },
-        ]
-    );
-}
+const GET_MENU_OPTIONS = (updateToken, updateUser, redirectTo, person) => {
+    if (!person){
+        return generateNonLoggedUser(updateToken, updateUser, redirectTo)
+    } else if(person.roles.some(role => (role.name === 'BAND'))){
+        return generateBandOwnerOptions(updateToken, updateUser, redirectTo);
+    } else if (person.roles.some(role => (role.name === 'MUSICIAN'))) {
+        return generateMusicianOptions(updateToken, updateUser, redirectTo);
+    } else if (person.roles.some(role => (role.name === 'CONTRACTOR'))) {
+        return generateContractorOptions(updateToken, updateUser, redirectTo);
+    }
+};
 
 function generateNonLoggedUser(updateToken, updateUser, redirectTo) {
     return (
@@ -93,6 +64,105 @@ function generateNonLoggedUser(updateToken, updateUser, redirectTo) {
         ]
     );
 }
+
+const generateBandOwnerOptions = (updateToken, updateUser, redirectTo) => (
+    [
+        {
+            label: 'Bandas',
+            icon: 'pi pi-fw pi-volume-up',
+            items: [
+                {
+                    label: 'Procurar',
+                    icon: 'pi pi-fw pi-search',
+                    command: () => redirectTo('/bandas')
+                },
+                {
+                    label: 'Cadastrar',
+                    icon: 'pi pi-fw pi-plus',
+                    command: () => redirectTo('/bandas/criar')
+                },
+                {
+                    label: 'Minhas bandas',
+                    icon: 'pi pi-fw pi-list',
+                    command: () => redirectTo('/minhas-bandas')
+                },
+            ]
+        },
+        {
+            label: 'Sair',
+            icon: 'pi pi-fw pi-sign-out',
+            command: () => {
+                updateUser(null)
+                updateToken(null)
+                redirectTo("/login")
+            }
+        },
+    ]
+);
+const generateMusicianOptions = (updateToken, updateUser, redirectTo) => (
+    [
+        {
+            label: 'Bandas',
+            icon: 'pi pi-fw pi-volume-up',
+            items: [
+                {
+                    label: 'Procurar',
+                    icon: 'pi pi-fw pi-search',
+                    command: () => redirectTo('/bandas')
+                },
+            ]
+        },
+        {
+            label: 'Sair',
+            icon: 'pi pi-fw pi-sign-out',
+            command: () => {
+                updateUser(null)
+                updateToken(null)
+                redirectTo("/login")
+            }
+        },
+    ]
+);
+const generateContractorOptions = (updateToken, updateUser, redirectTo) => (
+    [
+        {
+            label: 'Bandas',
+            icon: 'pi pi-fw pi-volume-up',
+            items: [
+                {
+                    label: 'Procurar',
+                    icon: 'pi pi-fw pi-search',
+                    command: () => redirectTo('/bandas')
+                },
+            ]
+        },
+        {
+            label: 'Eventos',
+            icon: 'pi pi-fw pi-calendar',
+            items: [
+                {
+                    label: 'Cadastrar',
+                    icon: 'pi pi-fw pi-plus',
+                    command: () => redirectTo('/eventos')
+                },
+                {
+                    label: 'Meus eventos',
+                    icon: 'pi pi-fw pi-list',
+                    command: () => redirectTo('/eventos')
+                },
+            ]
+        },
+        {
+            label: 'Sair',
+            icon: 'pi pi-fw pi-sign-out',
+            command: () => {
+                updateUser(null)
+                updateToken(null)
+                redirectTo("/login")
+            }
+        },
+    ]
+);
 
 const myMapDispatchToProps = {
     updateToken: updateToken,
