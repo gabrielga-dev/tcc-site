@@ -158,8 +158,6 @@ class _ChangeEmailPage extends React.Component {
                         () => {
                             updateUser(null);
                             updateToken(null);
-                            localStorage.removeItem(AuthConstants.TOKEN);
-                            localStorage.removeItem(AuthConstants.USER);
                             navigateTo('/login');
                         }, 2500
                     );

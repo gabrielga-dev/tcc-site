@@ -44,8 +44,6 @@ const PerfilDialogComponent = ({authenticatedUser, showDialog, hideDialog, updat
                                 () => {
                                     updateUser(null)
                                     updateToken(null)
-                                    localStorage.removeItem(AuthConstants.TOKEN);
-                                    localStorage.removeItem(AuthConstants.USER);
                                     navigateTo('/login')
                                 }
                             }/>

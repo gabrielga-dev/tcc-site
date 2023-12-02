@@ -20,26 +20,17 @@ import {RequestPasswordChangePage} from "./pages/new/noauth/password_change/requ
 import {ChangePasswordPage} from "./pages/new/noauth/password_change/change_password.page";
 import AuthenticatedPersonProfilePage from "./pages/new/auth/person/profile/authenticated_person_profile.page";
 import ChangeEmailPage from "./pages/new/both/change_email.page";
-import {AuthConstants} from "./util/auth.constants";
 import {updateToken} from "./service/redux/action/token.action";
 import {updateUser} from "./service/redux/action/user.action";
 
-const AppRoutes = ({token, user, updateToken, updateUser}) => {
-    let currentToken = token;
-
-    if(!token && (token !== localStorage.getItem(AuthConstants.TOKEN))){
-
-        updateUser(JSON.parse(localStorage.getItem(AuthConstants.USER)));
-        updateToken(localStorage.getItem(AuthConstants.TOKEN));
-        currentToken = localStorage.getItem(AuthConstants.TOKEN);
-    }
+const AppRoutes = ({token}) => {
     return (
         <BrowserRouter>
             <Routes>
                 <Route element={<HomePage/>} path="/"/>
                 <Route element={<ChangeEmailPage/>} path="/mudar-email"/>
                 {
-                    (currentToken)
+                    (token)
                         ? authRoutes()
                         : nonAuthRoutes()
                 }

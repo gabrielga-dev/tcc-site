@@ -42,7 +42,6 @@ class _BarraSuperiorComponent extends React.Component {
 
     render() {
         let {authenticatedUser, openLateralMenu, showDialog} = this.state;
-        console.log(authenticatedUser)
         return (
             <>
                 <Menubar
