@@ -17,6 +17,7 @@ import {connect} from "react-redux";
 import {updateUser} from "../../../service/redux/action/user.action";
 import {Divider} from "primereact/divider";
 import {UserAuthRequest} from "../../../domain/new/person/request/user_auth_request";
+import {AuthConstants} from "../../../util/auth.constants";
 
 const LoginPage = ({updateToken, updateUser}) => {
     const toast = useRef(null);
@@ -132,6 +133,14 @@ class _LoginPage extends React.Component {
                 UserService.GET_AUTHENTICATED_USER(response.data.token)
                     .then(
                         responseAuthUser => {
+
+                            console.log(JSON.parse(JSON.stringify(responseAuthUser.data)))
+                            localStorage.setItem(AuthConstants.TOKEN, response.data.token);
+                            localStorage.setItem(
+                                AuthConstants.USER,
+                                JSON.stringify(responseAuthUser.data)
+                            );
+
                             this.state.updateUser(responseAuthUser.data)
                             this.state.updateToken(response.data.token)
                             navigateTo("/")

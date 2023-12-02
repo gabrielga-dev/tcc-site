@@ -25,4 +25,12 @@ export const EmailValidationService = {
             BaseService.HEADERS
         )
     ),
+
+    REQUEST_EMAIL_CHANGE: (emailChangeRequest, token) => (
+        axios.post(
+            `${BASE_URL_MS_AUTH}/v1/email-validation/change-email/request`,
+            emailChangeRequest,
+            BaseService.MAKE_HEADERS(token)
+        )
+    ),
 }

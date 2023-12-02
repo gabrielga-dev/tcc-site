@@ -7,29 +7,34 @@ import {connect} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {StyleConstants} from "../../service/style.constants";
 import {updateUser} from "../../service/redux/action/user.action";
+import {AuthConstants} from "../../util/auth.constants";
 
 const PerfilDialogComponent = ({authenticatedUser, showDialog, hideDialog, updateToken, updateUser}) => {
-    const navigate = useNavigate();
+    const navigateTo = useNavigate();
     return (
-        <Dialog visible={showDialog} onHide={hideDialog} draggable={false}>
+        <Dialog
+            header="Opções"
+            visible={showDialog}
+            onHide={hideDialog}
+            draggable={false}
+            style={{width: '50%', marginLeft: '25%', marginRight: '25%'}}
+        >
             <Container>
                 <Row>
                     <Col>
-                        <h4>{`${authenticatedUser.firstName} ${authenticatedUser.lastName}`}</h4>
+                        <h5>{`${getSalutation()}, ${authenticatedUser.firstName}!`}</h5>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <Button
-                            label="Perfil"
-                            icon="pi pi-user"
-                            style={StyleConstants.WIDTH_100_PERCENT}
-                            onClick={() => navigate('/profile')}
-                        />
+                        <p>Você, atualmente, está com as seguintes permissão:</p>
+                        <ul>
+                            {getPermissions(authenticatedUser)}
+                        </ul>
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    <Col md={12} lg={6} style={{marginBottom: 25}}>
                         <Button
                             label="Sair"
                             icon="pi pi-power-off"
@@ -39,9 +44,17 @@ const PerfilDialogComponent = ({authenticatedUser, showDialog, hideDialog, updat
                                 () => {
                                     updateUser(null)
                                     updateToken(null)
-                                    navigate('/login')
+                                    navigateTo('/login')
                                 }
                             }/>
+                    </Col>
+                    <Col md={12} lg={6}>
+                        <Button
+                            label="Minha conta"
+                            icon="pi pi-user"
+                            style={StyleConstants.WIDTH_100_PERCENT}
+                            onClick={() => navigateTo('/meu-perfil')}
+                        />
                     </Col>
                 </Row>
             </Container>
@@ -49,6 +62,24 @@ const PerfilDialogComponent = ({authenticatedUser, showDialog, hideDialog, updat
     );
 }
 
+const getSalutation = () => {
+    const now = new Date();
+    const hour = now.getHours();
+
+    let salutation;
+
+    if (hour >= 5 && hour < 12) {
+        salutation = 'Bom dia';
+    } else if (hour >= 12 && hour < 18) {
+        salutation = 'Boa tarde';
+    } else {
+        salutation = 'Boa noite';
+    }
+
+    return salutation;
+}
+
+const getPermissions = (person) => (<li>{AuthConstants.GET_ROLE_NAME(person)}</li>);
 
 const myMapDispatchToProps = {
     updateToken: updateToken,

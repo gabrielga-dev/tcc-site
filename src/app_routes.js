@@ -18,20 +18,25 @@ import {SelectPersonRolePage} from "./pages/new/noauth/create_person/select_pers
 import {ValidateEmailPage} from "./pages/new/noauth/validate_email/validate_email.page";
 import {RequestPasswordChangePage} from "./pages/new/noauth/password_change/request_password_change.page";
 import {ChangePasswordPage} from "./pages/new/noauth/password_change/change_password.page";
+import AuthenticatedPersonProfilePage from "./pages/new/auth/person/profile/authenticated_person_profile.page";
+import ChangeEmailPage from "./pages/new/both/change_email.page";
+import {updateToken} from "./service/redux/action/token.action";
+import {updateUser} from "./service/redux/action/user.action";
 
-const AppRoutes = ({token, user}) => {
+const AppRoutes = ({token}) => {
     return (
         <BrowserRouter>
             <Routes>
                 <Route element={<HomePage/>} path="/"/>
-                <Route element={<SearchServicesPage/>} path="/servicos"/>
-                <Route element={<SearchBandsPage/>} path="/servicos/bandas"/>
-                <Route element={<BandProfilePage/>} path="/servicos/bandas/:uuid"/>
+                <Route element={<ChangeEmailPage/>} path="/mudar-email"/>
                 {
                     (token)
                         ? authRoutes()
                         : nonAuthRoutes()
                 }
+                <Route element={<SearchServicesPage/>} path="/servicos"/>
+                <Route element={<SearchBandsPage/>} path="/servicos/bandas"/>
+                <Route element={<BandProfilePage/>} path="/servicos/bandas/:uuid"/>
                 <Route element={<h1>Página não encontrada</h1>} path="*"/>
             </Routes>
         </BrowserRouter>
@@ -40,6 +45,9 @@ const AppRoutes = ({token, user}) => {
 
 const authRoutes = () => (
     <>
+        <Route element={<AuthenticatedPersonProfilePage/>} path="/meu-perfil"/>
+        <Route element={<ChangeEmailPage/>} path="/mudar-email/:validation_uuid"/>
+
         <Route element={<SearchAuthenticatedServices/>} path="/meus-servicos"/>
         <Route element={<SearchAuthenticatedPersonBandsPage/>} path="/meus-servicos/banda"/>
         <Route element={<CreateServicePage/>} path="/servico/criar"/>
@@ -73,4 +81,9 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(AppRoutes);
+const myMapDispatchToProps = {
+    updateToken: updateToken,
+    updateUser: updateUser,
+};
+
+export default connect(mapStateToProps, myMapDispatchToProps)(AppRoutes);
