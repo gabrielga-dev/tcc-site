@@ -34,17 +34,7 @@ const PerfilDialogComponent = ({authenticatedUser, showDialog, hideDialog, updat
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
-                        <Button
-                            label="Minha conta"
-                            icon="pi pi-user"
-                            style={StyleConstants.WIDTH_100_PERCENT}
-                            onClick={() => navigateTo('/meu-perfil')}
-                        />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
+                    <Col md={12} lg={6} style={{marginBottom: 25}}>
                         <Button
                             label="Sair"
                             icon="pi pi-power-off"
@@ -59,6 +49,14 @@ const PerfilDialogComponent = ({authenticatedUser, showDialog, hideDialog, updat
                                     navigateTo('/login')
                                 }
                             }/>
+                    </Col>
+                    <Col md={12} lg={6}>
+                        <Button
+                            label="Minha conta"
+                            icon="pi pi-user"
+                            style={StyleConstants.WIDTH_100_PERCENT}
+                            onClick={() => navigateTo('/meu-perfil')}
+                        />
                     </Col>
                 </Row>
             </Container>
@@ -83,15 +81,7 @@ const getSalutation = () => {
     return salutation;
 }
 
-const getPermissions = (person) => {
-    if (person.roles.some(role => (role.name === 'BAND'))) {
-        return (<li>Responsável por bandas</li>);
-    } else if (person.roles.some(role => (role.name === 'MUSICIAN'))) {
-        return (<li>Músico autônomo</li>);
-    } else if (person.roles.some(role => (role.name === 'CONTRACTOR'))) {
-        return (<li>Contratante de serviços</li>);
-    }
-}
+const getPermissions = (person) => (<li>{AuthConstants.GET_ROLE_NAME(person)}</li>);
 
 const myMapDispatchToProps = {
     updateToken: updateToken,

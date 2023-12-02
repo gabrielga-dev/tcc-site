@@ -11,6 +11,7 @@ import {Divider} from "primereact/divider";
 import ProfileInformationPage from "./profile_information.page";
 import {Toast} from "primereact/toast";
 import ChangePersonEmailPage from "./change_person_email.page";
+import PersonRoleInformationPage from "./person_role_information.page";
 
 const AuthenticatedPersonProfilePage = ({token, user}) => {
     const toast = useRef(null);
@@ -120,7 +121,7 @@ class _AuthenticatedPersonProfilePage extends React.Component {
             case 2:
                 return (<ChangePersonEmailPage showToast={showToast}/>);
             case 3:
-                return (<h1>3</h1>);
+                return (<PersonRoleInformationPage />);
         }
     }
 }
