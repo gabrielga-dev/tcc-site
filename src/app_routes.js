@@ -22,8 +22,9 @@ import AuthenticatedPersonProfilePage from "./pages/new/auth/person/profile/auth
 import ChangeEmailPage from "./pages/new/both/change_email.page";
 import {updateToken} from "./service/redux/action/token.action";
 import {updateUser} from "./service/redux/action/user.action";
+import ListBandsPage from "./pages/new/auth/band/list/list_bands.page";
 
-const AppRoutes = ({token}) => {
+const AppRoutes = ({token, user}) => {
     return (
         <BrowserRouter>
             <Routes>
@@ -31,7 +32,7 @@ const AppRoutes = ({token}) => {
                 <Route element={<ChangeEmailPage/>} path="/mudar-email"/>
                 {
                     (token)
-                        ? authRoutes()
+                        ? authRoutes(user)
                         : nonAuthRoutes()
                 }
                 <Route element={<SearchServicesPage/>} path="/servicos"/>
@@ -43,10 +44,12 @@ const AppRoutes = ({token}) => {
     );
 }
 
-const authRoutes = () => (
+const authRoutes = (user) => (
     <>
         <Route element={<AuthenticatedPersonProfilePage/>} path="/meu-perfil"/>
         <Route element={<ChangeEmailPage/>} path="/mudar-email/:validation_uuid"/>
+
+        {generateBandOwnerRoutes(user)}
 
         <Route element={<SearchAuthenticatedServices/>} path="/meus-servicos"/>
         <Route element={<SearchAuthenticatedPersonBandsPage/>} path="/meus-servicos/banda"/>
@@ -58,6 +61,17 @@ const authRoutes = () => (
         <Route element={<UploadMusicianProfilePage/>} path="/servicos/bandas/:bandUuid/musico/:musicianUuid/editar"/>
     </>
 )
+
+const generateBandOwnerRoutes = (user) => (
+    (!user.roles.some(role => (role.name === 'BAND')))
+        ? (<></>)
+        : (
+            <>
+                <Route element={<ListBandsPage/>} path="/bandas"/>
+            </>
+        )
+
+);
 
 const nonAuthRoutes = () => (
     <>
