@@ -79,7 +79,7 @@ const generateBandOwnerOptions = (updateToken, updateUser, redirectTo) => (
                 {
                     label: 'Cadastrar',
                     icon: 'pi pi-fw pi-plus',
-                    command: () => redirectTo('/bandas/criar')
+                    command: () => redirectTo('/bandas/cadastrar')
                 },
                 {
                     label: 'Minhas bandas',

@@ -1,9 +1,9 @@
 import {Col, Container, Row} from "react-bootstrap";
-import {ActivityIndicatorComponent} from "../../../../../components/activity_indicator.component";
+import {ActivityIndicatorComponent} from "../../../../../../components/activity_indicator.component";
 import {Card} from "primereact/card";
-import {FileService} from "../../../../../service/new/file.service";
+import {FileService} from "../../../../../../service/new/file.service";
 import {Button} from "primereact/button";
-import {StyleConstants} from "../../../../../service/style.constants";
+import {StyleConstants} from "../../../../../../service/style.constants";
 
 export const ListBandTableComponent = ({bands, navigateTo, isLoading}) => {
     if (isLoading) {
@@ -38,7 +38,7 @@ const generateBandCard = (band, navigateTo) => (
 const generateBandCardHeader = (profilePictureUuid) => (
     <div style={{width: '100%', textAlign: 'center'}}>
         <img
-            style={{ width: '150px', height: 'auto' }}
+            style={StyleConstants.IMAGE_STYLE}
             alt="Card"
             src={FileService.GET_IMAGE_URL(profilePictureUuid)}
             onError={(e) => e.target.src = 'images/band_default_icon.png'}
