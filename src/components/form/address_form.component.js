@@ -31,6 +31,10 @@ export class AddressFormComponent extends React.Component {
         }
     }
 
+    resetRequest() {
+        this.setState({request: new AddressRequest()})
+    }
+
     componentDidMount() {
         this.setState({isLoading: true});
 
@@ -56,9 +60,6 @@ export class AddressFormComponent extends React.Component {
             number,
             neighbour,
             complement,
-            cityId,
-            stateIso,
-            countryIso,
             zipCode,
         } = this.state.request;
         let {

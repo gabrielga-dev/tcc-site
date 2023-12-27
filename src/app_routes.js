@@ -22,7 +22,7 @@ import ChangeEmailPage from "./pages/new/both/change_email.page";
 import {updateToken} from "./service/redux/action/token.action";
 import {updateUser} from "./service/redux/action/user.action";
 import ListBandsPage from "./pages/new/auth/band/list/list_bands.page";
-import {CreateBandPage} from "./pages/new/auth/band/create/create_band.page";
+import CreateBandPage from "./pages/new/auth/band/create/create_band.page";
 
 const AppRoutes = ({token, user}) => {
     return (

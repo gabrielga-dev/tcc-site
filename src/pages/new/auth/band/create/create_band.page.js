@@ -12,8 +12,14 @@ import {TextAreaComponent} from "../../../../../components/form/input/text_area.
 import {Divider} from "primereact/divider";
 import {AddressFormComponent} from "../../../../../components/form/address_form.component";
 import {BandContactComponent} from "../band_contact.component";
+import {FormEndingComponent} from "../../../../../components/form_ending.component";
+import {ConfirmDialog} from "primereact/confirmdialog";
+import {ActivityIndicatorComponent} from "../../../../../components/activity_indicator.component";
+import ValidationUtil from "../../../../../util/validation/validation.util";
+import {ToastUtils} from "../../../../../util/toast.utils";
+import {BandService} from "../../../../../service/new/band.service";
 
-export const CreateBandPage = ({token, user}) => {
+const CreateBandPage = ({token, user}) => {
     const toast = useRef(null);
     const showToast = (body) => {
         toast.current.show(body);
@@ -40,7 +46,10 @@ class _CreateBandPage extends React.Component {
     constructor(props) {
         super(props)
 
+        this.addressComponentRef = React.createRef();
         this.state = {
+            isLoading: false,
+
             token: props.token,
             authenticatedUser: props.authenticatedUser,
 
@@ -55,6 +64,9 @@ class _CreateBandPage extends React.Component {
     }
 
     render() {
+        if (this.state.isLoading) {
+            return (<ActivityIndicatorComponent/>);
+        }
         return (
             <HomeTemplate steps={['Home', 'Bandas', 'Cadastrar']}>
                 <Card>
@@ -73,6 +85,10 @@ class _CreateBandPage extends React.Component {
                         <Row>
                             {this.renderBandContactSection()}
                         </Row>
+                        <Divider align="center"><span>Submeter</span></Divider>
+                        <Row>
+                            {this.renderFormEnding()}
+                        </Row>
                     </Container>
                 </Card>
             </HomeTemplate>
@@ -90,7 +106,7 @@ class _CreateBandPage extends React.Component {
                         alt={pictureUrl ? 'Imagem selecionada' : 'Imagem padrão'}
                         onRemovePicture={() => this.setState({picture: null, pictureUrl: null})}
                         onUploadPicture={(newPicture) => {
-                            const newPictureUrl = URL.createObjectURL(newPicture)
+                            const newPictureUrl = URL.createObjectURL(newPicture);
                             this.setState({picture: newPicture, pictureUrl: newPictureUrl})
                         }}
                     />
@@ -132,6 +148,7 @@ class _CreateBandPage extends React.Component {
     renderBandAddressSection() {
         return (
             <AddressFormComponent
+                ref={this.addressComponentRef}
                 showToast={this.state.showToast}
                 updateRequest={(newAddress) => this.setAddress(newAddress)}
             />
@@ -146,6 +163,73 @@ class _CreateBandPage extends React.Component {
                 currentContacts={this.state.request.contacts}
             />
         );
+    }
+
+    renderFormEnding() {
+        let {clearDialogVisible} = this.state;
+        return (
+            <>
+                <Col sm={0} md={6}/>
+                <Col sm={12} md={6}>
+                    <ConfirmDialog
+                        visible={clearDialogVisible}
+                        onHide={() => this.setState({clearDialogVisible: false})}
+                        header="Confirmação"
+                        message="Deseja apagar os dados inseridos até agora?"
+                        acceptLabel="Sim"
+                        rejectLabel="Não"
+                        icon="pi pi-exclamation-triangle"
+                        accept={() => {
+                            this.addressComponentRef.current.resetRequest();
+                            this.setState({
+                                clearDialogVisible: false,
+                                request: new BandRequest(),
+                                picture: null,
+                                pictureUrl: null
+                            })
+                        }}
+                        reject={() => this.setState({clearDialogVisible: false})}
+                    />
+                    <FormEndingComponent
+                        showFirst={false}
+                        onClickSecond={() => this.setState({clearDialogVisible: true})}
+                        onClickThird={() => this.submitRequest()}
+                    />
+                </Col>
+            </>
+        );
+    }
+
+    submitRequest() {
+        this.setState({isLoading: true});
+        const validator = new ValidationUtil();
+        let {request, picture, token} = this.state;
+        let errors = validator.validate(request)
+            .concat(validator.validate(request.address));
+        if (request.contacts.some(contact => (validator.validate(contact).length !== 0))) {
+            errors.concat({title: "Campos inválidos", message: "Um dos contatos possuem dados inválidos!"})
+        }
+        if (errors.length > 0) {
+            this.state.showToast(ToastUtils.BUILD_TOAST_FORM_ERROR(errors[0]))
+            this.setState({isLoading: false});
+            return;
+        }
+        BandService.CREATE(request, picture, token)
+            .then(
+                response => {
+                    this.state.showToast(
+                        ToastUtils.BUILD_TOAST_SUCCESS_BODY("Banda criada com sucesso!")
+                    )
+                    this.setState({request: new BandRequest()});
+                    setTimeout(
+                        () => {
+                            this.state.navigateTo('/minhas-bandas')
+                        },
+                        1500
+                    );
+                }
+            ).catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
+            .finally(() => this.setState({isLoading: false}))
     }
 
     setBandValue(field, newValue) {
