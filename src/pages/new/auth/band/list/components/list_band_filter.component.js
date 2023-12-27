@@ -2,15 +2,15 @@ import React from "react";
 import {Accordion, AccordionTab} from "primereact/accordion";
 import {Col, Container, Row} from "react-bootstrap";
 import {InputText} from "primereact/inputtext";
-import {ListBandCriteria} from "../../../../../domain/new/band/criteria/list_band.criteria";
-import {StyleConstants} from "../../../../../service/style.constants";
+import {ListBandCriteria} from "../../../../../../domain/new/band/criteria/list_band.criteria";
+import {StyleConstants} from "../../../../../../service/style.constants";
 import {Dropdown} from "primereact/dropdown";
-import {LocationService} from "../../../../../service/new/location.service";
-import {ToastUtils} from "../../../../../util/toast.utils";
-import {StateResponse} from "../../../../../domain/new/location/response/state.response";
-import {ActivityIndicatorComponent} from "../../../../../components/activity_indicator.component";
-import {CityResponse} from "../../../../../domain/new/location/response/city.response";
-import {FormEndingComponent} from "../../../../../components/form_ending.component";
+import {LocationService} from "../../../../../../service/new/location.service";
+import {ToastUtils} from "../../../../../../util/toast.utils";
+import {StateResponse} from "../../../../../../domain/new/location/response/state.response";
+import {ActivityIndicatorComponent} from "../../../../../../components/activity_indicator.component";
+import {CityResponse} from "../../../../../../domain/new/location/response/city.response";
+import {FormEndingComponent} from "../../../../../../components/form_ending.component";
 
 
 export class ListBandFilterComponent extends React.Component {

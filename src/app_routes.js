@@ -8,7 +8,6 @@ import {SearchServicesPage} from "./pages/new/both/service/search_service_page";
 import {SearchBandsPage} from "./pages/new/both/service/band/search_band_page";
 import BandProfilePage from "./pages/new/both/service/band/band_profile.page";
 import CreateServicePage from "./pages/new/auth/service/create_service.page";
-import CreateBandPage from "./pages/new/auth/service/band/create_band.page";
 import {SearchAuthenticatedServices} from "./pages/new/auth/service/search_authenticated_person_service.page";
 import SearchAuthenticatedPersonBandsPage from "./pages/new/auth/service/band/search_authenticated_person_band.page";
 import EditBandPage from "./pages/new/auth/service/band/edit_band.page";
@@ -23,6 +22,7 @@ import ChangeEmailPage from "./pages/new/both/change_email.page";
 import {updateToken} from "./service/redux/action/token.action";
 import {updateUser} from "./service/redux/action/user.action";
 import ListBandsPage from "./pages/new/auth/band/list/list_bands.page";
+import CreateBandPage from "./pages/new/auth/band/create/create_band.page";
 
 const AppRoutes = ({token, user}) => {
     return (
@@ -54,7 +54,6 @@ const authRoutes = (user) => (
         <Route element={<SearchAuthenticatedServices/>} path="/meus-servicos"/>
         <Route element={<SearchAuthenticatedPersonBandsPage/>} path="/meus-servicos/banda"/>
         <Route element={<CreateServicePage/>} path="/servico/criar"/>
-        <Route element={<CreateBandPage/>} path="/servico/criar/banda"/>
         <Route element={<EditBandPage/>} path="/servicos/bandas/:uuid/editar"/>
         <Route element={<CreateMusicianPage/>} path="/servicos/bandas/:uuid/adicionar-musico"/>
         <Route element={<UploadMusicianProfilePage/>} path="/servicos/bandas/:bandUuid/musico/:musicianUuid/imagem"/>
@@ -68,6 +67,7 @@ const generateBandOwnerRoutes = (user) => (
         : (
             <>
                 <Route element={<ListBandsPage/>} path="/bandas"/>
+                <Route element={<CreateBandPage/>} path="/bandas/cadastrar"/>
             </>
         )
 

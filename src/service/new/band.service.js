@@ -22,9 +22,18 @@ export const BandService = {
     FIND_BAND_BY_UUID: (bandUuid) => {
         return axios.get(`${BASE_URL_BAND}/v1/band/uuid/${bandUuid}`, BaseService.HEADERS);
     },
-    CREATE: (band, token) => (
-        axios.post(`${BASE_URL_BAND}/v1/band`, band, BaseService.MAKE_HEADERS(token))
-    ),
+    CREATE: (band, picture, token) => {
+        const form = new FormData();
+
+        const bandJson = JSON.stringify(band);
+        const bandBlob = new Blob([bandJson], {
+            type: 'application/json'
+        });
+        form.append('request', bandBlob);
+
+        form.append('profilePicture', picture);
+        return axios.post(`${BASE_URL_BAND}/v1/band`, form, BaseService.MAKE_HEADERS(token));
+    },
     UPDATE: (bandUuid, band, token) => (
         axios.put(`${BASE_URL_BAND}/v1/band/${bandUuid}`, band, BaseService.MAKE_HEADERS(token))
     ),

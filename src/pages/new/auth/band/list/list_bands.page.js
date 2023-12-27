@@ -4,15 +4,15 @@ import {Toast} from "primereact/toast";
 import {connect} from "react-redux";
 import HomeTemplate from "../../../template/home_template";
 import {Col, Container, Row} from "react-bootstrap";
-import {BackgroundPanelComponent} from "../../../../../components/background_panel.component";
-import {ListBandFilterComponent} from "./list_band_filter.component";
-import {ListBandTableComponent} from "./list_band_table.component";
+import {ListBandFilterComponent} from "./components/list_band_filter.component";
+import {ListBandTableComponent} from "./components/list_band_table.component";
 import {Paginator} from "primereact/paginator";
 import {PaginationRequest} from "../../../../../domain/new/commom/request/pagination.request";
 import {PageResponse} from "../../../../../domain/new/commom/response/page.response";
 import {BandService} from "../../../../../service/new/band.service";
 import {ToastUtils} from "../../../../../util/toast.utils";
 import {BandResponse} from "../../../../../domain/new/band/response/band.response";
+import {Card} from "primereact/card";
 
 const ListBandsPage = ({token, user}) => {
     const toast = useRef(null);
@@ -81,7 +81,7 @@ class _ListBandsPage extends React.Component {
     render() {
         return (
             <HomeTemplate steps={['Home', 'Bandas']}>
-                <BackgroundPanelComponent>
+                <Card>
                     <Container>
                         <Row>
                             <Col>
@@ -104,7 +104,7 @@ class _ListBandsPage extends React.Component {
                             {this.renderPaginator()}
                         </Row>
                     </Container>
-                </BackgroundPanelComponent>
+                </Card>
             </HomeTemplate>
         );
     }
