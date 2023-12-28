@@ -102,9 +102,6 @@ class _ListBandsPage extends React.Component {
                             </Col>
                         </Row>
                         <Row>
-                            {JSON.stringify(this.state.pageable)}
-                            <br/>
-                            {JSON.stringify(this.state.pagination)}
                             {this.renderPaginator()}
                         </Row>
                     </Container>
