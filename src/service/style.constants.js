@@ -4,7 +4,7 @@ export const StyleConstants = {
     FONT_BOLD: {fontWeight: 'bold'},
     IMAGE_STYLE: {
         width: '150px',
-        height: 'auto',
+        height: '150px',
         borderRadius: 90,
         overflow: 'hidden',
         border: '2px solid #ccc'
