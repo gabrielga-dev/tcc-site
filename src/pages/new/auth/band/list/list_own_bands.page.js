@@ -141,7 +141,11 @@ class _ListOwnBandsPage extends React.Component {
             <img
                 style={StyleConstants.IMAGE_STYLE}
                 alt={`Avatar da banda ${band.name}`}
-                src={FileService.GET_IMAGE_URL(band.profilePictureUuid)}
+                src={
+                    (!band.profilePictureUuid)
+                        ? 'images/band_default_icon.png'
+                        : FileService.GET_IMAGE_URL(band.profilePictureUuid)
+                }
                 onError={(e) => e.target.src = 'images/band_default_icon.png'}
             />
         );

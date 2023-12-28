@@ -52,7 +52,7 @@ class _ListBandsPage extends React.Component {
 
             isTableLoading: false,
             bands: [],
-            pagination: new PaginationRequest(8),
+            pagination: new PaginationRequest(9),
             pageable: new PageResponse(),
         }
     }
