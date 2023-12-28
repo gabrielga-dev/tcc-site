@@ -75,7 +75,7 @@ export class ListBandFilterComponent extends React.Component {
                 <Container>
                     <Row>
                         <Col md={4} sm={12} style={FIELD_MARGIN}>
-                            <h5>Email</h5>
+                            <h5>Nome</h5>
                             <InputText
                                 style={StyleConstants.WIDTH_100_PERCENT}
                                 value={this.state.criteria.name}
