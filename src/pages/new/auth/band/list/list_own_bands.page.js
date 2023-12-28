@@ -59,6 +59,7 @@ class _ListOwnBandsPage extends React.Component {
             bands: [],
             pagination: new PaginationRequest(5),
             pageable: new PageResponse(),
+            first: 0,
         }
     }
 
@@ -120,13 +121,14 @@ class _ListOwnBandsPage extends React.Component {
                         </Row>
                         <Row>
                             <Paginator
+                                first={this.state.first}
                                 number={pagination.page}
                                 rows={pagination.quantityPerPage}
                                 totalRecords={pageable.totalElements}
                                 onPageChange={(e) => {
                                     let {pagination} = this.state;
                                     pagination.page = e.page;
-                                    this.setState({pagination})
+                                    this.setState({pagination: pagination, first: e.first})
                                     this.findBands()
                                 }}/>
                         </Row>
