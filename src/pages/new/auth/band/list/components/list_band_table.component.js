@@ -9,7 +9,7 @@ export const ListBandTableComponent = ({bands, navigateTo, isLoading}) => {
     if (isLoading) {
         return (<ActivityIndicatorComponent/>)
     }
-    if(bands.length === 0){
+    if (bands.length === 0) {
         return (<h4 align="center">Nenhuma banda encontrada 😢</h4>);
     }
     return (
@@ -40,7 +40,11 @@ const generateBandCardHeader = (profilePictureUuid) => (
         <img
             style={StyleConstants.IMAGE_STYLE}
             alt="Card"
-            src={FileService.GET_IMAGE_URL(profilePictureUuid)}
+            src={
+                (!profilePictureUuid)
+                    ? 'images/band_default_icon.png'
+                    : FileService.GET_IMAGE_URL(profilePictureUuid)
+            }
             onError={(e) => e.target.src = 'images/band_default_icon.png'}
         />
     </div>

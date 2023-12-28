@@ -23,6 +23,7 @@ import {updateToken} from "./service/redux/action/token.action";
 import {updateUser} from "./service/redux/action/user.action";
 import ListBandsPage from "./pages/new/auth/band/list/list_bands.page";
 import CreateBandPage from "./pages/new/auth/band/create/create_band.page";
+import ListOwnBandsPage from "./pages/new/auth/band/list/list_own_bands.page";
 
 const AppRoutes = ({token, user}) => {
     return (
@@ -67,6 +68,7 @@ const generateBandOwnerRoutes = (user) => (
         : (
             <>
                 <Route element={<ListBandsPage/>} path="/bandas"/>
+                <Route element={<ListOwnBandsPage/>} path="/minhas-bandas"/>
                 <Route element={<CreateBandPage/>} path="/bandas/cadastrar"/>
             </>
         )
