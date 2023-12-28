@@ -18,6 +18,7 @@ import {FileService} from "../../../../../service/new/file.service";
 import {Button} from "primereact/button";
 import './list_own_bands.style.css'
 import {Paginator} from "primereact/paginator";
+import {ConfirmDialog} from "primereact/confirmdialog";
 
 const ListOwnBandsPage = ({token, user}) => {
     const toast = useRef(null);
@@ -60,6 +61,8 @@ class _ListOwnBandsPage extends React.Component {
             pagination: new PaginationRequest(5),
             pageable: new PageResponse(),
             first: 0,
+
+            showingToggleActiveStatusDialog: false,
         }
     }
 
@@ -79,6 +82,14 @@ class _ListOwnBandsPage extends React.Component {
                     this.setState({bands: bands, pageable: newPageable});
                 }
             ).catch(error => showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
+            .finally(() => this.setState({isTableLoading: false}))
+    }
+
+    toggleBandStatus(bandUuid) {
+        this.setState({isTableLoading: true});
+        BandService.TOGGLE_BAND_ACTIVITY_FLAG(bandUuid, this.state.token)
+            .then(() => this.findBands())
+            .catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
             .finally(() => this.setState({isTableLoading: false}))
     }
 
@@ -115,7 +126,11 @@ class _ListOwnBandsPage extends React.Component {
                                         body={this.renderBandAvatar}
                                     />
                                     <Column style={{width: '60%'}} field="name" header="Nome"/>
-                                    <Column style={{width: '20%'}} header="Ações" body={this.renderBandActions}/>
+                                    <Column
+                                        style={{width: '20%'}}
+                                        header="Ações"
+                                        body={(band) => this.renderBandActions(band)}
+                                    />
                                 </DataTable>
                             </Col>
                         </Row>
@@ -132,9 +147,36 @@ class _ListOwnBandsPage extends React.Component {
                                     this.findBands()
                                 }}/>
                         </Row>
+                        {this.renderToggleBandStatusDialog()}
                     </Container>
                 </Card>
             </HomeTemplate>
+        );
+    }
+
+    renderToggleBandStatusDialog() {
+        let {showingToggleActiveStatusDialog, selectedBand} = this.state;
+        return (
+            <ConfirmDialog
+                visible={showingToggleActiveStatusDialog}
+                onHide={() => this.setState({showingToggleActiveStatusDialog: false, selectedBand: null})}
+                message={
+                    selectedBand?.active
+                        ? "Você quer mesmo desativar esta banda?"
+                        : "Você quer mesmo ativar esta banda?"
+                }
+                header={
+                    selectedBand?.active
+                        ? "Desativar banda?"
+                        : "Ativar banda?"
+                }
+                acceptLabel="Sim"
+                rejectLabel="Não"
+                icon="pi pi-exclamation-triangle"
+                accept={() => this.toggleBandStatus(selectedBand.uuid)}
+                reject={() => {
+                }}
+            />
         );
     }
 
@@ -178,6 +220,11 @@ class _ListOwnBandsPage extends React.Component {
                                 band.active
                                     ? "p-button-rounded p-button-danger"
                                     : "p-button-rounded p-button-success"
+                            }
+                            onClick={
+                                () => this.setState(
+                                    {showingToggleActiveStatusDialog: true, selectedBand: band}
+                                )
                             }
                         />
                     </Col>

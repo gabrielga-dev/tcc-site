@@ -38,7 +38,7 @@ export const BandService = {
         axios.put(`${BASE_URL_BAND}/v1/band/${bandUuid}`, band, BaseService.MAKE_HEADERS(token))
     ),
     TOGGLE_BAND_ACTIVITY_FLAG: (bandUuid, token) => (
-        axios.delete(`${BASE_URL_BAND}/v1/band/uuid/${bandUuid}`, BaseService.MAKE_HEADERS(token))
+        axios.patch(`${BASE_URL_BAND}/v1/band/${bandUuid}/toggle`, null,  BaseService.MAKE_HEADERS(token))
     ),
     UPLOAD_PROFILE_PICTURE: (bandUuid, data, token) => {
         const form = new FormData();
