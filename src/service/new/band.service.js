@@ -34,11 +34,15 @@ export const BandService = {
         form.append('profilePicture', picture);
         return axios.post(`${BASE_URL_BAND}/v1/band`, form, BaseService.MAKE_HEADERS(token));
     },
+    TOGGLE_BAND_ACTIVITY_FLAG: (bandUuid, token) => (
+        axios.patch(`${BASE_URL_BAND}/v1/band/${bandUuid}/toggle`, null, BaseService.MAKE_HEADERS(token))
+    ),
+    FIND_PROFILE: (bandUuid, token) => (
+        axios.get(`${BASE_URL_BAND}/v1/band/${bandUuid}/profile`, BaseService.MAKE_HEADERS(token))
+    ),
+
     UPDATE: (bandUuid, band, token) => (
         axios.put(`${BASE_URL_BAND}/v1/band/${bandUuid}`, band, BaseService.MAKE_HEADERS(token))
-    ),
-    TOGGLE_BAND_ACTIVITY_FLAG: (bandUuid, token) => (
-        axios.patch(`${BASE_URL_BAND}/v1/band/${bandUuid}/toggle`, null,  BaseService.MAKE_HEADERS(token))
     ),
     UPLOAD_PROFILE_PICTURE: (bandUuid, data, token) => {
         const form = new FormData();
