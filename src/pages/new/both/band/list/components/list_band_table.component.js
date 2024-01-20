@@ -56,6 +56,6 @@ const generateBandCardFooter = (bandUuid, navigateTo) => (
         label="Ver perfil"
         icon="pi pi-user"
         className="p-button-sm"
-        onClick={() => navigateTo(`/banda/perfil/${bandUuid}`)}
+        onClick={() => navigateTo(`/servicos/bandas/${bandUuid}`)}
     />
 );

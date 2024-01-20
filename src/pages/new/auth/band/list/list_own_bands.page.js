@@ -7,7 +7,7 @@ import {PaginationRequest} from "../../../../../domain/new/commom/request/pagina
 import {PageResponse} from "../../../../../domain/new/commom/response/page.response";
 import {Card} from "primereact/card";
 import {Col, Container, Row} from "react-bootstrap";
-import {ListBandFilterComponent} from "./components/list_band_filter.component";
+import {ListBandFilterComponent} from "../../../both/band/list/components/list_band_filter.component";
 import {BandService} from "../../../../../service/new/band.service";
 import {ToastUtils} from "../../../../../util/toast.utils";
 import {DataTable} from "primereact/datatable";
@@ -205,6 +205,7 @@ class _ListOwnBandsPage extends React.Component {
                             tooltipOptions={{position: 'top'}}
                             icon="pi pi-user"
                             className="p-button-rounded p-button-info"
+                            onClick={() => this.state.navigateTo(`/servicos/bandas/${band.uuid}`)}
                         />
                     </Col>
                     <Col sm={12} md={4} style={{marginBottom: 10}}>
