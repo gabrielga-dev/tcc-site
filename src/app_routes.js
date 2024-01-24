@@ -1,29 +1,29 @@
 import React from "react";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import {CreateAccountPage} from "./pages/new/noauth/create_person/create_account.page";
+import {CreateAccountPage} from "./pages/noauth/create_person/create_account.page";
 import {connect} from "react-redux";
-import LoginPage from "./pages/new/noauth/login_page";
-import HomePage from "./pages/new/both/home_page";
-import {SearchServicesPage} from "./pages/new/both/service/search_service_page";
-import {SearchBandsPage} from "./pages/new/both/service/band/search_band_page";
-import CreateServicePage from "./pages/new/auth/service/create_service.page";
-import {SearchAuthenticatedServices} from "./pages/new/auth/service/search_authenticated_person_service.page";
-import SearchAuthenticatedPersonBandsPage from "./pages/new/auth/service/band/search_authenticated_person_band.page";
-import EditBandPage from "./pages/new/auth/service/band/edit_band.page";
-import CreateMusicianPage from "./pages/new/auth/service/band/musician/create_musician.page";
-import UploadMusicianProfilePage from "./pages/new/auth/service/band/musician/musician_profile_picture.page";
-import {SelectPersonRolePage} from "./pages/new/noauth/create_person/select_person_role.page";
-import {ValidateEmailPage} from "./pages/new/noauth/validate_email/validate_email.page";
-import {RequestPasswordChangePage} from "./pages/new/noauth/password_change/request_password_change.page";
-import {ChangePasswordPage} from "./pages/new/noauth/password_change/change_password.page";
-import AuthenticatedPersonProfilePage from "./pages/new/auth/person/profile/authenticated_person_profile.page";
-import ChangeEmailPage from "./pages/new/both/change_email.page";
+import LoginPage from "./pages/noauth/login_page";
+import HomePage from "./pages/both/home_page";
+import {SearchServicesPage} from "./pages/both/service/search_service_page";
+import {SearchBandsPage} from "./pages/both/service/band/search_band_page";
+import CreateServicePage from "./pages/auth/service/create_service.page";
+import {SearchAuthenticatedServices} from "./pages/auth/service/search_authenticated_person_service.page";
+import SearchAuthenticatedPersonBandsPage from "./pages/auth/service/band/search_authenticated_person_band.page";
+import EditBandPage from "./pages/auth/service/band/edit_band.page";
+import CreateMusicianPage from "./pages/auth/service/band/musician/create_musician.page";
+import UploadMusicianProfilePage from "./pages/auth/service/band/musician/musician_profile_picture.page";
+import {SelectPersonRolePage} from "./pages/noauth/create_person/select_person_role.page";
+import {ValidateEmailPage} from "./pages/noauth/validate_email/validate_email.page";
+import {RequestPasswordChangePage} from "./pages/noauth/password_change/request_password_change.page";
+import {ChangePasswordPage} from "./pages/noauth/password_change/change_password.page";
+import AuthenticatedPersonProfilePage from "./pages/auth/person/profile/authenticated_person_profile.page";
+import ChangeEmailPage from "./pages/both/change_email.page";
 import {updateToken} from "./service/redux/action/token.action";
 import {updateUser} from "./service/redux/action/user.action";
-import ListBandsPage from "./pages/new/both/band/list/list_bands.page";
-import CreateBandPage from "./pages/new/auth/band/create/create_band.page";
-import ListOwnBandsPage from "./pages/new/auth/band/list/list_own_bands.page";
-import BandProfilePage from "./pages/new/both/band/profile/band_profile.page";
+import ListBandsPage from "./pages/both/band/list/list_bands.page";
+import CreateBandPage from "./pages/auth/band/create/create_band.page";
+import ListOwnBandsPage from "./pages/auth/band/list/list_own_bands.page";
+import BandProfilePage from "./pages/both/band/profile/band_profile.page";
 
 const AppRoutes = ({token, user}) => {
     return (
@@ -70,6 +70,7 @@ const generateBandOwnerRoutes = (user) => (
                 <Route element={<ListBandsPage/>} path="/bandas"/>
                 <Route element={<ListOwnBandsPage/>} path="/minhas-bandas"/>
                 <Route element={<CreateBandPage/>} path="/bandas/cadastrar"/>
+                <Route element={<CreateBandPage/>} path="/bandas/:band_uuid/editar"/>
             </>
         )
 

@@ -21,7 +21,7 @@ export class AddressFormComponent extends React.Component {
             showToast: props.showToast,
 
             updateRequest: props.updateRequest ? props.updateRequest : (x) => console.log(x),
-            request: props.address ? this.props.request : new AddressRequest(),
+            request: this.props.address ? this.props.address : new AddressRequest(),
 
             selectedState: null,
             states: [],
@@ -35,19 +35,31 @@ export class AddressFormComponent extends React.Component {
         this.setState({request: new AddressRequest()})
     }
 
+    setRequest(address) {
+        this.setState({request: address});
+        this.componentDidMount()
+    }
+
     componentDidMount() {
         this.setState({isLoading: true});
 
-        let {showToast} = this.state;
+        let {showToast, request} = this.state;
+
         LocationService.GET_BRAZIL_STATES()
             .then(
                 response => {
                     let newStates = response.data.map(state => (new StateResponse(state)));
                     this.setState({states: newStates});
+                    if (!!request.state) {
+                        this.setField('stateIso', request.state)
+                        this.setState({
+                            selectedState: newStates.filter(stt => (stt.iso2 === request.state))[0]
+                        });
+                        this.getCities(request.state)
+                    }
                 }
-            ).catch(error => {
-            showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error))
-        }).finally(() => this.setState({isLoading: false}))
+            ).catch(error => showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
+            .finally(() => this.setState({isLoading: false}))
     }
 
     render() {
@@ -162,12 +174,18 @@ export class AddressFormComponent extends React.Component {
 
     getCities(stateIso) {
         this.setState({isLoading: true});
-        let {showToast} = this.state;
+        let {showToast, request} = this.state;
         LocationService.GET_STATE_CITIES(stateIso)
             .then(
                 response => {
                     let newCities = response.data.map(city => (new CityResponse(city)));
                     this.setState({cities: newCities});
+                    if (!!request.cityId) {
+                        this.setState({
+                            selectedCity: newCities.filter(city => (city.id === request.cityId))[0]
+                        });
+                        this.setField('cityId', request.cityId);
+                    }
                 }
             ).catch(error => {
             showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error))
