@@ -11,6 +11,7 @@ import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import ValidationUtil from "../../../util/validation/validation.util";
 import {ToastUtils} from "../../../util/toast.utils";
+import {ContactService} from "../../../service/new/contact.service";
 
 
 export class BandContactComponent extends React.Component {
@@ -21,6 +22,9 @@ export class BandContactComponent extends React.Component {
             .map(type => ({label: ContactType[type].NAME, value: type}));
 
         this.state = {
+            bandUuid: this.props.bandUuid,
+            token: this.props.token,
+
             isEditing: !!props.isEditing,
 
             isLoading: false,
@@ -38,7 +42,15 @@ export class BandContactComponent extends React.Component {
         }
     }
 
-    removeContact(index) {
+    removeContact(value, index) {
+        if (!!value.uuid) {
+            this.setState({isLoading: true});
+            ContactService.DELETE_CONTACT(this.state.bandUuid, value.uuid, this.state.token)
+                .then(response => {
+                })
+                .catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_FORM_ERROR(error)))
+                .finally(() => this.setState({isLoading: false}))
+        }
         let {insertedContacts} = this.state;
         insertedContacts.splice(index, 1);
         this.setState({insertedContacts: insertedContacts});
@@ -51,15 +63,27 @@ export class BandContactComponent extends React.Component {
     }
 
     insertRequest() {
-        let {validator, insertedContacts, request} = this.state;
+        let {validator, insertedContacts, request, isEditing, bandUuid, token} = this.state;
         let errors = validator.validate(request);
         if (errors.length > 0) {
             this.state.showToast(ToastUtils.BUILD_TOAST_FORM_ERROR(errors[0]))
             return;
         }
-        insertedContacts.push(request);
-        this.setState({insertedContacts: insertedContacts});
-        this.cleanRequest()
+        if (isEditing) {
+            this.setState({isLoading: true})
+            ContactService.CREATE(request, bandUuid, token)
+                .then(response => {
+                    insertedContacts.push(request);
+                    this.setState({insertedContacts: insertedContacts});
+                    this.cleanRequest()
+                })
+                .catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_FORM_ERROR(error)))
+                .finally(() => this.setState({isLoading: false}))
+        } else {
+            insertedContacts.push(request);
+            this.setState({insertedContacts: insertedContacts});
+            this.cleanRequest()
+        }
     }
 
     render() {
@@ -193,7 +217,7 @@ export class BandContactComponent extends React.Component {
         );
     }
 
-    updateTypeOnIndex(newType, index){
+    updateTypeOnIndex(newType, index) {
         let {insertedContacts} = this.state;
         insertedContacts[index].type = newType;
         this.setState({insertedContacts: insertedContacts});
@@ -212,7 +236,7 @@ export class BandContactComponent extends React.Component {
         );
     }
 
-    updateContentOnIndex(newContent, index){
+    updateContentOnIndex(newContent, index) {
         let {insertedContacts} = this.state;
         insertedContacts[index].content = newContent;
         this.setState({insertedContacts: insertedContacts});
@@ -229,11 +253,19 @@ export class BandContactComponent extends React.Component {
                                 className="p-button-rounded p-button-success"
                                 style={{marginRight: 10}}
                                 onClick={() => {
-                                    let {validator} = this.state;
+                                    let {validator, bandUuid, token, showToast} = this.state;
                                     let errors = validator.validate(value);
                                     if (errors.length > 0) {
-                                        this.state.showToast(ToastUtils.BUILD_TOAST_FORM_ERROR(errors[0]))
+                                        showToast(ToastUtils.BUILD_TOAST_FORM_ERROR(errors[0]))
                                         return;
+                                    }
+                                    if (!!value.uuid) {
+                                        this.setState({isLoading: true});
+                                        ContactService.UPDATE(value, bandUuid, value.uuid, token)
+                                            .then(response => {
+                                            })
+                                            .catch(error => showToast(ToastUtils.BUILD_TOAST_FORM_ERROR(error)))
+                                            .finally(() => this.setState({isLoading: false}))
                                     }
                                     this.setState({isEditingIndex: null})
                                 }}
@@ -256,7 +288,7 @@ export class BandContactComponent extends React.Component {
                         <Button
                             icon="pi pi-trash"
                             className="p-button-rounded p-button-danger"
-                            onClick={() => this.removeContact(index)}
+                            onClick={() => this.removeContact(value, index)}
                         />
                     </Col>
                 </Row>

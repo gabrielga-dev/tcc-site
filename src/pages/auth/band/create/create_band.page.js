@@ -19,6 +19,7 @@ import ValidationUtil from "../../../../util/validation/validation.util";
 import {ToastUtils} from "../../../../util/toast.utils";
 import {BandService} from "../../../../service/new/band.service";
 import {BandProfileDto} from "../../../../domain/new/dto/band/band_profile.dto";
+import {ContactRequest} from "../../../../domain/new/contact/request/contact.request";
 
 const CreateBandPage = ({token, user}) => {
     const toast = useRef(null);
@@ -51,6 +52,7 @@ class _CreateBandPage extends React.Component {
         super(props)
 
         this.addressComponentRef = React.createRef();
+        this.contactComponentRef = React.createRef();
         this.state = {
             bandUuid: props.bandUuid,
             isEditing: !!props.bandUuid,
@@ -91,6 +93,8 @@ class _CreateBandPage extends React.Component {
                     request.address.state = address.state;
                     request.address.zipCode = address.zipCode;
 
+                    request.contacts = profile.contacts.map(contact => (new ContactRequest(contact)))
+
                     try {
                         this.addressComponentRef.current.setRequest(request.address);
                     } catch (e) {
@@ -115,9 +119,6 @@ class _CreateBandPage extends React.Component {
             <HomeTemplate steps={['Home', 'Bandas', 'Cadastrar']}>
                 <Card>
                     <Container>
-                        <Row>
-                            {JSON.stringify(this.state.request)}
-                        </Row>
                         <Row>
                             {this.renderPictureSection()}
                         </Row>
@@ -206,7 +207,10 @@ class _CreateBandPage extends React.Component {
     renderBandContactSection() {
         return (
             <BandContactComponent
-                isEditing={false}
+                bandUuid={this.state.bandUuid}
+                token={this.state.token}
+                ref={this.contactComponentRef}
+                isEditing={this.state.isEditing}
                 showToast={this.state.showToast}
                 currentContacts={this.state.request.contacts}
             />
