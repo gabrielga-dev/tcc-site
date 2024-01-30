@@ -6,6 +6,7 @@ export class BandRequest {
     description = '';
     address = new AddressRequest();
     contacts = [];
+    clearProfilePicture = false;
 
     constructor(request = null) {
         if (request) {

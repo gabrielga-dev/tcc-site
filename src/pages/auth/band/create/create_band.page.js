@@ -20,6 +20,7 @@ import {ToastUtils} from "../../../../util/toast.utils";
 import {BandService} from "../../../../service/new/band.service";
 import {BandProfileDto} from "../../../../domain/new/dto/band/band_profile.dto";
 import {ContactRequest} from "../../../../domain/new/contact/request/contact.request";
+import {FileService} from "../../../../service/new/file.service";
 
 const CreateBandPage = ({token, user}) => {
     const toast = useRef(null);
@@ -82,6 +83,9 @@ class _CreateBandPage extends React.Component {
                     const profile = new BandProfileDto(response.data);
                     request.name = profile.name
                     request.description = profile.description;
+                    pictureUrl = profile.profilePictureUuid
+                        ? FileService.GET_IMAGE_URL(profile.profilePictureUuid)
+                        : null;
 
                     const address = profile.address;
                     request.address.street = address.street;
@@ -92,7 +96,6 @@ class _CreateBandPage extends React.Component {
                     request.address.stateIso = address.state;
                     request.address.state = address.state;
                     request.address.zipCode = address.zipCode;
-
                     request.contacts = profile.contacts.map(contact => (new ContactRequest(contact)))
 
                     try {
@@ -102,7 +105,8 @@ class _CreateBandPage extends React.Component {
                     }
 
                     this.setState({
-                        request: request
+                        request: request,
+                        pictureUrl: pictureUrl
                     });
                 }).catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
                 .finally(() => this.setState({isLoading: false}))
@@ -144,7 +148,7 @@ class _CreateBandPage extends React.Component {
     }
 
     renderPictureSection() {
-        let {pictureUrl} = this.state;
+        let {pictureUrl, isEditing} = this.state;
         return (
             <>
                 <Col sm={0} md={3}/>
@@ -152,10 +156,24 @@ class _CreateBandPage extends React.Component {
                     <UpdateImageComponent
                         src={pictureUrl}
                         alt={pictureUrl ? 'Imagem selecionada' : 'Imagem padrão'}
-                        onRemovePicture={() => this.setState({picture: null, pictureUrl: null})}
+                        onRemovePicture={
+                            () => {
+                                this.setState({picture: null, pictureUrl: null})
+                                if (isEditing) {
+                                    let {request} = this.state;
+                                    request.clearProfilePicture = true;
+                                    this.state({request: request})
+                                }
+                            }
+                        }
                         onUploadPicture={(newPicture) => {
                             const newPictureUrl = URL.createObjectURL(newPicture);
                             this.setState({picture: newPicture, pictureUrl: newPictureUrl})
+                            if (isEditing) {
+                                let {request} = this.state;
+                                request.clearProfilePicture = false;
+                                this.state({request: request})
+                            }
                         }}
                     />
                 </Col>
@@ -218,7 +236,7 @@ class _CreateBandPage extends React.Component {
     }
 
     renderFormEnding() {
-        let {clearDialogVisible} = this.state;
+        let {clearDialogVisible, isEditing} = this.state;
         return (
             <>
                 <Col sm={0} md={6}/>
@@ -244,15 +262,20 @@ class _CreateBandPage extends React.Component {
                     />
                     <FormEndingComponent
                         showFirst={false}
+                        showSecond={!isEditing}
                         onClickSecond={() => this.setState({clearDialogVisible: true})}
-                        onClickThird={() => this.submitRequest()}
+                        onClickThird={
+                            () => this.state.isEditing
+                                ? this.submitEditingRequest()
+                                : this.submitCreatingRequest()
+                        }
                     />
                 </Col>
             </>
         );
     }
 
-    submitRequest() {
+    submitCreatingRequest() {
         this.setState({isLoading: true});
         const validator = new ValidationUtil();
         let {request, picture, token} = this.state;
@@ -271,6 +294,38 @@ class _CreateBandPage extends React.Component {
                 response => {
                     this.state.showToast(
                         ToastUtils.BUILD_TOAST_SUCCESS_BODY("Banda criada com sucesso!")
+                    )
+                    this.setState({request: new BandRequest()});
+                    setTimeout(
+                        () => {
+                            this.state.navigateTo('/minhas-bandas')
+                        },
+                        1500
+                    );
+                }
+            ).catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
+            .finally(() => this.setState({isLoading: false}))
+    }
+
+    submitEditingRequest() {
+        this.setState({isLoading: true});
+        const validator = new ValidationUtil();
+        let {request, picture, token, bandUuid} = this.state;
+        let errors = validator.validate(request)
+            .concat(validator.validate(request.address));
+        if (request.contacts.some(contact => (validator.validate(contact).length !== 0))) {
+            errors.concat({title: "Campos inválidos", message: "Um dos contatos possuem dados inválidos!"})
+        }
+        if (errors.length > 0) {
+            this.state.showToast(ToastUtils.BUILD_TOAST_FORM_ERROR(errors[0]))
+            this.setState({isLoading: false});
+            return;
+        }
+        BandService.UPDATE(bandUuid, request, picture, token)
+            .then(
+                response => {
+                    this.state.showToast(
+                        ToastUtils.BUILD_TOAST_SUCCESS_BODY("Banda editada com sucesso!")
                     )
                     this.setState({request: new BandRequest()});
                     setTimeout(

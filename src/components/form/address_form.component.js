@@ -36,7 +36,8 @@ export class AddressFormComponent extends React.Component {
     }
 
     setRequest(address) {
-        this.setState({request: address});
+        this.setState({isLoading: false})
+        this.setState({request: new AddressRequest(address)});
         this.componentDidMount()
     }
 
@@ -164,7 +165,11 @@ export class AddressFormComponent extends React.Component {
                             value={zipCode}
                             placeHolder="Ex.: 35.574-021"
                             mask="99.999-999"
-                            onChange={(newZipCode) => this.setField('zipCode', newZipCode)}
+                            onChange={(newZipCode) => {
+                                if (!newZipCode)
+                                    return
+                                this.setField('zipCode', newZipCode)
+                            }}
                         />
                     </Col>
                 </Row>
