@@ -3,8 +3,10 @@ import {AddressForm} from "../form/address.form";
 export class AddressDto {
     street;
     neighbour;
+    number;
     complement;
     city;
+    cityId;
     state;
     country;
     zipCode;
@@ -12,8 +14,10 @@ export class AddressDto {
     constructor(data) {
         this.street = data.street;
         this.neighbour = data.neighbour;
+        this.number = data.number;
         this.complement = data.complement;
         this.city = data.city;
+        this.cityId = data.cityId;
         this.state = data.state;
         this.country = data.country;
         this.zipCode = data.zipCode;

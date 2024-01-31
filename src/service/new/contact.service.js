@@ -14,5 +14,12 @@ export const ContactService = {
         axios.post(
             `${BASE_URL_BAND}/v1/contact/band/${bandUuid}`, contactForm, BaseService.MAKE_HEADERS(token)
         )
-    )
+    ),
+    UPDATE: (contactForm, bandUuid, contactUuid, token) => (
+        axios.put(
+            `${BASE_URL_BAND}/v1/contact/band/${bandUuid}/contact/${contactUuid}`,
+            contactForm,
+            BaseService.MAKE_HEADERS(token)
+        )
+    ),
 }

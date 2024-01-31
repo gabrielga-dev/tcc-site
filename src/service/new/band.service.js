@@ -41,9 +41,24 @@ export const BandService = {
         axios.get(`${BASE_URL_BAND}/v1/band/${bandUuid}/profile`, BaseService.MAKE_HEADERS(token))
     ),
 
-    UPDATE: (bandUuid, band, token) => (
-        axios.put(`${BASE_URL_BAND}/v1/band/${bandUuid}`, band, BaseService.MAKE_HEADERS(token))
-    ),
+    UPDATE: (bandUuid, band, picture, token) => {
+
+        if(!!picture){
+            console.log('non null')
+        } else {
+            console.log('null')
+        }
+        const form = new FormData();
+
+        const bandJson = JSON.stringify(band);
+        const bandBlob = new Blob([bandJson], {
+            type: 'application/json'
+        });
+        form.append('request', bandBlob);
+
+        form.append('profilePicture', picture);
+        return axios.put(`${BASE_URL_BAND}/v1/band/${bandUuid}`, form, BaseService.MAKE_HEADERS(token))
+    },
     UPLOAD_PROFILE_PICTURE: (bandUuid, data, token) => {
         const form = new FormData();
         form.append('picture', data);
