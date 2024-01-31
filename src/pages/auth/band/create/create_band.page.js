@@ -223,15 +223,26 @@ class _CreateBandPage extends React.Component {
     }
 
     renderBandContactSection() {
+        let {isEditing} = this.state;
         return (
-            <BandContactComponent
-                bandUuid={this.state.bandUuid}
-                token={this.state.token}
-                ref={this.contactComponentRef}
-                isEditing={this.state.isEditing}
-                showToast={this.state.showToast}
-                currentContacts={this.state.request.contacts}
-            />
+            <>
+                <BandContactComponent
+                    bandUuid={this.state.bandUuid}
+                    token={this.state.token}
+                    ref={this.contactComponentRef}
+                    isEditing={this.state.isEditing}
+                    showToast={this.state.showToast}
+                    currentContacts={this.state.request.contacts}
+                />
+                {
+                    isEditing
+                        ? (
+                            <span style={{color: 'rgba(145,145,145,0.99)'}}>
+                                <b>Cuidado!</b> Alterações nesta seção serão persistidas!
+                            </span>
+                        ) : (<></>)
+                }
+            </>
         );
     }
 
