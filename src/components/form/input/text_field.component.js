@@ -11,10 +11,11 @@ export const TextFieldComponent = (
         maxLength=75,
         minLength=3,
         onChange=(value)=>{console.log(value)},
+        optional=false
     }
 ) => (
     <>
-        <h6>{label}</h6>
+        <h6>{label}{!optional ? '*' : ''}</h6>
         <InputText
             disabled={disabled}
             placeholder={placeHolder}

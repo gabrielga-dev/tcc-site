@@ -247,6 +247,7 @@ class _ListOwnBandsPage extends React.Component {
                             tooltipOptions={{position: 'top'}}
                             icon="pi pi-users"
                             className="p-button-rounded p-button-warning"
+                            onClick={() => navigateTo(`/bandas/${band.uuid}/gerenciar-musicos`)}
                         />
                     </Col>
                 </Row>
