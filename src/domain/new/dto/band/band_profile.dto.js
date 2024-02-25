@@ -1,6 +1,7 @@
 import {AddressDto} from "../address.dto";
 import {BandForm} from "../../form/band/band.form";
 import {ContactForm} from "../../form/band/contact.form";
+import {MusicianTypeResponse} from "../../musician/response/musician_type.response";
 
 export class BandProfileDto {
     uuid;
@@ -31,7 +32,7 @@ export class BandProfileDto {
         }
     }
 
-    toForm(){
+    toForm() {
         let form = new BandForm();
         form.name = this.name;
         form.description = this.description;
@@ -43,7 +44,7 @@ export class BandProfileDto {
         return form;
     }
 
-    removeMusician(musicianUuid){
+    removeMusician(musicianUuid) {
         this.musicians = this.musicians.filter(m => m.uuid !== musicianUuid);
     }
 }
@@ -55,6 +56,7 @@ class Musician {
     avatarUuid;
     age;
     creationDate;
+    types;
 
     constructor(data) {
         this.uuid = data.uuid;
@@ -63,6 +65,7 @@ class Musician {
         this.avatarUuid = data.avatarUuid;
         this.age = data.age;
         this.creationDate = new Date(data['creationDateMilliseconds']);
+        this.types = data.types ? data.types.map(type => (new MusicianTypeResponse(type))) : []
     }
 }
 
@@ -76,7 +79,7 @@ class Contact {
         this.content = data.content;
     }
 
-    toForm(){
+    toForm() {
         let form = new ContactForm();
         form.uuid = this.uuid;
         form.type = this.type;

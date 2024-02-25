@@ -42,12 +42,6 @@ export const BandService = {
     ),
 
     UPDATE: (bandUuid, band, picture, token) => {
-
-        if(!!picture){
-            console.log('non null')
-        } else {
-            console.log('null')
-        }
         const form = new FormData();
 
         const bandJson = JSON.stringify(band);

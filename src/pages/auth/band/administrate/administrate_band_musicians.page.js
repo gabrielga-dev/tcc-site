@@ -16,6 +16,7 @@ import {Avatar} from "primereact/avatar";
 import {Image} from "primereact/image";
 import {FileService} from "../../../../service/new/file.service";
 import {Tag} from "primereact/tag";
+import {Divider} from "primereact/divider";
 
 const AdministrateBandMusicians = ({token, user}) => {
     const toast = useRef(null);
@@ -113,8 +114,8 @@ class _AdministrateBandMusicians extends React.Component {
 
         let cols = bandProfile.musicians.map(
             musician => (
-                <Col key={musician.uuid} lg={3} md={6} sm={12} style={MarginStyle.makeMargin(0, 5, 0, 5)}>
-                    <Card>
+                <Col key={musician.uuid} xl={3} lg={4} md={6} sm={12} style={MarginStyle.makeMargin(0, 5, 0, 5)}>
+                    <Card key={musician.uuid}>
                         <Container>
                             <Row>
                                 <Col style={STYLE_ALIGN_ITEM_CENTER}>
@@ -142,23 +143,24 @@ class _AdministrateBandMusicians extends React.Component {
                             </Row>
                             <Row>
                                 {
-                                    musician.types.map(
-                                        type => (
-                                            <Col md={6} style={{marginTop: 5}}>
-                                                <Tag
-                                                    style={StyleConstants.WIDTH_100_PERCENT}
-                                                    value={type.name}
-                                                    rounded
-                                                />
-                                            </Col>
-                                        )
-                                    )
+                                    musician.types
+                                        ? musician.types.map(
+                                            type => (
+                                                <Col key={`${musician.uuid}_${type.uuid}`} md={6} style={{marginTop: 5}}>
+                                                    <Tag
+                                                        style={StyleConstants.WIDTH_100_PERCENT}
+                                                        value={type.name}
+                                                        rounded
+                                                    />
+                                                </Col>
+                                            )
+                                        ) : []
                                 }
                             </Row>
-                            <Row>
+                            <Divider/>
+                            <Row style={{marginTop: 5}}>
                                 <Col md={6} sm={12} style={{marginBottom: 5}}>
                                     <Button
-                                        label="Remover"
                                         className="p-button-danger"
                                         icon="pi pi-times"
                                         style={StyleConstants.WIDTH_100_PERCENT}
@@ -166,7 +168,6 @@ class _AdministrateBandMusicians extends React.Component {
                                 </Col>
                                 <Col md={6} sm={12} style={{marginBottom: 5}}>
                                     <Button
-                                        label="Editar"
                                         className="p-button-warning"
                                         icon="pi pi-pencil"
                                         style={StyleConstants.WIDTH_100_PERCENT}
@@ -182,7 +183,11 @@ class _AdministrateBandMusicians extends React.Component {
 
         return (
             <Col>
-                {cols}
+                <Container>
+                    <Row>
+                        {cols}
+                    </Row>
+                </Container>
             </Col>
         );
     }

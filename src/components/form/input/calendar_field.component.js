@@ -13,7 +13,8 @@ export const CalendarFieldComponent = (
         onChange = (value) => {
             console.log(value)
         },
-        optional = false
+        optional = false,
+        dateFormat="dd/mm/yy",
     }
 ) => (
     <>
@@ -24,7 +25,7 @@ export const CalendarFieldComponent = (
             value={value}
             maxDate={maxDate}
             minDate={minDate}
-            dateFormat="dd/mm/yy"
+            dateFormat={dateFormat}
             style={StyleConstants.WIDTH_100_PERCENT}
             onChange={(e) => onChange(e.value)}
         />

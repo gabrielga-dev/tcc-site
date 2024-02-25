@@ -14,10 +14,21 @@ import {CalendarFieldComponent} from "../../../../components/form/input/calendar
 import {TextMaskFieldComponent} from "../../../../components/form/input/text_mask_field.component";
 import {Divider} from "primereact/divider";
 import {AddressFormComponent} from "../../../../components/form/address_form.component";
-import {BandRequest} from "../../../../domain/new/band/request/band.request";
 import {BandService} from "../../../../service/new/band.service";
 import {BandProfileDto} from "../../../../domain/new/dto/band/band_profile.dto";
 import {ToastUtils} from "../../../../util/toast.utils";
+import {FormEndingComponent} from "../../../../components/form_ending.component";
+import ValidationUtil from "../../../../util/validation/validation.util";
+import {MusicianService} from "../../../../service/new/musician.service";
+import {PickList} from "primereact/picklist";
+import {Tag} from "primereact/tag";
+import axios from "axios";
+import {MusicianTypeService} from "../../../../service/new/musician_type.service";
+import {MusicianTypeResponse} from "../../../../domain/new/musician/response/musician_type.response";
+import {MusicianTypeRequest} from "../../../../domain/new/musician/request/musician_type.request";
+import {DateUtil} from "../../../../util/date.util";
+import {Dialog} from "primereact/dialog";
+import {Button} from "primereact/button";
 
 const CreateMusicianPage = ({token, user}) => {
     const toast = useRef(null);
@@ -68,6 +79,13 @@ class _CreateMusicianPage extends React.Component {
             pictureUrl: null,
 
             request: new MusicianRequest(),
+            selectedBirthDay: new Date(),
+
+            availableMusicianTypes: [],
+            selectedMusicianTypes: [],
+
+            showAssociatePopUp: false,
+            musicianCpfToAssociate: ''
         }
     }
 
@@ -87,9 +105,22 @@ class _CreateMusicianPage extends React.Component {
                                 {this.renderBaseMusicianInformationForm()}
                             </Row>
                             <Row style={{marginBottom: 10}}>
+                                {this.renderBaseMusicianTypes()}
+                            </Row>
+                            <Row style={{marginBottom: 10}}>
                                 {this.renderMusicianAddressForm()}
                             </Row>
                         </FormAreaComponent>
+                        <Row>
+                            <Col md={6} sm={0}/>
+                            <Col md={6} sm={12}>
+                                <FormEndingComponent
+                                    showFirst={false}
+                                    showSecond={false}
+                                    onClickThird={() => this.submitRequest()}
+                                />
+                            </Col>
+                        </Row>
                     </Container>
                 </Card>
             </HomeTemplate>
@@ -98,11 +129,20 @@ class _CreateMusicianPage extends React.Component {
 
     componentDidMount() {
         this.setState({isLoading: true});
-        BandService.FIND_PROFILE(this.state.bandUuid, this.state.token)
-            .then(response => {
-                const profile = new BandProfileDto(response.data);
+        axios.all(
+            [
+                BandService.FIND_PROFILE(this.state.bandUuid, this.state.token),
+                MusicianTypeService.FIND_ALL(this.state.token)
+            ]
+        )
+            .then(responses => {
+                //band profile
+                const profile = new BandProfileDto(responses[0].data);
 
-                this.setState({bandProfile: profile});
+                //musician types
+                const musicianTypes = responses[1].data.map(musicianType => (new MusicianTypeResponse(musicianType)));
+
+                this.setState({bandProfile: profile, availableMusicianTypes: musicianTypes});
             }).catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
             .finally(() => this.setState({isLoading: false}))
     }
@@ -144,7 +184,7 @@ class _CreateMusicianPage extends React.Component {
     }
 
     renderBaseMusicianInformationForm() {
-        let {request} = this.state;
+        let {request, selectedBirthday} = this.state;
         return (
             <>
                 <Row style={{marginBottom: 10}}>
@@ -174,11 +214,14 @@ class _CreateMusicianPage extends React.Component {
                         <CalendarFieldComponent
                             label="Data de nascimento"
                             placeHolder="Insira aqui a data de aniversário do músico"
-                            value={request.birthday}
+                            value={selectedBirthday}
                             minDate={null}
-                            minLength={1}
-                            maxLength={100}
-                            onChange={(firstName) => this.setMusicianValue('firstName', firstName)}
+                            onChange={(birthday) => {
+                                if (birthday) {
+                                    this.setState({selectedBirthday: new Date(birthday)})
+                                    this.setMusicianValue('birthday', DateUtil.DATE_TO_EPOCH(new Date(birthday)));
+                                }
+                            }}
                         />
                     </Col>
                     <Col md={6} sm={12}>
@@ -189,6 +232,47 @@ class _CreateMusicianPage extends React.Component {
                             mask='999.999.999-99'
                             onChange={(cpf) => this.setMusicianValue('cpf', cpf)}
                         />
+                        <Dialog
+                            closable={false}
+                            header="Cpf de músico já cadastrado na plataforma"
+                            visible={this.state.showAssociatePopUp}
+                            style={{width: '50vw'}}
+                            draggable={false}
+                            footer={() => (
+                                <div>
+                                    <Button
+                                        label="Não"
+                                        icon="pi pi-times"
+                                        onClick={() => {
+                                            let {request} = this.state;
+                                            request.cpf = '';
+                                            this.setState(
+                                                {
+                                                    request: request,
+                                                    showAssociatePopUp: false,
+                                                    musicianCpfToAssociate: ''
+                                                }
+                                            )
+                                        }}
+                                        className="p-button-text"
+                                    />
+                                    <Button
+                                        label="Sim"
+                                        icon="pi pi-check"
+                                        onClick={() => this.assocMusician()}
+                                        autoFocus
+                                    />
+                                </div>
+                            )}
+                            onHide={() => {
+                            }}
+                        >
+                            <p>
+                                O CPF digitado já se encontra cadastrado
+                                na plataforma, portanto não é possível cadastrar um novo músico com ele! Mas você
+                                pode vincular tal músico à sua banda! Gostaria de fazer isso?
+                            </p>
+                        </Dialog>
                     </Col>
                 </Row>
                 <Row style={{marginBottom: 10}}>
@@ -200,6 +284,90 @@ class _CreateMusicianPage extends React.Component {
                             minLength={1}
                             maxLength={100}
                             onChange={(email) => this.setMusicianValue('email', email)}
+                        />
+                    </Col>
+                </Row>
+            </>
+        );
+    }
+
+    checkIfMusicianExists(cpf) {
+        this.setState({isLoading: true});
+        let {token} = this.state;
+        let exists = false;
+        MusicianService.FIND_BY_CPF(cpf, token)
+            .then(
+                () => {
+                    this.setState({showAssociatePopUp: true, musicianCpfToAssociate: cpf});
+                    exists = true
+                }
+            )
+            .catch(
+                error => {
+                    let errorData = error.response.data;
+                    if ((errorData.code !== 404) || (!errorData.message.includes('Músico não encontrado'))) {
+                        this.state.showToast(ToastUtils.BUILD_TOAST_FORM_ERROR(error))
+                    }
+                }
+            ).then(() => this.setState({isLoading: false}));
+        return exists;
+    }
+
+    assocMusician() {
+        this.setState({isLoading: true, showAssociatePopUp: false});
+        let {musicianCpfToAssociate, bandUuid, token} = this.state;
+        MusicianService.ASSOCIATE(bandUuid, musicianCpfToAssociate, token)
+            .then(
+                () => {
+                    this.state.showToast(ToastUtils.BUILD_TOAST_SUCCESS_BODY('Associação efetuada com sucesso!'))
+                    setTimeout(
+                        () => {
+                            this.state.navigateTo(`/bandas/${bandUuid}/gerenciar-musicos`)
+                        },
+                        1500
+                    );
+                }
+            )
+            .catch(
+                error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error))
+            )
+            .finally(() => this.setState({isLoading: false}));
+    }
+
+    renderBaseMusicianTypes() {
+        let {availableMusicianTypes, selectedMusicianTypes} = this.state;
+        return (
+            <>
+                <Divider align="center"><span>Tipo de músico</span></Divider>
+                <Row style={{marginBottom: 10}}>
+                    <Col>
+                        <PickList
+                            source={availableMusicianTypes}
+                            target={selectedMusicianTypes}
+                            itemTemplate={
+                                (item) => (<Tag>{item.name}</Tag>)
+                            }
+                            sourceHeader="Disponíveis"
+                            targetHeader="Selecionados"
+                            sourceStyle={{height: '342px'}}
+                            targetStyle={{height: '342px'}}
+                            onChange={
+                                (event) => {
+                                    let {request} = this.state;
+
+                                    request.types = event.target
+                                        .map(
+                                            selectedType => (new MusicianTypeRequest(selectedType))
+                                        );
+                                    this.setState({
+                                        availableMusicianTypes: event.source,
+                                        selectedMusicianTypes: event.target
+                                    });
+                                }
+                            }
+                            filterBy="name"
+                            sourceFilterPlaceholder="Busque pelo nome"
+                            targetFilterPlaceholder="Busque pelo nome"
                         />
                     </Col>
                 </Row>
@@ -232,9 +400,45 @@ class _CreateMusicianPage extends React.Component {
 
     setAddress(newAddress) {
         let {request} = this.state;
-        let auxRequest = new BandRequest(request);
+        let auxRequest = new MusicianRequest(request);
         auxRequest.address = newAddress
         this.setState({request: auxRequest});
+    }
+
+    submitRequest() {
+        let {request} = this.state;
+
+        if(request.cpf && this.checkIfMusicianExists(request.cpf)){
+            return
+        }
+
+        this.setState({isLoading: true});
+        const validator = new ValidationUtil();
+
+        let errors = validator.validate(request)
+            .concat(validator.validate(request.address));
+        if (errors.length > 0) {
+            this.state.showToast(ToastUtils.BUILD_TOAST_FORM_ERROR(errors[0]))
+            this.setState({isLoading: false});
+            return;
+        }
+        let {bandUuid, picture, token} = this.state;
+        MusicianService.CREATE(bandUuid, picture, request, token)
+            .then(
+                () => {
+                    this.state.showToast(
+                        ToastUtils.BUILD_TOAST_SUCCESS_BODY("Músico criado com sucesso!")
+                    )
+                    this.setState({request: new MusicianRequest()});
+                    setTimeout(
+                        () => {
+                            this.state.navigateTo(`/bandas/${bandUuid}/gerenciar-musicos`)
+                        },
+                        1500
+                    );
+                }
+            ).catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
+            .finally(() => this.setState({isLoading: false}))
     }
 }
 
