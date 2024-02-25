@@ -6,7 +6,7 @@ export class MusicianRequest {
     firstName = '';
     lastName = '';
     birthday = '';
-    cpf = '___.___.___-__';
+    cpf = '';
     email = '';
     address = new AddressRequest();
     types = [];
