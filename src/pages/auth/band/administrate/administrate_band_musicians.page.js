@@ -78,17 +78,27 @@ class _AdministrateBandMusicians extends React.Component {
                 <Card>
                     <Container>
                         <Row>
-                            <Col md={8} sm={0}/>
+                            <Col md={4} sm={0}/>
                             <Col md={4} sm={12}>
                                 <Button
-                                    label="Criar músico"
+                                    label="Cadastrar músico"
                                     className="p-button-success"
                                     style={StyleConstants.WIDTH_100_PERCENT}
                                     icon="pi pi-plus"
                                     onClick={() => navigateTo("criar")}
                                 />
                             </Col>
+                            <Col md={4} sm={12}>
+                                <Button
+                                    label="Vincular músico já cadastrado"
+                                    className="info"
+                                    style={StyleConstants.WIDTH_100_PERCENT}
+                                    icon="pi pi-plus"
+                                    onClick={() => navigateTo("vincular")}
+                                />
+                            </Col>
                         </Row>
+                        <Divider align="center"><span>Músicos</span></Divider>
                         <Row>
                             <Col>
                                 {this.renderMusicians()}
