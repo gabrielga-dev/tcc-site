@@ -27,8 +27,8 @@ import {MusicianTypeService} from "../../../../service/new/musician_type.service
 import {MusicianTypeResponse} from "../../../../domain/new/musician/response/musician_type.response";
 import {MusicianTypeRequest} from "../../../../domain/new/musician/request/musician_type.request";
 import {DateUtil} from "../../../../util/date.util";
-import {Dialog} from "primereact/dialog";
 import {Button} from "primereact/button";
+import {Dialog} from "primereact/dialog";
 
 const CreateMusicianPage = ({token, user}) => {
     const toast = useRef(null);
@@ -230,7 +230,12 @@ class _CreateMusicianPage extends React.Component {
                             placeHolder="Insira aqui o CPF do músico"
                             value={request.cpf}
                             mask='999.999.999-99'
-                            onChange={(cpf) => this.setMusicianValue('cpf', cpf)}
+                            onChange={(cpf) => {
+                                this.setMusicianValue('cpf', cpf)
+                                if (cpf && !cpf.includes('_')) {
+                                    this.checkIfMusicianExists(cpf);
+                                }
+                            }}
                         />
                         <Dialog
                             closable={false}
@@ -292,15 +297,10 @@ class _CreateMusicianPage extends React.Component {
     }
 
     checkIfMusicianExists(cpf) {
-        this.setState({isLoading: true});
         let {token} = this.state;
-        let exists = false;
         MusicianService.FIND_BY_CPF(cpf, token)
             .then(
-                () => {
-                    this.setState({showAssociatePopUp: true, musicianCpfToAssociate: cpf});
-                    exists = true
-                }
+                () => this.setState({showAssociatePopUp: true, musicianCpfToAssociate: cpf})
             )
             .catch(
                 error => {
@@ -309,29 +309,12 @@ class _CreateMusicianPage extends React.Component {
                         this.state.showToast(ToastUtils.BUILD_TOAST_FORM_ERROR(error))
                     }
                 }
-            ).then(() => this.setState({isLoading: false}));
-        return exists;
+            );
     }
 
     assocMusician() {
-        this.setState({isLoading: true, showAssociatePopUp: false});
-        let {musicianCpfToAssociate, bandUuid, token} = this.state;
-        MusicianService.ASSOCIATE(bandUuid, musicianCpfToAssociate, token)
-            .then(
-                () => {
-                    this.state.showToast(ToastUtils.BUILD_TOAST_SUCCESS_BODY('Associação efetuada com sucesso!'))
-                    setTimeout(
-                        () => {
-                            this.state.navigateTo(`/bandas/${bandUuid}/gerenciar-musicos`)
-                        },
-                        1500
-                    );
-                }
-            )
-            .catch(
-                error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error))
-            )
-            .finally(() => this.setState({isLoading: false}));
+        let {bandUuid, request} = this.state;
+        this.state.navigateTo(`/bandas/${bandUuid}/gerenciar-musicos/vincular/${request.cpf}`)
     }
 
     renderBaseMusicianTypes() {
@@ -365,9 +348,6 @@ class _CreateMusicianPage extends React.Component {
                                     });
                                 }
                             }
-                            filterBy="name"
-                            sourceFilterPlaceholder="Busque pelo nome"
-                            targetFilterPlaceholder="Busque pelo nome"
                         />
                     </Col>
                 </Row>
@@ -407,10 +387,6 @@ class _CreateMusicianPage extends React.Component {
 
     submitRequest() {
         let {request} = this.state;
-
-        if(request.cpf && this.checkIfMusicianExists(request.cpf)){
-            return
-        }
 
         this.setState({isLoading: true});
         const validator = new ValidationUtil();

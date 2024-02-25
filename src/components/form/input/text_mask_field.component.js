@@ -11,7 +11,8 @@ export const TextMaskFieldComponent = (
         onChange = (value) => {
             console.log(value)
         },
-        optional = false
+        optional = false,
+        disabled=false
     }
 ) => (
     <>
@@ -22,6 +23,7 @@ export const TextMaskFieldComponent = (
             mask={mask}
             style={StyleConstants.WIDTH_100_PERCENT}
             onChange={(e) => onChange(e.value)}
+            disabled={disabled}
         />
     </>
 );
