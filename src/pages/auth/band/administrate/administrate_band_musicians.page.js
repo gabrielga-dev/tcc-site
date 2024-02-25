@@ -17,6 +17,9 @@ import {Image} from "primereact/image";
 import {FileService} from "../../../../service/new/file.service";
 import {Tag} from "primereact/tag";
 import {Divider} from "primereact/divider";
+import {MusicianResponse} from "../../../../domain/new/musician/response/musician.response";
+import {Dialog} from "primereact/dialog";
+import {MusicianService} from "../../../../service/new/musician.service";
 
 const AdministrateBandMusicians = ({token, user}) => {
     const toast = useRef(null);
@@ -55,6 +58,9 @@ class _AdministrateBandMusicians extends React.Component {
             showToast: props.showToast,
 
             bandProfile: new BandProfileDto(),
+
+            selectedMusician: new MusicianResponse(),
+            showDeleteDialog: false,
         }
     }
 
@@ -69,9 +75,7 @@ class _AdministrateBandMusicians extends React.Component {
     }
 
     render() {
-        if (this.state.isLoading) {
-            return (<ActivityIndicatorComponent/>);
-        }
+        let {isLoading} = this.state;
         let {navigateTo} = this.state;
         return (
             <HomeTemplate steps={['Home', 'Bandas', this.state.bandProfile?.name, 'Gerenciar Músicos']}>
@@ -81,6 +85,7 @@ class _AdministrateBandMusicians extends React.Component {
                             <Col md={4} sm={0}/>
                             <Col md={4} sm={12}>
                                 <Button
+                                    disabled={isLoading}
                                     label="Cadastrar músico"
                                     className="p-button-success"
                                     style={StyleConstants.WIDTH_100_PERCENT}
@@ -90,6 +95,7 @@ class _AdministrateBandMusicians extends React.Component {
                             </Col>
                             <Col md={4} sm={12}>
                                 <Button
+                                    disabled={isLoading}
                                     label="Vincular músico já cadastrado"
                                     className="info"
                                     style={StyleConstants.WIDTH_100_PERCENT}
@@ -102,6 +108,59 @@ class _AdministrateBandMusicians extends React.Component {
                         <Row>
                             <Col>
                                 {this.renderMusicians()}
+                                <Dialog
+                                    header={
+                                        this.state.selectedMusician?.hasStartedWithThisBand
+                                            ? 'Excluir Músico' : 'Desvincular Músico'
+                                    }
+                                    visible={this.state.showDeleteDialog}
+                                    style={{width: '50vw'}}
+                                    footer={
+                                        () => (
+                                            <div>
+                                                <Button
+                                                    label="Não"
+                                                    icon="pi pi-times"
+                                                    onClick={
+                                                        () => this.setState({
+                                                            selectedMusician: null,
+                                                            showDeleteDialog: false
+                                                        })
+                                                    }
+                                                    className="p-button-success p-button-text"
+                                                />
+                                                <Button
+                                                    label="Sim"
+                                                    icon="pi pi-check"
+                                                    onClick={() => {
+                                                        let {selectedMusician} = this.state;
+                                                        if (selectedMusician) {
+                                                            if (selectedMusician.hasStartedWithThisBand) {
+                                                                this.deleteMusician();
+                                                            } else {
+                                                                this.disassociateMusician();
+                                                            }
+                                                        } else {
+                                                            this.setState({
+                                                                selectedMusician: null,
+                                                                showDeleteDialog: false
+                                                            })
+                                                        }
+                                                    }}
+                                                    className="p-button-danger"
+                                                    autoFocus
+                                                />
+                                            </div>
+                                        )
+                                    }
+                                    onHide={
+                                        () => this.setState({selectedMusician: null, showDeleteDialog: false})
+                                    }
+                                    closable={false}
+                                    draggable={false}
+                                >
+                                    <p>{this.generateRemoveMessage()}</p>
+                                </Dialog>
                             </Col>
                         </Row>
                     </Container>
@@ -110,7 +169,23 @@ class _AdministrateBandMusicians extends React.Component {
         );
     }
 
+    generateRemoveMessage() {
+        let {selectedMusician} = this.state;
+
+        if (!selectedMusician) {
+            return '';
+        }
+        if (selectedMusician.hasStartedWithThisBand) {
+            return `Você deseja excluir o músico ${selectedMusician.firstName}?`;
+        }
+        return `Você deseja desvincular o músico ${selectedMusician.firstName}?`;
+    }
+
     renderMusicians() {
+        if (this.state.isLoading) {
+            return (<ActivityIndicatorComponent/>);
+        }
+
         let {bandProfile} = this.state;
 
         if (bandProfile.musicians.length === 0)
@@ -171,13 +246,19 @@ class _AdministrateBandMusicians extends React.Component {
                             <Row style={{marginTop: 5}}>
                                 <Col md={6} sm={12} style={{marginBottom: 5}}>
                                     <Button
+                                        tooltip={musician.hasStartedWithThisBand ? 'Excluir' : 'Desvincular'}
+                                        tooltipOptions={{position: "top"}}
                                         className="p-button-danger"
-                                        icon="pi pi-times"
+                                        icon="pi pi-trash"
                                         style={StyleConstants.WIDTH_100_PERCENT}
+                                        onClick={() => this.showDialogRemoveMusician(musician)}
                                     />
                                 </Col>
                                 <Col md={6} sm={12} style={{marginBottom: 5}}>
                                     <Button
+                                        disabled={!musician.hasStartedWithThisBand}
+                                        tooltip={musician.hasStartedWithThisBand ? 'Editar' : 'Impossível editar, músico vinculado'}
+                                        tooltipOptions={{position: "top"}}
                                         className="p-button-warning"
                                         icon="pi pi-pencil"
                                         style={StyleConstants.WIDTH_100_PERCENT}
@@ -200,6 +281,27 @@ class _AdministrateBandMusicians extends React.Component {
                 </Container>
             </Col>
         );
+    }
+
+    showDialogRemoveMusician(musician) {
+        this.setState({selectedMusician: musician, showDeleteDialog: true});
+    }
+
+    disassociateMusician() {
+        this.setState({isLoading: true});
+
+        let {bandUuid, selectedMusician, token} = this.state;
+        MusicianService.DISASSOCIATE(bandUuid, selectedMusician.uuid, token)
+            .then(
+                () => this.componentDidMount()
+            ).catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
+            .finally(
+                () => this.setState({isLoading: false, selectedMusician: null, showDeleteDialog: false})
+            )
+    }
+
+    deleteMusician() {
+        //todo delete musician
     }
 }
 
