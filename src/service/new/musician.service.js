@@ -28,6 +28,13 @@ export const MusicianService = {
         )
     ),
 
+    DISASSOCIATE: (bandUuid, musicianUuid, token) => (
+        axios.delete(
+            `${BASE_URL_BAND}/v1/musician/${musicianUuid}/band/${bandUuid}/disassociate`,
+            BaseService.MAKE_HEADERS(token)
+        )
+    ),
+
     DELETE: (bandUuid, musicianUuid, token) => (
         axios.delete(
             `${BASE_URL_BAND}/v1/musician/band/${bandUuid}/${musicianUuid}`, BaseService.MAKE_HEADERS(token)

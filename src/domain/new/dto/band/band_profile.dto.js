@@ -57,6 +57,7 @@ class Musician {
     age;
     creationDate;
     types;
+    hasStartedWithThisBand;
 
     constructor(data) {
         this.uuid = data.uuid;
@@ -65,7 +66,8 @@ class Musician {
         this.avatarUuid = data.avatarUuid;
         this.age = data.age;
         this.creationDate = new Date(data['creationDateMilliseconds']);
-        this.types = data.types ? data.types.map(type => (new MusicianTypeResponse(type))) : []
+        this.types = data.types ? data.types.map(type => (new MusicianTypeResponse(type))) : [];
+        this.hasStartedWithThisBand = data.hasStartedWithThisBand;
     }
 }
 
