@@ -163,7 +163,7 @@ class _BandProfilePage extends React.Component {
 
         let cols = bandProfile.musicians.map(
             musician => (
-                <Col key={musician.uuid} lg={3} md={6} sm={12} style={MarginStyle.makeMargin(0, 5, 0, 5)}>
+                <Col key={musician.uuid} xl={3} lg={4} md={6} sm={12} style={MarginStyle.makeMargin(0, 5, 0, 5)}>
                     <Card>
                         <Container>
                             <Row>
@@ -212,9 +212,9 @@ class _BandProfilePage extends React.Component {
         )
 
         return (
-            <Col>
+            <Row>
                 {cols}
-            </Col>
+            </Row>
         );
     }
 

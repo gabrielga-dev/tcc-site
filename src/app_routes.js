@@ -10,7 +10,6 @@ import CreateServicePage from "./pages/auth/service/create_service.page";
 import {SearchAuthenticatedServices} from "./pages/auth/service/search_authenticated_person_service.page";
 import SearchAuthenticatedPersonBandsPage from "./pages/auth/service/band/search_authenticated_person_band.page";
 import EditBandPage from "./pages/auth/service/band/edit_band.page";
-import CreateMusicianPage from "./pages/auth/service/band/musician/create_musician.page";
 import UploadMusicianProfilePage from "./pages/auth/service/band/musician/musician_profile_picture.page";
 import {SelectPersonRolePage} from "./pages/noauth/create_person/select_person_role.page";
 import {ValidateEmailPage} from "./pages/noauth/validate_email/validate_email.page";
@@ -24,6 +23,8 @@ import ListBandsPage from "./pages/both/band/list/list_bands.page";
 import CreateBandPage from "./pages/auth/band/create/create_band.page";
 import ListOwnBandsPage from "./pages/auth/band/list/list_own_bands.page";
 import BandProfilePage from "./pages/both/band/profile/band_profile.page";
+import AdministrateBandMusicians from "./pages/auth/band/administrate/administrate_band_musicians.page";
+import CreateMusicianPage from "./pages/auth/musician/create/create_musician.page";
 
 const AppRoutes = ({token, user}) => {
     return (
@@ -56,7 +57,6 @@ const authRoutes = (user) => (
         <Route element={<SearchAuthenticatedPersonBandsPage/>} path="/meus-servicos/banda"/>
         <Route element={<CreateServicePage/>} path="/servico/criar"/>
         <Route element={<EditBandPage/>} path="/servicos/bandas/:uuid/editar"/>
-        <Route element={<CreateMusicianPage/>} path="/servicos/bandas/:uuid/adicionar-musico"/>
         <Route element={<UploadMusicianProfilePage/>} path="/servicos/bandas/:bandUuid/musico/:musicianUuid/imagem"/>
         <Route element={<UploadMusicianProfilePage/>} path="/servicos/bandas/:bandUuid/musico/:musicianUuid/editar"/>
     </>
@@ -71,6 +71,9 @@ const generateBandOwnerRoutes = (user) => (
                 <Route element={<ListOwnBandsPage/>} path="/minhas-bandas"/>
                 <Route element={<CreateBandPage/>} path="/bandas/cadastrar"/>
                 <Route element={<CreateBandPage/>} path="/bandas/:band_uuid/editar"/>
+
+                <Route element={<AdministrateBandMusicians/>} path="/bandas/:band_uuid/gerenciar-musicos"/>
+                <Route element={<CreateMusicianPage/>} path="/bandas/:band_uuid/gerenciar-musicos/criar"/>
             </>
         )
 

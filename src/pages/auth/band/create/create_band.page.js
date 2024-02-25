@@ -75,7 +75,7 @@ class _CreateBandPage extends React.Component {
     }
 
     componentDidMount() {
-        let {bandUuid, token, request, pictureUrl, picture} = this.state;
+        let {bandUuid, token, request, pictureUrl} = this.state;
         if (bandUuid) {
             this.setState({isLoading: true})
             BandService.FIND_PROFILE(bandUuid, token)
@@ -120,7 +120,7 @@ class _CreateBandPage extends React.Component {
             return (<ActivityIndicatorComponent/>);
         }
         return (
-            <HomeTemplate steps={['Home', 'Bandas', 'Cadastrar']}>
+            <HomeTemplate steps={['Home', 'Bandas', this.state.isEditing ? 'Editar' : 'Cadastrar']}>
                 <Card>
                     <Container>
                         <Row>
@@ -302,7 +302,7 @@ class _CreateBandPage extends React.Component {
         }
         BandService.CREATE(request, picture, token)
             .then(
-                response => {
+                () => {
                     this.state.showToast(
                         ToastUtils.BUILD_TOAST_SUCCESS_BODY("Banda criada com sucesso!")
                     )
@@ -334,7 +334,7 @@ class _CreateBandPage extends React.Component {
         }
         BandService.UPDATE(bandUuid, request, picture, token)
             .then(
-                response => {
+                () => {
                     this.state.showToast(
                         ToastUtils.BUILD_TOAST_SUCCESS_BODY("Banda editada com sucesso!")
                     )

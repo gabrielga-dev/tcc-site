@@ -8,9 +8,12 @@ export const UpdateImageComponent = (
     {
         src,
         srcOnError = DEFAULT_IMAGE,
-        alt='Imagem',
-        onUploadPicture=(picture)=>{},
-        onRemovePicture=()=>{},
+        alt = 'Imagem',
+        onUploadPicture = () => {
+        },
+        onRemovePicture = () => {
+        },
+        customDefaultImage
     }
 ) => {
     const fileUploadRef = useRef(null);
@@ -22,7 +25,7 @@ export const UpdateImageComponent = (
                         <img
                             style={StyleConstants.IMAGE_STYLE}
                             alt={alt}
-                            src={src ? src : DEFAULT_IMAGE}
+                            src={src ? src : (customDefaultImage ? customDefaultImage : DEFAULT_IMAGE)}
                             onError={(e) => e.target.src = srcOnError}
                         />
                     </Col>
