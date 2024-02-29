@@ -29,10 +29,11 @@ import {MusicianTypeRequest} from "../../../../domain/new/musician/request/music
 import {DateUtil} from "../../../../util/date.util";
 import {Button} from "primereact/button";
 import {Dialog} from "primereact/dialog";
+import {FileService} from "../../../../service/new/file.service";
 
 const CreateMusicianPage = ({token, user}) => {
     const toast = useRef(null);
-    let {band_uuid} = useParams();
+    let {band_uuid, musician_uuid} = useParams();
     const showToast = (body) => {
         toast.current.show(body);
     };
@@ -51,6 +52,7 @@ const CreateMusicianPage = ({token, user}) => {
                 navigateTo={redirectTo}
                 showToast={showToast}
                 bandUuid={band_uuid}
+                musicianUuid={musician_uuid}
             />
         </>
     );
@@ -63,10 +65,12 @@ class _CreateMusicianPage extends React.Component {
         super(props)
 
         this.addressComponentRef = React.createRef();
-        this.contactComponentRef = React.createRef();
         this.state = {
             bandUuid: props.bandUuid,
+            musicianUuid: this.props.musicianUuid,
+            isEditing: !!this.props.musicianUuid,
 
+            isMasterLoading: false,
             isLoading: false,
 
             token: props.token,
@@ -90,7 +94,7 @@ class _CreateMusicianPage extends React.Component {
     }
 
     render() {
-        if (this.state.isLoading) {
+        if (this.state.isMasterLoading) {
             return (<ActivityIndicatorComponent/>);
         }
         return (
@@ -128,7 +132,42 @@ class _CreateMusicianPage extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({isLoading: true});
+        this.setState({isMasterLoading: true});
+        if (this.state.musicianUuid) {
+            let {musicianUuid, token, pictureUrl} = this.state;
+            MusicianService.FIND_BY_UUID(musicianUuid, token)
+                .then(
+                    response => {
+                        let musician = new MusicianRequest();
+                        musician.fromResponse(response.data);
+                        musician.types.sort(compareMusicianTypeFunction)
+
+                        pictureUrl = response.data['avatarUuid']
+                            ? FileService.GET_IMAGE_URL(response.data['avatarUuid'])
+                            : null;
+
+                        try {
+                            this.addressComponentRef.current.setRequest(musician.address);
+                        } catch (e) {
+
+                        }
+
+                        let selectedMusicianTypes = musician.types.map(
+                            musicianType => (new MusicianTypeResponse(musicianType))
+                        );
+                        selectedMusicianTypes.sort(compareMusicianTypeFunction)
+
+                        this.setState(
+                            {
+                                request: musician,
+                                selectedBirthday: new Date(musician.birthday),
+                                pictureUrl: pictureUrl,
+                                selectedMusicianTypes: selectedMusicianTypes
+                            }
+                        );
+                    }
+                ).catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
+        }
         axios.all(
             [
                 BandService.FIND_PROFILE(this.state.bandUuid, this.state.token),
@@ -140,15 +179,19 @@ class _CreateMusicianPage extends React.Component {
                 const profile = new BandProfileDto(responses[0].data);
 
                 //musician types
-                const musicianTypes = responses[1].data.map(musicianType => (new MusicianTypeResponse(musicianType)));
+                const musicianTypes = responses[1].data.map(
+                    musicianType => (new MusicianTypeResponse(musicianType))
+                ).filter(availableType => (
+                    !this.state.selectedMusicianTypes.some(type => (type.uuid === availableType.uuid))
+                ));
 
                 this.setState({bandProfile: profile, availableMusicianTypes: musicianTypes});
             }).catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
-            .finally(() => this.setState({isLoading: false}))
+            .finally(() => this.setState({isMasterLoading: false}))
     }
 
     renderPictureSection() {
-        let {pictureUrl, isEditing} = this.state;
+        let {pictureUrl, isEditing, isLoading} = this.state;
         return (
             <>
                 <Col sm={0} md={3}/>
@@ -163,7 +206,7 @@ class _CreateMusicianPage extends React.Component {
                                 if (isEditing) {
                                     let {request} = this.state;
                                     request.clearProfilePicture = true;
-                                    this.state({request: request})
+                                    this.setState({request: request})
                                 }
                             }
                         }
@@ -173,9 +216,10 @@ class _CreateMusicianPage extends React.Component {
                             if (isEditing) {
                                 let {request} = this.state;
                                 request.clearProfilePicture = false;
-                                this.state({request: request})
+                                this.setState({request: request})
                             }
                         }}
+                        isLoading={isLoading}
                     />
                 </Col>
                 <Col sm={0} md={3}/>
@@ -184,12 +228,13 @@ class _CreateMusicianPage extends React.Component {
     }
 
     renderBaseMusicianInformationForm() {
-        let {request, selectedBirthday} = this.state;
+        let {request, selectedBirthday, isLoading} = this.state;
         return (
             <>
                 <Row style={{marginBottom: 10}}>
                     <Col md={6} sm={12}>
                         <TextFieldComponent
+                            disabled={isLoading}
                             label="Nome"
                             placeHolder="Insira aqui o nome do músico"
                             value={request.firstName}
@@ -200,6 +245,7 @@ class _CreateMusicianPage extends React.Component {
                     </Col>
                     <Col md={6} sm={12}>
                         <TextFieldComponent
+                            disabled={isLoading}
                             label="Sobrenome"
                             placeHolder="Insira aqui o sobrenome do músico"
                             value={request.lastName}
@@ -212,6 +258,7 @@ class _CreateMusicianPage extends React.Component {
                 <Row style={{marginBottom: 10}}>
                     <Col md={6} sm={12}>
                         <CalendarFieldComponent
+                            disabled={isLoading}
                             label="Data de nascimento"
                             placeHolder="Insira aqui a data de aniversário do músico"
                             value={selectedBirthday}
@@ -226,6 +273,7 @@ class _CreateMusicianPage extends React.Component {
                     </Col>
                     <Col md={6} sm={12}>
                         <TextMaskFieldComponent
+                            disabled={isLoading}
                             label="CPF"
                             placeHolder="Insira aqui o CPF do músico"
                             value={request.cpf}
@@ -283,6 +331,7 @@ class _CreateMusicianPage extends React.Component {
                 <Row style={{marginBottom: 10}}>
                     <Col md={6} sm={12}>
                         <TextFieldComponent
+                            disabled={isLoading}
                             label="Email"
                             placeHolder="Insira aqui o email do músico"
                             value={request.email}
@@ -318,7 +367,7 @@ class _CreateMusicianPage extends React.Component {
     }
 
     renderBaseMusicianTypes() {
-        let {availableMusicianTypes, selectedMusicianTypes} = this.state;
+        let {availableMusicianTypes, selectedMusicianTypes, isLoading} = this.state;
         return (
             <>
                 <Divider align="center"><span>Tipo de músico</span></Divider>
@@ -336,15 +385,25 @@ class _CreateMusicianPage extends React.Component {
                             targetStyle={{height: '342px'}}
                             onChange={
                                 (event) => {
+                                    if (isLoading) {
+                                        return
+                                    }
                                     let {request} = this.state;
 
                                     request.types = event.target
                                         .map(
                                             selectedType => (new MusicianTypeRequest(selectedType))
                                         );
+
+                                    let availableMusicianTypes = event.source;
+                                    let selectedMusicianTypes = event.target;
+
+                                    availableMusicianTypes.sort(compareMusicianTypeFunction);
+                                    selectedMusicianTypes.sort(compareMusicianTypeFunction);
+
                                     this.setState({
-                                        availableMusicianTypes: event.source,
-                                        selectedMusicianTypes: event.target
+                                        availableMusicianTypes: availableMusicianTypes,
+                                        selectedMusicianTypes: selectedMusicianTypes
                                     });
                                 }
                             }
@@ -362,6 +421,7 @@ class _CreateMusicianPage extends React.Component {
                     <span>Endereço</span>
                 </Divider>
                 <AddressFormComponent
+                    isLoading={this.state.isLoading}
                     ref={this.addressComponentRef}
                     showToast={this.state.showToast}
                     updateRequest={(newAddress) => this.setAddress(newAddress)}
@@ -398,25 +458,55 @@ class _CreateMusicianPage extends React.Component {
             this.setState({isLoading: false});
             return;
         }
-        let {bandUuid, picture, token} = this.state;
-        MusicianService.CREATE(bandUuid, picture, request, token)
-            .then(
-                () => {
-                    this.state.showToast(
-                        ToastUtils.BUILD_TOAST_SUCCESS_BODY("Músico criado com sucesso!")
-                    )
-                    this.setState({request: new MusicianRequest()});
-                    setTimeout(
-                        () => {
-                            this.state.navigateTo(`/bandas/${bandUuid}/gerenciar-musicos`)
-                        },
-                        1500
-                    );
-                }
-            ).catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
-            .finally(() => this.setState({isLoading: false}))
+        let {isEditing, musicianUuid, bandUuid, picture, token} = this.state;
+
+        if (isEditing) {
+            MusicianService.UPDATE(musicianUuid, picture, request, token)
+                .then(
+                    () => {
+                        this.state.showToast(
+                            ToastUtils.BUILD_TOAST_SUCCESS_BODY("Músico editado com sucesso!")
+                        )
+                        this.setState({request: new MusicianRequest()});
+                        setTimeout(
+                            () => {
+                                this.state.navigateTo(`/bandas/${bandUuid}/gerenciar-musicos`)
+                            },
+                            1500
+                        );
+                    }
+                ).catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
+                .finally(() => this.setState({isLoading: false}));
+        } else {
+            MusicianService.CREATE(bandUuid, picture, request, token)
+                .then(
+                    () => {
+                        this.state.showToast(
+                            ToastUtils.BUILD_TOAST_SUCCESS_BODY("Músico criado com sucesso!")
+                        )
+                        this.setState({request: new MusicianRequest()});
+                        setTimeout(
+                            () => {
+                                this.state.navigateTo(`/bandas/${bandUuid}/gerenciar-musicos`)
+                            },
+                            1500
+                        );
+                    }
+                ).catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
+                .finally(() => this.setState({isLoading: false}));
+        }
     }
 }
+
+const compareMusicianTypeFunction = (a, b) => {
+    if (a.uuid < b.uuid) {
+        return -1;
+    }
+    if (a.uuid > b.uuid) {
+        return 1;
+    }
+    return 0;
+};
 
 const mapStateToProps = state => {
     return state

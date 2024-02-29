@@ -13,7 +13,8 @@ export const UpdateImageComponent = (
         },
         onRemovePicture = () => {
         },
-        customDefaultImage
+        customDefaultImage,
+        isLoading=false
     }
 ) => {
     const fileUploadRef = useRef(null);
@@ -33,7 +34,7 @@ export const UpdateImageComponent = (
                 <Row>
                     <Col md={6} sm={12} style={{marginBottom: 15}}>
                         <Button
-                            disabled={!src}
+                            disabled={!src || isLoading}
                             style={StyleConstants.WIDTH_100_PERCENT}
                             label="Remover foto"
                             className="p-button-warning"
@@ -43,6 +44,7 @@ export const UpdateImageComponent = (
                     </Col>
                     <Col md={6} sm={12} style={{marginBottom: 15}}>
                         <FileUpload
+                            disabled={isLoading}
                             ref={fileUploadRef}
                             name="profilePicture"
                             accept="image/*"

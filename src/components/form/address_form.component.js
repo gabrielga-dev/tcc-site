@@ -17,7 +17,7 @@ export class AddressFormComponent extends React.Component {
         super(props)
 
         this.state = {
-            isLoading: false,
+            isLoading: props.isLoading,
             showToast: props.showToast,
 
             updateRequest: props.updateRequest ? props.updateRequest : (x) => console.log(x),
@@ -76,6 +76,7 @@ export class AddressFormComponent extends React.Component {
             zipCode,
         } = this.state.request;
         let {
+            isLoading,
             selectedState,
             states,
             selectedCity,
@@ -87,6 +88,7 @@ export class AddressFormComponent extends React.Component {
                 <Row style={ROW_STYLE}>
                     <Col md={6} sm={12}>
                         <TextFieldComponent
+                            disabled={isLoading}
                             label="Rua"
                             value={street}
                             minLength={3}
@@ -97,6 +99,7 @@ export class AddressFormComponent extends React.Component {
                     </Col>
                     <Col md={6} sm={12}>
                         <NumericFieldComponent
+                            disabled={isLoading}
                             label="Número"
                             value={number}
                             placeHolder="Ex.: 320"
@@ -107,6 +110,7 @@ export class AddressFormComponent extends React.Component {
                 <Row style={ROW_STYLE}>
                     <Col md={6} sm={12}>
                         <TextFieldComponent
+                            disabled={isLoading}
                             label="Complemento"
                             value={complement}
                             minLength={3}
@@ -117,6 +121,7 @@ export class AddressFormComponent extends React.Component {
                     </Col>
                     <Col md={6} sm={12}>
                         <TextFieldComponent
+                            disabled={isLoading}
                             label="Bairro"
                             value={neighbour}
                             minLength={3}
@@ -129,6 +134,7 @@ export class AddressFormComponent extends React.Component {
                 <Row style={ROW_STYLE}>
                     <Col md={6} sm={12}>
                         <DropDownFieldComponent
+                            disabled={isLoading}
                             label="Estado"
                             placeHolder="Selecione um estado"
                             value={selectedState}
@@ -144,7 +150,7 @@ export class AddressFormComponent extends React.Component {
                     </Col>
                     <Col md={6} sm={12}>
                         <DropDownFieldComponent
-                            disabled={!selectedState}
+                            disabled={!selectedState || isLoading}
                             label="Cidade"
                             placeHolder="Selecione uma cidade"
                             value={selectedCity}
@@ -161,6 +167,7 @@ export class AddressFormComponent extends React.Component {
                 <Row style={ROW_STYLE}>
                     <Col md={6} sm={12}>
                         <TextMaskFieldComponent
+                            disabled={isLoading}
                             label="CEP"
                             value={zipCode}
                             placeHolder="Ex.: 35.574-021"

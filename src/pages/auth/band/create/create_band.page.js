@@ -162,7 +162,7 @@ class _CreateBandPage extends React.Component {
                                 if (isEditing) {
                                     let {request} = this.state;
                                     request.clearProfilePicture = true;
-                                    this.state({request: request})
+                                    this.setState({request: request})
                                 }
                             }
                         }
@@ -172,7 +172,7 @@ class _CreateBandPage extends React.Component {
                             if (isEditing) {
                                 let {request} = this.state;
                                 request.clearProfilePicture = false;
-                                this.state({request: request})
+                                this.setState({request: request})
                             }
                         }}
                     />

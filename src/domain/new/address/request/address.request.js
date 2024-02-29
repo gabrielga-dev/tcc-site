@@ -6,11 +6,11 @@ export class AddressRequest {
     complement;
     cityId;
     stateIso;
-    countryIso='BR';
+    countryIso = 'BR';
     zipCode;
 
-    constructor(address=null) {
-        if(address){
+    constructor(address = null) {
+        if (address) {
             this.street = address.street;
             this.number = address.number;
             this.neighbour = address.neighbour;
@@ -29,6 +29,17 @@ export class AddressRequest {
             this.countryIso = 'BR';
             this.zipCode = '';
         }
+    }
+
+    fromResponse(response) {
+        this.street = response.street;
+        this.number = response.number;
+        this.neighbour = response.neighbour;
+        this.complement = response.complement;
+        this.cityId = response.cityId;
+        this.stateIso = response.state;
+        this.state = response.state;
+        this.zipCode = response.zipCode;
     }
 
     getValidations() {

@@ -23,6 +23,23 @@ export class MusicianRequest {
         }
     }
 
+    fromResponse(response){
+        this.firstName = response.firstName;
+        this.lastName = response.lastName;
+        this.birthday = response.birthDay;
+        this.cpf = response.cpf;
+        this.email = response.email;
+        this.address = new AddressRequest();
+        this.address.fromResponse(response.address);
+        this.types = response.types.map(
+            typeResponse => {
+                let typeRequest = new MusicianTypeRequest();
+                typeRequest.fromResponse(typeResponse);
+                return typeRequest;
+            }
+        );
+    }
+
     getValidations() {
         return [
             {
