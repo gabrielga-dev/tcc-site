@@ -51,6 +51,7 @@ class _AdministrateBandMusicians extends React.Component {
         super(props)
         this.state = {
             bandUuid: props.bandUuid,
+            isMasterLoading: true,
             isLoading: true,
             token: props.token,
             authenticatedUser: props.authenticatedUser,
@@ -65,17 +66,21 @@ class _AdministrateBandMusicians extends React.Component {
     }
 
     componentDidMount() {
+        this.setState({isLoading: true, isMasterLoading: true});
         let {bandUuid, token} = this.state;
         BandService.FIND_PROFILE(bandUuid, token)
             .then(response => {
                 const profile = new BandProfileDto(response.data);
                 this.setState({bandProfile: profile});
             }).catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
-            .finally(() => this.setState({isLoading: false}))
+            .finally(() => this.setState({isLoading: false, isMasterLoading: false}))
     }
 
     render() {
-        let {isLoading} = this.state;
+        let {isLoading, isMasterLoading} = this.state;
+        if (isMasterLoading){
+            return (<ActivityIndicatorComponent/>)
+        }
         let {navigateTo} = this.state;
         return (
             <HomeTemplate steps={['Home', 'Bandas', this.state.bandProfile?.name, 'Gerenciar Músicos']}>

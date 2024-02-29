@@ -20,6 +20,19 @@ export const MusicianService = {
         return axios.post(`${BASE_URL_BAND}/v1/musician/band/${bandUuid}`, form, BaseService.MAKE_HEADERS(token));
     },
 
+    UPDATE: (musicianUuid, picture, musician, token) => {
+        const form = new FormData();
+
+        const musicianJson = JSON.stringify(musician);
+        const musicianBlob = new Blob([musicianJson], {
+            type: 'application/json'
+        });
+        form.append('request', musicianBlob);
+
+        form.append('profilePicture', picture);
+        return axios.put(`${BASE_URL_BAND}/v1/musician/${musicianUuid}`, form, BaseService.MAKE_HEADERS(token));
+    },
+
     ASSOCIATE: (bandUuid, cpf, token) => (
         axios.post(
             `${BASE_URL_BAND}/v1/musician/${cpf}/band/${bandUuid}/associate`,
@@ -41,8 +54,8 @@ export const MusicianService = {
         )
     ),
 
-    FIND_BY_UUID: (bandUuid, musicianUuid, token) => (
-        axios.get(`${BASE_URL_BAND}/v1/musician/band/${bandUuid}/${musicianUuid}`, BaseService.MAKE_HEADERS(token))
+    FIND_BY_UUID: (musicianUuid, token) => (
+        axios.get(`${BASE_URL_BAND}/v1/musician/${musicianUuid}`, BaseService.MAKE_HEADERS(token))
     ),
 
     FIND_BY_CPF: (musicianCpf, token) => (

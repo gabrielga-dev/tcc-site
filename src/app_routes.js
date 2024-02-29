@@ -75,6 +75,7 @@ const generateBandOwnerRoutes = (user) => (
 
                 <Route element={<AdministrateBandMusicians/>} path="/bandas/:band_uuid/gerenciar-musicos"/>
                 <Route element={<CreateMusicianPage/>} path="/bandas/:band_uuid/gerenciar-musicos/criar"/>
+                <Route element={<CreateMusicianPage/>} path="/bandas/:band_uuid/gerenciar-musicos/:musician_uuid/editar"/>
                 <Route element={<AssociateMusicianPage/>} path="/bandas/:band_uuid/gerenciar-musicos/vincular"/>
                 <Route element={<AssociateMusicianPage/>} path="/bandas/:band_uuid/gerenciar-musicos/vincular/:cpf"/>
             </>
