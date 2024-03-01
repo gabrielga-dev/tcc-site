@@ -73,4 +73,12 @@ export const MusicianService = {
     REMOVE_PROFILE_PICTURE: (musicianUuid, token) => (
         axios.delete(`${BASE_URL_BAND}/v1/musician/${musicianUuid}/avatar`, BaseService.MAKE_HEADERS(token))
     ),
+
+    DEACTIVATE: (musicianUuid, token) => (
+        axios.delete(`${BASE_URL_BAND}/v1/musician/${musicianUuid}`, BaseService.MAKE_HEADERS(token))
+    ),
+
+    ACTIVATE: (musicianUuid, token) => (
+        axios.patch(`${BASE_URL_BAND}/v1/musician?musicianUuid=${musicianUuid}`, {}, BaseService.MAKE_HEADERS(token))
+    ),
 }
