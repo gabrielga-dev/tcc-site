@@ -23,6 +23,7 @@ export class MusicianResponse {
             this.avatarUuid = musician.avatarUuid;
             this.hasStartedWithThisBand = musician.hasStartedWithThisBand;
             this.active = musician.active;
+            this.hasAccount = musician.hasAccount;
             this.types = musician.types.map(type => (new MusicianTypeResponse(type)));
         }
     }

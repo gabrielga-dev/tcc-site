@@ -26,6 +26,7 @@ export class BandProfileDto {
             this.ownerUuid = data.ownerUuid;
             this.creationDate = new Date(data['creationDateMilliseconds']);
             this.musicians = data.musicians.map(musician => (new Musician(musician)));
+            this.createdMusicians = data.createdMusicians.map(musician => (new Musician(musician)));
             this.address = new AddressDto(data.address);
             this.contacts = data.contacts.map(contact => (new Contact(contact)));
             this.numberOfMusics = data.numberOfMusics;
@@ -58,6 +59,7 @@ class Musician {
     creationDate;
     types;
     hasStartedWithThisBand;
+    active;
 
     constructor(data) {
         this.uuid = data.uuid;
@@ -68,6 +70,8 @@ class Musician {
         this.creationDate = new Date(data['creationDateMilliseconds']);
         this.types = data.types ? data.types.map(type => (new MusicianTypeResponse(type))) : [];
         this.hasStartedWithThisBand = data.hasStartedWithThisBand;
+        this.active = data.active;
+        this.hasAccount = data.hasAccount;
     }
 }
 

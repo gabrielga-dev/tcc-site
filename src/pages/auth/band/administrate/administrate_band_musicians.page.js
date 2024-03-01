@@ -78,7 +78,7 @@ class _AdministrateBandMusicians extends React.Component {
 
     render() {
         let {isLoading, isMasterLoading} = this.state;
-        if (isMasterLoading){
+        if (isMasterLoading) {
             return (<ActivityIndicatorComponent/>)
         }
         let {navigateTo} = this.state;
@@ -109,14 +109,19 @@ class _AdministrateBandMusicians extends React.Component {
                                 />
                             </Col>
                         </Row>
-                        <Divider align="center"><span>Músicos</span></Divider>
+                        <Divider align="center"><span>Músicos vinculados à banda</span></Divider>
                         <Row>
                             <Col>
                                 {this.renderMusicians()}
                                 <Dialog
                                     header={
-                                        this.state.selectedMusician?.hasStartedWithThisBand
-                                            ? 'Excluir Músico' : 'Desvincular Músico'
+                                        this.state.disassociate
+                                            ? 'Desvincular Músico'
+                                            : (
+                                                this.selectedMusician?.active
+                                                    ? 'Desativar Músico'
+                                                    : 'Ativar Músico'
+                                            )
                                     }
                                     visible={this.state.showDeleteDialog}
                                     style={{width: '50vw'}}
@@ -129,37 +134,50 @@ class _AdministrateBandMusicians extends React.Component {
                                                     onClick={
                                                         () => this.setState({
                                                             selectedMusician: null,
-                                                            showDeleteDialog: false
+                                                            showDeleteDialog: false,
+                                                            disassociate: null
                                                         })
                                                     }
-                                                    className="p-button-success p-button-text"
+                                                    className={
+                                                        this.state.disassociate
+                                                            ? "p-button-success p-button-text"
+                                                            : (
+                                                                this.state.selectedMusician?.active
+                                                                    ? 'p-button-success p-button-text'
+                                                                    : 'p-button-danger p-button-text'
+                                                            )
+                                                    }
                                                 />
                                                 <Button
                                                     label="Sim"
                                                     icon="pi pi-check"
                                                     onClick={() => {
-                                                        let {selectedMusician} = this.state;
-                                                        if (selectedMusician) {
-                                                            if (selectedMusician.hasStartedWithThisBand) {
-                                                                this.deleteMusician();
-                                                            } else {
-                                                                this.disassociateMusician();
-                                                            }
+                                                        let {disassociate} = this.state;
+                                                        if (disassociate) {
+                                                            this.disassociateMusician();
                                                         } else {
-                                                            this.setState({
-                                                                selectedMusician: null,
-                                                                showDeleteDialog: false
-                                                            })
+                                                            this.deleteMusician();
                                                         }
                                                     }}
-                                                    className="p-button-danger"
+
+                                                    className={
+                                                        this.state.disassociate
+                                                            ? "p-button-danger"
+                                                            : (
+                                                                this.state.selectedMusician?.active
+                                                                    ? 'p-button-danger'
+                                                                    : 'p-button-success'
+                                                            )
+                                                    }
                                                     autoFocus
                                                 />
                                             </div>
                                         )
                                     }
                                     onHide={
-                                        () => this.setState({selectedMusician: null, showDeleteDialog: false})
+                                        () => this.setState(
+                                            {selectedMusician: null, showDeleteDialog: false, disassociate: null}
+                                        )
                                     }
                                     closable={false}
                                     draggable={false}
@@ -168,6 +186,10 @@ class _AdministrateBandMusicians extends React.Component {
                                 </Dialog>
                             </Col>
                         </Row>
+                        <Divider align="center"><span>Músicos criados pela banda</span></Divider>
+                        <Row>
+                            {this.renderMusicians(false)}
+                        </Row>
                     </Container>
                 </Card>
             </HomeTemplate>
@@ -175,37 +197,49 @@ class _AdministrateBandMusicians extends React.Component {
     }
 
     generateRemoveMessage() {
-        let {selectedMusician} = this.state;
+        let {disassociate, selectedMusician} = this.state;
 
         if (!selectedMusician) {
             return '';
         }
-        if (selectedMusician.hasStartedWithThisBand) {
-            return `Você deseja excluir o músico ${selectedMusician.firstName}?`;
+        if (disassociate) {
+            return `Você deseja desvincular o músico ${selectedMusician.firstName}?`;
         }
-        return `Você deseja desvincular o músico ${selectedMusician.firstName}?`;
+        return `Você deseja ${selectedMusician.active ? 'desativar' : 'ativar'} o músico ${selectedMusician.firstName}?`;
     }
 
-    renderMusicians() {
+    renderMusicians(onlyAssociated = true) {
         if (this.state.isLoading) {
             return (<ActivityIndicatorComponent/>);
         }
 
         let {bandProfile} = this.state;
 
-        if (bandProfile.musicians.length === 0)
+        if (
+            (onlyAssociated
+                ? bandProfile.musicians
+                : bandProfile.createdMusicians).length === 0
+        ) {
+            let emptyMessage = onlyAssociated
+                ? 'Nenhum músico vinculado à essa banda!'
+                : 'Nenhum músico criado por essa banda!'
             return (
                 <Col>
-                    <h5 align="center">Nenhum músico vinculado à essa banda! 😢</h5>
+                    <h5 align="center">{emptyMessage} 😢</h5>
                 </Col>
             );
+        }
 
         let {navigateTo} = this.state
 
-        let cols = bandProfile.musicians.map(
+        let cols = (
+            onlyAssociated
+                ? bandProfile.musicians
+                : bandProfile.createdMusicians
+        ).map(
             musician => (
                 <Col key={musician.uuid} xl={3} lg={4} md={6} sm={12} style={MarginStyle.makeMargin(0, 5, 0, 5)}>
-                    <Card key={musician.uuid}>
+                    <Card key={musician.uuid} style={musician.active ? {} : {backgroundColor: 'rgba(0, 0, 0, 0.15)'}}>
                         <Container>
                             <Row>
                                 <Col style={STYLE_ALIGN_ITEM_CENTER}>
@@ -249,27 +283,49 @@ class _AdministrateBandMusicians extends React.Component {
                             </Row>
                             <Divider/>
                             <Row style={{marginTop: 5}}>
-                                <Col md={6} sm={12} style={{marginBottom: 5}}>
+                                <Col md={onlyAssociated ? 12 : 6} sm={12} style={{marginBottom: 5}}>
                                     <Button
-                                        tooltip={musician.hasStartedWithThisBand ? 'Excluir' : 'Desvincular'}
+                                        disabled={!onlyAssociated && musician.hasAccount}
+                                        tooltip={
+                                            onlyAssociated
+                                                ? 'Desvincular'
+                                                : (
+                                                    musician.active
+                                                        ? 'Desativar' : 'Ativar'
+                                                )
+                                        }
                                         tooltipOptions={{position: "top"}}
-                                        className="p-button-danger"
-                                        icon="pi pi-trash"
+                                        className={
+                                            onlyAssociated || musician.active
+                                                ? 'p-button-danger'
+                                                : 'p-button-success'
+                                        }
+                                        icon={onlyAssociated ? 'pi pi-trash' : 'pi pi-power-off'}
                                         style={StyleConstants.WIDTH_100_PERCENT}
-                                        onClick={() => this.showDialogRemoveMusician(musician)}
+                                        onClick={() => this.showDialogRemoveMusician(musician, onlyAssociated)}
                                     />
                                 </Col>
-                                <Col md={6} sm={12} style={{marginBottom: 5}}>
-                                    <Button
-                                        disabled={!musician.hasStartedWithThisBand}
-                                        tooltip={musician.hasStartedWithThisBand ? 'Editar' : 'Impossível editar, músico vinculado'}
-                                        tooltipOptions={{position: "top"}}
-                                        className="p-button-warning"
-                                        icon="pi pi-pencil"
-                                        style={StyleConstants.WIDTH_100_PERCENT}
-                                        onClick={() => navigateTo(`${musician.uuid}/editar`)}
-                                    />
-                                </Col>
+                                {
+                                    onlyAssociated
+                                        ? (<></>)
+                                        : (
+                                            <Col md={6} sm={12} style={{marginBottom: 5}}>
+                                                <Button
+                                                    disabled={musician.hasAccount}
+                                                    tooltip={
+                                                        !musician.hasAccount
+                                                            ? 'Editar'
+                                                            : 'Impossível editar, músico vinculado'
+                                                    }
+                                                    tooltipOptions={{position: "top"}}
+                                                    className="p-button-warning"
+                                                    icon="pi pi-pencil"
+                                                    style={StyleConstants.WIDTH_100_PERCENT}
+                                                    onClick={() => navigateTo(`${musician.uuid}/editar`)}
+                                                />
+                                            </Col>
+                                        )
+                                }
                             </Row>
                         </Container>
                     </Card>
@@ -288,8 +344,8 @@ class _AdministrateBandMusicians extends React.Component {
         );
     }
 
-    showDialogRemoveMusician(musician) {
-        this.setState({selectedMusician: musician, showDeleteDialog: true});
+    showDialogRemoveMusician(musician, disassociate) {
+        this.setState({selectedMusician: musician, showDeleteDialog: true, disassociate: disassociate});
     }
 
     disassociateMusician() {
@@ -306,7 +362,32 @@ class _AdministrateBandMusicians extends React.Component {
     }
 
     deleteMusician() {
-        //todo delete musician
+        let {selectedMusician, token, showToast} = this.state;
+
+        this.setState({isMasterLoading: true})
+        if (!!selectedMusician) {
+            (
+                selectedMusician.active
+                    ? MusicianService.DEACTIVATE(selectedMusician.uuid, token)
+                    : MusicianService.ACTIVATE(selectedMusician.uuid, token)
+            ).then(
+                () => {
+                    showToast(
+                        ToastUtils.BUILD_TOAST_SUCCESS_BODY(
+                            `Músico ${selectedMusician.active ? 'desativado' : 'ativado'} com sucesso!`
+                        )
+                    );
+
+                    setTimeout(() => this.componentDidMount(), 2500);
+                }
+            ).catch(
+                error => {
+                    this.setState({isMasterLoading: false})
+                    this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error));
+                }
+            )
+        }
+        this.setState({isLoading: false, selectedMusician: null, showDeleteDialog: false})
     }
 }
 
