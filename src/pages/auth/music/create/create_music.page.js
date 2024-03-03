@@ -1,8 +1,8 @@
 import React, {useRef} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {Toast} from "primereact/toast";
-import {ActivityIndicatorComponent} from "../../../components/activity_indicator.component";
-import HomeTemplate from "../../template/home_template";
+import {ActivityIndicatorComponent} from "../../../../components/activity_indicator.component";
+import HomeTemplate from "../../../template/home_template";
 import {Container, Row} from "react-bootstrap";
 import {Card} from "primereact/card";
 import {Button} from "primereact/button";
@@ -48,11 +48,10 @@ class _CreateMusicPage extends React.Component {
     }
 
     render() {
-        let {isLoading, isMasterLoading} = this.state;
+        let {isMasterLoading} = this.state;
         if (isMasterLoading) {
             return (<ActivityIndicatorComponent/>)
         }
-        let {navigateTo} = this.state;
         return (
             <HomeTemplate steps={['Home', 'Bandas', this.state.bandProfile?.name, 'Gerenciar Músicos']}>
                 <Card>

@@ -254,7 +254,7 @@ class _ListOwnBandsPage extends React.Component {
                     <Col sm={12} md={4} style={{marginBottom: 10}}>
                         <Button
                             disabled={!band.active}
-                            tooltip="Administrar músicos"
+                            tooltip="Administrar músicas"
                             tooltipOptions={{position: 'top'}}
                             icon="pi pi-users"
                             className="p-button-rounded p-button-info"
