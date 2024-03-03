@@ -2,6 +2,7 @@ import {AddressDto} from "../address.dto";
 import {BandForm} from "../../form/band/band.form";
 import {ContactForm} from "../../form/band/contact.form";
 import {MusicianTypeResponse} from "../../musician/response/musician_type.response";
+import {MusicResponse} from "../../music/response/music.response";
 
 export class BandProfileDto {
     uuid;
@@ -12,6 +13,7 @@ export class BandProfileDto {
     ownerUuid;
     creationDate;
     musicians;
+    musics;
     address;
     contacts;
     numberOfMusics;
@@ -26,6 +28,7 @@ export class BandProfileDto {
             this.ownerUuid = data.ownerUuid;
             this.creationDate = new Date(data['creationDateMilliseconds']);
             this.musicians = data.musicians.map(musician => (new Musician(musician)));
+            this.musics = data.contributedMusics.map(music => (new MusicResponse(music)))
             this.createdMusicians = data.createdMusicians.map(musician => (new Musician(musician)));
             this.address = new AddressDto(data.address);
             this.contacts = data.contacts.map(contact => (new Contact(contact)));

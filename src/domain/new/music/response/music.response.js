@@ -14,7 +14,7 @@ export class MusicResponse {
             this.author = music.author;
             this.artist = music.artist;
             this.observation = music.observation;
-            this.creationDateTimestamp = new Date(music['creationDate']);
+            this.creationDateTimestamp = new Date(music['creationDateTimestamp']);
             this.active = music.active;
         }
     }

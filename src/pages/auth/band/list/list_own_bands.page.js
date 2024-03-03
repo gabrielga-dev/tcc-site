@@ -20,6 +20,7 @@ import './list_own_bands.style.css'
 import {Paginator} from "primereact/paginator";
 import {ConfirmDialog} from "primereact/confirmdialog";
 
+
 const ListOwnBandsPage = ({token, user}) => {
     const toast = useRef(null);
     const showToast = (body) => {
@@ -248,6 +249,16 @@ class _ListOwnBandsPage extends React.Component {
                             icon="pi pi-users"
                             className="p-button-rounded p-button-warning"
                             onClick={() => navigateTo(`/bandas/${band.uuid}/gerenciar-musicos`)}
+                        />
+                    </Col>
+                    <Col sm={12} md={4} style={{marginBottom: 10}}>
+                        <Button
+                            disabled={!band.active}
+                            tooltip="Administrar músicas"
+                            tooltipOptions={{position: 'top'}}
+                            icon="pi pi-users"
+                            className="p-button-rounded p-button-info"
+                            onClick={() => navigateTo(`/bandas/${band.uuid}/gerenciar-musicas`)}
                         />
                     </Col>
                 </Row>
