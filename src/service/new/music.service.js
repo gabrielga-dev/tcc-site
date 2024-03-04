@@ -9,4 +9,8 @@ export const MusicService = {
     LIST_BAND_MUSICS: (bandUuid, token=null) => (
         axios.get(`${BASE_URL_BAND}/v1/music/band/${bandUuid}`, BaseService.MAKE_HEADERS(token))
     ),
+
+    CREATE: (bandUuid, music, token) => (
+        axios.post(`${BASE_URL_BAND}/v1/music/band/${bandUuid}`, music, BaseService.MAKE_HEADERS(token))
+    ),
 }

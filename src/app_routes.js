@@ -27,6 +27,7 @@ import AdministrateBandMusicians from "./pages/auth/band/administrate/administra
 import CreateMusicianPage from "./pages/auth/musician/create/create_musician.page";
 import AssociateMusicianPage from "./pages/auth/musician/associate/associate_musician.page";
 import ListBandMusicsPage from "./pages/auth/music/list/list_band_musics.page";
+import CreateMusicPage from "./pages/auth/music/create/create_music.page";
 
 const AppRoutes = ({token, user}) => {
     return (
@@ -81,6 +82,7 @@ const generateBandOwnerRoutes = (user) => (
                 <Route element={<AssociateMusicianPage/>} path="/bandas/:band_uuid/gerenciar-musicos/vincular/:cpf"/>
 
                 <Route element={<ListBandMusicsPage/>} path="/bandas/:band_uuid/gerenciar-musicas"/>
+                <Route element={<CreateMusicPage/>} path="/bandas/:band_uuid/gerenciar-musicas/criar"/>
             </>
         )
 

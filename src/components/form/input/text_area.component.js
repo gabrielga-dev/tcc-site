@@ -10,12 +10,15 @@ export const TextAreaComponent = (
         minLength = 3,
         onChange = (value) => {
             console.log(value)
-        }
+        },
+        optional = false,
+        disabled = false
     }
 ) => (
     <>
-        <h6>{label}</h6>
+        <h6>{label}{optional ? '' : '*'}</h6>
         <InputTextarea
+            disabled={disabled}
             placeholder={placeHolder}
             value={value}
             rows={5}
