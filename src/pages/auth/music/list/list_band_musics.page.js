@@ -92,23 +92,20 @@ class _ListBandMusicsPage extends React.Component {
             return (<ActivityIndicatorComponent/>);
         }
 
-        let {isTableLoading, musics} = this.state;
+        let {isTableLoading, musics, navigateTo} = this.state;
         return (
             <HomeTemplate steps={['Home', 'Bandas', this.state.bandName, 'Gerenciar Músicas']}>
                 <Card>
                     <Container>
                         <Row>
-                            <Col sm={12} md={4}/>
-                            <Col sm={12} md={4}/>
-                            <Col sm={12} md={4}>
+                            <Col sm={12} md={8}/>
+                            <Col sm={12} md={4} style={{marginBottom: 10}}>
                                 <Button
                                     style={StyleConstants.WIDTH_100_PERCENT}
                                     label='Adicionar uma nova música'
                                     icon='pi pi-pencil'
                                     onClick={
-                                        () => {
-                                            //todo
-                                        }
+                                        () => navigateTo('criar')
                                     }
                                 />
                             </Col>
