@@ -5,7 +5,7 @@ export class MusicRequest {
     artist = '';
     observation = '';
 
-    fromRequest(request) {
+    fromResponse(request) {
         this.name = request.name;
         this.author = request.author;
         this.artist = request.artist;
