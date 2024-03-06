@@ -130,7 +130,7 @@ class _CreateMusicPage extends React.Component {
                                                 disabled={isLoading}
                                                 optional={true}
                                                 label='Observação'
-                                                placeHolder='Informações soibre a música, estilo, etc.'
+                                                placeHolder='Informações sobre a música, estilo, etc.'
                                                 value={request.observation}
                                                 onChange={(value) => this.changeValue('observation', value)}
                                                 maxLength={1000}

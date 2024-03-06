@@ -6,11 +6,23 @@ const BASE_URL_BAND = `${API_CONSTANTS.API_BASE_URL}/band`;
 
 export const MusicService = {
 
-    LIST_BAND_MUSICS: (bandUuid, token=null) => (
-        axios.get(`${BASE_URL_BAND}/v1/music/band/${bandUuid}`, BaseService.MAKE_HEADERS(token))
-    ),
+    LIST_BAND_MUSICS: (bandUuid, token = null, criteria, pagination) => {
+        let url = `${BASE_URL_BAND}/v1/music/band/${bandUuid}?${pagination.toRequestParameters()}`;
+        if (!criteria.isEmpty()) {
+            url = `${url}&${criteria.toRequestParameters()}`
+        }
+        return axios.get(url, BaseService.MAKE_HEADERS(token))
+    },
 
     CREATE: (bandUuid, music, token) => (
         axios.post(`${BASE_URL_BAND}/v1/music/band/${bandUuid}`, music, BaseService.MAKE_HEADERS(token))
+    ),
+
+    DEACTIVATE: (musicUuid, token) => (
+        axios.delete(`${BASE_URL_BAND}/v1/music/${musicUuid}`, BaseService.MAKE_HEADERS(token))
+    ),
+
+    ACTIVATE: (musicUuid, token) => (
+        axios.patch(`${BASE_URL_BAND}/v1/music?musicUuid=${musicUuid}`, null, BaseService.MAKE_HEADERS(token))
     ),
 }
