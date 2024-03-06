@@ -22,7 +22,6 @@ import {BandDto} from "../../../../domain/new/dto/band/band.dto";
 import {ActivityIndicatorComponent} from "../../../../components/activity_indicator.component";
 import {Avatar} from "primereact/avatar";
 import {FileService} from "../../../../service/new/file.service";
-import {PaginationDto} from "../../../../domain/new/dto/page/pagination.dto";
 import {InputText} from "primereact/inputtext";
 import {PageableDto} from "../../../../domain/new/dto/page/pageable.dto";
 import {Paginator} from "primereact/paginator";
@@ -53,8 +52,6 @@ export default class _SearchBandsPage extends React.Component {
             redirectTo: props.redirectTo,
 
             filter: new BandFilter(),
-            pagination: new PaginationDto(5),
-            pageable: new PageableDto(),
 
             isLoading: false,
             states: [],
