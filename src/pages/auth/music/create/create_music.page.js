@@ -16,10 +16,11 @@ import {TextAreaComponent} from "../../../../components/form/input/text_area.com
 import {FormEndingComponent} from "../../../../components/form_ending.component";
 import ValidationUtil from "../../../../util/validation/validation.util";
 import {MusicService} from "../../../../service/new/music.service";
+import axios from "axios";
 
 const CreateMusicPage = ({token, user}) => {
     const toast = useRef(null);
-    let {band_uuid, cpf} = useParams();
+    let {band_uuid, music_uuid} = useParams();
     const showToast = (body) => {
         toast.current.show(body);
     };
@@ -37,7 +38,7 @@ const CreateMusicPage = ({token, user}) => {
                 navigateTo={redirectTo}
                 showToast={showToast}
                 bandUuid={band_uuid}
-                cpf={cpf}
+                musicUuid={music_uuid}
             />
         </>
     );
@@ -48,6 +49,7 @@ class _CreateMusicPage extends React.Component {
         super(props)
         this.state = {
             isEditing: !!props.musicUuid,
+            musicUuid: props.musicUuid,
 
             bandUuid: props.bandUuid,
             isMasterLoading: true,
@@ -65,13 +67,22 @@ class _CreateMusicPage extends React.Component {
     componentDidMount() {
         this.setState({isMasterLoading: true});
 
-        let {bandUuid, token} = this.state;
+        let {bandUuid, token, isEditing, musicUuid} = this.state;
 
-        BandService.FIND_PROFILE(bandUuid, token)
-            .then(response => {
-                let profile = new BandProfileDto(response.data);
-                this.setState({bandName: profile.name});
-            }).catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
+        axios.all(
+            [
+                BandService.FIND_PROFILE(bandUuid, token),
+                isEditing ? MusicService.FIND_BY_UUID(musicUuid, token) : null
+            ]
+        ).then(responses => {
+            let profile = new BandProfileDto(responses[0].data);
+            this.setState({bandName: profile.name});
+            if (isEditing){
+                let music = new MusicRequest();
+                music.fromResponse(responses[1].data);
+                this.setState({request: music});
+            }
+        }).catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
             .finally(() => this.setState({isMasterLoading: false}));
     }
 
@@ -80,10 +91,12 @@ class _CreateMusicPage extends React.Component {
             return (<ActivityIndicatorComponent/>);
         }
 
-        let {request, isLoading} = this.state;
+        let {request, isLoading, isEditing} = this.state;
 
         return (
-            <HomeTemplate steps={['Home', 'Bandas', this.state.bandName, 'Gerenciar Músicas', 'Criar']}>
+            <HomeTemplate
+                steps={['Home', 'Bandas', this.state.bandName, 'Gerenciar Músicas', isEditing ? 'Editar': 'Criar']}
+            >
                 <Card>
                     <Container>
                         <Row>
@@ -166,7 +179,7 @@ class _CreateMusicPage extends React.Component {
     submitRequest() {
         this.setState({isLoading: true});
 
-        let {bandUuid, request, isEditing, token} = this.state;
+        let {bandUuid, musicUuid, request, isEditing, token} = this.state;
         const validator = new ValidationUtil();
         let errors = validator.validate(request);
         if (errors.length > 0) {
@@ -190,10 +203,31 @@ class _CreateMusicPage extends React.Component {
                         );
                     }
                 ).catch(
-                    error => {
-                        this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error));
-                        this.setState({isLoading: false})
+                error => {
+                    this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error));
+                    this.setState({isLoading: false})
+                }
+            );
+        } else {
+            MusicService.UPDATE(musicUuid, request, token)
+                .then(
+                    () => {
+                        this.state.showToast(
+                            ToastUtils.BUILD_TOAST_SUCCESS_BODY("Música editada com sucesso!")
+                        )
+                        this.setState({request: new MusicRequest()});
+                        setTimeout(
+                            () => {
+                                this.state.navigateTo(`/bandas/${bandUuid}/gerenciar-musicas`)
+                            },
+                            1500
+                        );
                     }
+                ).catch(
+                error => {
+                    this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error));
+                    this.setState({isLoading: false})
+                }
             );
         }
     }

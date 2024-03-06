@@ -83,6 +83,7 @@ const generateBandOwnerRoutes = (user) => (
 
                 <Route element={<ListBandMusicsPage/>} path="/bandas/:band_uuid/gerenciar-musicas"/>
                 <Route element={<CreateMusicPage/>} path="/bandas/:band_uuid/gerenciar-musicas/criar"/>
+                <Route element={<CreateMusicPage/>} path="/bandas/:band_uuid/gerenciar-musicas/:music_uuid/editar"/>
             </>
         )
 
