@@ -143,7 +143,7 @@ const generateContractorOptions = (updateToken, updateUser, redirectTo) => (
                 {
                     label: 'Cadastrar',
                     icon: 'pi pi-fw pi-plus',
-                    command: () => redirectTo('/eventos')
+                    command: () => redirectTo('/eventos/criar')
                 },
                 {
                     label: 'Meus eventos',

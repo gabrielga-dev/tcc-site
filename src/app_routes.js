@@ -28,6 +28,7 @@ import CreateMusicianPage from "./pages/auth/musician/create/create_musician.pag
 import AssociateMusicianPage from "./pages/auth/musician/associate/associate_musician.page";
 import ListBandMusicsPage from "./pages/auth/music/list/list_band_musics.page";
 import CreateMusicPage from "./pages/auth/music/create/create_music.page";
+import CreateEventPage from "./pages/auth/event/create/create_event.page";
 
 const AppRoutes = ({token, user}) => {
     return (
@@ -55,6 +56,7 @@ const authRoutes = (user) => (
         <Route element={<ChangeEmailPage/>} path="/mudar-email/:validation_uuid"/>
 
         {generateBandOwnerRoutes(user)}
+        {generateContractorOwnerRoutes(user)}
 
         <Route element={<SearchAuthenticatedServices/>} path="/meus-servicos"/>
         <Route element={<SearchAuthenticatedPersonBandsPage/>} path="/meus-servicos/banda"/>
@@ -86,7 +88,16 @@ const generateBandOwnerRoutes = (user) => (
                 <Route element={<CreateMusicPage/>} path="/bandas/:band_uuid/gerenciar-musicas/:music_uuid/editar"/>
             </>
         )
+);
 
+const generateContractorOwnerRoutes = (user) => (
+    (!user.roles.some(role => (role.name === 'CONTRACTOR')))
+        ? (<></>)
+        : (
+            <>
+                <Route element={<CreateEventPage/>} path="/eventos/criar"/>
+            </>
+        )
 );
 
 const nonAuthRoutes = () => (

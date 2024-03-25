@@ -13,10 +13,11 @@ export const DropDownFieldComponent = (
         },
         optionLabel = 'name',
         disabled = false,
+        optional=false
     }
 ) => (
     <>
-        <h6>{label}</h6>
+        <h6>{label}{!optional ? '*' : ''}</h6>
         <Dropdown
             style={StyleConstants.WIDTH_100_PERCENT}
             optionLabel={optionLabel}

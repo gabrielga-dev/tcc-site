@@ -28,7 +28,6 @@ export const CalendarFieldComponent = (
             dateFormat={dateFormat}
             style={StyleConstants.WIDTH_100_PERCENT}
             onChange={(e) => {
-                console.log(e.value)
                 onChange(e.value)
             }}
         />

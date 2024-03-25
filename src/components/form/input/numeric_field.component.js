@@ -11,11 +11,12 @@ export const NumericFieldComponent = (
         minLength = 3,
         onChange = (value) => {
             console.log(value)
-        }
+        },
+        optional=false
     }
 ) => (
     <>
-        <h6>{label}</h6>
+        <h6>{label}{!optional ? '*' : ''}</h6>
         <InputNumber
             placeholder={placeHolder}
             value={value}
