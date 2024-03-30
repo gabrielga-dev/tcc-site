@@ -8,4 +8,13 @@ export const EventService = {
     CREATE: (request, token) => (
         axios.post(`${BASE_URL}/v1/event`, request, BaseService.MAKE_HEADERS(token))
     ),
+
+    FIND_BY_CRITERIA: (criteria, pagination, token) => {
+
+        let url = `${BASE_URL}/v1/event?${pagination.toRequestParameters()}`;
+        if (!!criteria) {
+            url = `${url}&${criteria.toRequestParameters()}`
+        }
+        return axios.get(url, BaseService.MAKE_HEADERS(token));
+    },
 }
