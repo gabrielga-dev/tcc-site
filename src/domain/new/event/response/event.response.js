@@ -4,6 +4,7 @@ export class EventResponse {
     name;
     description;
     dateTimestamp;
+    active;
 
     isActive() {
         const eventDate = new Date(this.dateTimestamp);
@@ -17,6 +18,7 @@ export class EventResponse {
             this.name = data.name;
             this.description = data.description;
             this.dateTimestamp = data.dateTimestamp;
+            this.active = data.active;
         }
     }
 }

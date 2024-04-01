@@ -17,4 +17,12 @@ export const EventService = {
         }
         return axios.get(url, BaseService.MAKE_HEADERS(token));
     },
+
+    FIND_PROFILE: (eventUuid, token) => {
+        return axios.get(`${BASE_URL}/v1/event/${eventUuid}/profile`, BaseService.MAKE_HEADERS(token));
+    },
+
+    CANCEL: (eventUuid, token) => {
+        return axios.delete(`${BASE_URL}/v1/event/${eventUuid}/cancel`, BaseService.MAKE_HEADERS(token));
+    },
 }

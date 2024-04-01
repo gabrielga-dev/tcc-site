@@ -30,6 +30,7 @@ import ListBandMusicsPage from "./pages/auth/music/list/list_band_musics.page";
 import CreateMusicPage from "./pages/auth/music/create/create_music.page";
 import CreateEventPage from "./pages/auth/event/create/create_event.page";
 import ListEventsPage from "./pages/auth/event/list/list_events.page";
+import CancelEventPage from "./pages/auth/event/cancel/cancel_event.page";
 
 const AppRoutes = ({token, user}) => {
     return (
@@ -98,6 +99,7 @@ const generateContractorOwnerRoutes = (user) => (
             <>
                 <Route element={<CreateEventPage/>} path="/eventos/criar"/>
                 <Route element={<ListEventsPage/>} path="/eventos"/>
+                <Route element={<CancelEventPage/>} path="/eventos/:event_uuid/cancelar"/>
             </>
         )
 );

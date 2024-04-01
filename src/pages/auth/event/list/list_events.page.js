@@ -208,7 +208,7 @@ class _ListEventsPage extends React.Component {
                             tooltipOptions={{position: 'top'}}
                             icon="pi pi-times"
                             className="p-button-rounded p-button-danger"
-                            onClick={() => console.log('cancelar')} //todo
+                            onClick={() => navigateTo(`/eventos/${event.uuid}/cancelar`)}
                         />
                     </Col>
                 </Row>
