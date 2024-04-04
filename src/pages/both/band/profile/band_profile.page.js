@@ -84,7 +84,7 @@ class _BandProfilePage extends React.Component {
         if (this.state.isLoading) {
             return (<ActivityIndicatorComponent/>);
         }
-        let {bandProfile, authenticatedUser} = this.state;
+        let {bandProfile, authenticatedUser, navigateTo} = this.state;
         return (
             <HomeTemplate steps={['Home', 'Bandas', this.state.bandProfile?.name]}>
                 <Card>
@@ -133,6 +133,9 @@ class _BandProfilePage extends React.Component {
                                                 style={StyleConstants.WIDTH_100_PERCENT}
                                                 icon="pi pi-dollar"
                                                 className="p-button-success"
+                                                onClick={
+                                                    () => navigateTo(`/band/${this.state.bandUuid}/pedir-orcamento`)
+                                                }
                                             />
                                         </Col>
                                     </Row>

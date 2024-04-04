@@ -2,15 +2,15 @@ import React, {useRef} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {Toast} from "primereact/toast";
 import {connect} from "react-redux";
-import {EventResponse} from "../../../../domain/new/event/response/event.response";
-import {EventService} from "../../../../service/new/event.service";
-import {ToastUtils} from "../../../../util/toast.utils";
-import {ActivityIndicatorComponent} from "../../../../components/activity_indicator.component";
-import HomeTemplate from "../../../template/home_template";
+import {EventResponse} from "../../../../../domain/new/event/response/event.response";
+import {EventService} from "../../../../../service/new/event.service";
+import {ToastUtils} from "../../../../../util/toast.utils";
+import {ActivityIndicatorComponent} from "../../../../../components/activity_indicator.component";
+import HomeTemplate from "../../../../template/home_template";
 import {Card} from "primereact/card";
 import {Container} from "react-bootstrap";
-import {QuoteRequestService} from "../../../../service/new/quote_request.service";
-import {QuoteRequestTypeResponse} from "../../../../domain/new/quote_request/response/quote_request_type.response";
+import {QuoteRequestService} from "../../../../../service/new/quote_request.service";
+import {QuoteRequestTypeResponse} from "../../../../../domain/new/quote_request/response/quote_request_type.response";
 import {QuoteRequestsTableComponent} from "./quote_request_table.component";
 
 const ListEventQuoteRequestsPage = ({token, user}) => {

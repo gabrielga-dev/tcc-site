@@ -2,10 +2,10 @@ import React from "react";
 import {Col, Container, Row} from "react-bootstrap";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
-import {ServiceType} from "../../../../domain/new/quote_request/service.type";
-import {ToastUtils} from "../../../../util/toast.utils";
+import {ServiceType} from "../../../../../domain/new/quote_request/service.type";
+import {ToastUtils} from "../../../../../util/toast.utils";
 import {Button} from "primereact/button";
-import {QuoteRequestStatusType} from "../../../../domain/new/quote_request/quote_request_status.type";
+import {QuoteRequestStatusType} from "../../../../../domain/new/quote_request/quote_request_status.type";
 
 export const QuoteRequestsTableComponent = (
     {
