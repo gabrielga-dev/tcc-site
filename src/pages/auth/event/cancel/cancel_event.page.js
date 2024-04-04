@@ -60,7 +60,7 @@ class _CancelEventPage extends React.Component {
         this.setState({isMasterLoading: true});
 
         let {eventUuid, token, showToast, navigateTo} = this.state;
-        EventService.FIND_PROFILE(eventUuid, token)
+        EventService.FIND_BY_UUID(eventUuid, token)
             .then(
                 response => {
                     let eventResponse = new EventResponse(response.data);
