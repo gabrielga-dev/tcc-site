@@ -7,6 +7,7 @@ import './remove_navbar_button.css'
 import PerfilDialogComponent from "./perfil_dialog.component";
 import {Col, Container, Row} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
+import {ColorConstants} from "../../style/color.constants";
 
 export const BarraSuperiorComponent = ({openLateralMenu, authenticatedUser}) => {
     const navigate = useNavigate();
@@ -45,6 +46,7 @@ class _BarraSuperiorComponent extends React.Component {
         return (
             <>
                 <Menubar
+                    style={MENU_BAR_STYLE}
                     start={
                         <Button
                             onClick={openLateralMenu}
@@ -105,6 +107,11 @@ class _BarraSuperiorComponent extends React.Component {
             />
         )
     }
+}
+
+const MENU_BAR_STYLE = {
+    backgroundColor: ColorConstants.BACKGROUND.AUX,
+    borderColor: ColorConstants.BACKGROUND.AUX,
 }
 
 const innerStyle =

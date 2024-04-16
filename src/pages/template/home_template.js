@@ -6,8 +6,8 @@ import {ActivityIndicatorComponent} from "../../components/activity_indicator.co
 import MenuLateralComponent from "../../components/menu_lateral.component";
 import {BarraSuperiorComponent} from "../../components/barraSuperior/barra_superior.component";
 import {Container} from "react-bootstrap";
-import {PaddingStyle} from "../../style/padding.style";
 import {BreadcrumbComponent} from "../../components/breadcrumb.component";
+import {ColorConstants} from "../../style/color.constants";
 
 const HomeTemplate = ({token, user, updateToken, children, steps}) => {
     const navigate = useNavigate();
@@ -41,12 +41,12 @@ class _HomeTemplate extends React.Component {
     }
 
     render() {
-        let {authenticatedUser, loading, navigateTo} = this.state
+        let {authenticatedUser, loading} = this.state
         if (loading) {
             return (<ActivityIndicatorComponent/>);
         }
-        return(
-            <>
+        return (
+            <div style={CONTAINER_STYLE}>
                 <BarraSuperiorComponent
                     openLateralMenu={() => this.setState({showMenu: true})}
                     authenticatedUser={authenticatedUser}
@@ -57,16 +57,25 @@ class _HomeTemplate extends React.Component {
                         this.setState({showMenu: !state})
                     }}
                 />
-                <div style={PaddingStyle.makePadding(10)}>
+                <div style={BREAD_CRUMB_STYLE}>
                     <BreadcrumbComponent passos={this.state.steps}/>
                 </div>
                 <Container>
                     {this.props.children}
                 </Container>
-            </>
+            </div>
         );
     }
 }
+
+const BREAD_CRUMB_STYLE = {
+    padding: 10,
+}
+
+const CONTAINER_STYLE = {
+    color: ColorConstants.TEXT_COLOR_MAIN
+}
+
 
 const myMapDispatchToProps = {
     updateToken: updateToken,

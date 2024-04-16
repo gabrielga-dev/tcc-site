@@ -1,0 +1,11 @@
+.p-accordion-header-link {
+    background-color: #343434 !important;
+    border-color: #2d2d2d !important;
+    color: #b7b7b7 !important;
+}
+
+.p-accordion-content {
+    background-color: #343434 !important;
+    border-color: #343434 !important;
+    color: #b7b7b7 !important;
+}

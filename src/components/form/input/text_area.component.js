@@ -16,8 +16,9 @@ export const TextAreaComponent = (
     }
 ) => (
     <>
-        <h6>{label}{optional ? '' : '*'}</h6>
+        <h6 className='input-field-label'>{label}{!optional ? '*' : ''}</h6>
         <InputTextarea
+            className="input-field"
             disabled={disabled}
             placeholder={placeHolder}
             value={value}

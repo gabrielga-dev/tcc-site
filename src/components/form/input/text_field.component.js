@@ -1,28 +1,29 @@
 import {InputText} from "primereact/inputtext";
-import {StyleConstants} from "../../../service/style.constants";
 import React from "react";
 
 export const TextFieldComponent = (
     {
-        disabled=false,
-        label='INPUT_TEXT',
-        placeHolder='PLACE_HOLDER',
+        disabled = false,
+        label = 'INPUT_TEXT',
+        placeHolder = 'PLACE_HOLDER',
         value,
-        maxLength=75,
-        minLength=3,
-        onChange=(value)=>{console.log(value)},
-        optional=false
+        maxLength = 75,
+        minLength = 3,
+        onChange = (value) => {
+            console.log(value)
+        },
+        optional = false
     }
 ) => (
     <>
-        <h6>{label}{!optional ? '*' : ''}</h6>
+        <h6 className='input-field-label'>{label}{!optional ? '*' : ''}</h6>
         <InputText
+            className="p-inputtext-sm input-field"
             disabled={disabled}
             placeholder={placeHolder}
             value={value}
             maxLength={maxLength}
             minLength={minLength}
-            style={StyleConstants.WIDTH_100_PERCENT}
             onChange={(e) => onChange(e.target.value)}
         />
     </>

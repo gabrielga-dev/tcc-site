@@ -14,10 +14,10 @@ import {StyleConstants} from "../../../../service/style.constants";
 import {MusicianResponse} from "../../../../domain/new/musician/response/musician.response";
 import {MusicianService} from "../../../../service/new/musician.service";
 import {Divider} from "primereact/divider";
-import {Avatar} from "primereact/avatar";
-import {Image} from "primereact/image";
 import {FileService} from "../../../../service/new/file.service";
 import {Tag} from "primereact/tag";
+
+import './associate_musician.style.css';
 
 const AssociateMusicianPage = ({token, user}) => {
     const toast = useRef(null);
@@ -57,7 +57,7 @@ class _AssociateMusicianPage extends React.Component {
             navigateTo: props.navigateTo,
             showToast: props.showToast,
 
-            cpf: this.props.cpf ? this.props.cpf : '',
+            cpf: this.props.cpf ? this.props.cpf : '008.548.970-03',
             bandName: '',
             searched: false,
             foundMusician: new MusicianResponse(),
@@ -80,7 +80,7 @@ class _AssociateMusicianPage extends React.Component {
         let {cpf, isLoading} = this.state;
         return (
             <HomeTemplate steps={['Home', 'Bandas', this.state.bandName, 'Gerenciar Músicos', 'Vincular Músico']}>
-                <Card>
+                <Card className='main-card'>
                     <Container>
                         <Row>
                             <Col>
@@ -113,9 +113,7 @@ class _AssociateMusicianPage extends React.Component {
                         </Row>
                         <Divider align='center'><span>Resultado</span></Divider>
                         <Row>
-                            <Col>
-                                {this.renderSearchResult()}
-                            </Col>
+                            {this.renderSearchResult()}
                         </Row>
                     </Container>
                 </Card>
@@ -130,74 +128,72 @@ class _AssociateMusicianPage extends React.Component {
         let {searched, foundMusician} = this.state;
 
         if (!searched) {
-            return (<h6 align='center'>Pesquise por um músico! 🤩</h6>)
+            return (
+                <Col>
+                    <h6 align='center'>Pesquise por um músico! 🤩</h6>
+                </Col>
+            )
         }
 
         if (!foundMusician.uuid) {
-            return (<h6 align='center'>Nenhum músico encontrado com esse cpf! 😢</h6>)
+            return (
+                <Col>
+                    <h6 align='center'>Nenhum músico encontrado com esse cpf! 😢</h6>
+                </Col>
+            )
         }
-        return this.renderMusician();
+        return (
+            <>
+                <Col />
+                {this.renderMusician()}
+                <Col />
+            </>
+        );
     }
 
     renderMusician() {
         let {foundMusician} = this.state;
         return (
-            <Card>
-                <Container>
-                    <Row>
-                        <Col style={STYLE_ALIGN_ITEM_CENTER}>
-                            {
-                                !!!foundMusician.avatarUuid
-                                    ? (<Avatar label={foundMusician.firstName[0]} size=" large"/>)
-                                    : (
-                                        <Image
-                                            src={FileService.GET_IMAGE_URL(foundMusician.avatarUuid)}
-                                            alt={`Imagem do músico ${foundMusician.name}`}
-                                            width="100"
-                                            height="100"
-                                        />
-                                    )
-                            }
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={12} style={STYLE_ALIGN_ITEM_CENTER}>
-                            <h5>{`${foundMusician.firstName} ${foundMusician.lastName}`}</h5>
-                        </Col>
-                        <Col md={12} style={STYLE_ALIGN_ITEM_CENTER}>
-                            <h6>{`${foundMusician.age} anos`}</h6>
-                        </Col>
-                    </Row>
-                    <Row>
-                        {
-                            foundMusician.types
-                                ? foundMusician.types.map(
-                                    type => (
-                                        <Col key={`${foundMusician.uuid}_${type.uuid}`} md={6} style={{marginTop: 5}}>
-                                            <Tag
-                                                style={StyleConstants.WIDTH_100_PERCENT}
-                                                value={type.name}
-                                                rounded
-                                            />
-                                        </Col>
-                                    )
-                                ) : []
+            <Col
+                xl={2} lg={3} md={4} sm={12}
+                className={foundMusician.active ? 'musician-musician-card-active' : 'musician-card-non-active'}
+            >
+                <div
+                    className='musician-img-container'
+                >
+                    <img
+                        className='musician-img'
+                        src={
+                            !!foundMusician.avatarUuid
+                                ? FileService.GET_IMAGE_URL(foundMusician.avatarUuid)
+                                : '/images/musician_default_icon.png'
                         }
-                    </Row>
-                    <Divider/>
-                    <Row style={{marginTop: 5}}>
-                        <Col style={{marginBottom: 5}}>
-                            <Button
-                                label="Vincular"
-                                className="p-button-success"
-                                icon="pi pi-plus"
-                                style={StyleConstants.WIDTH_100_PERCENT}
-                                onClick={() => this.associateMusician()}
-                            />
-                        </Col>
-                    </Row>
-                </Container>
-            </Card>
+                        alt={`Imagem do integrante ${foundMusician.name}`}
+                    />
+                </div>
+                <p className='musician-name'>{foundMusician.firstName}</p>
+                <p className='musician-age'>{`${foundMusician.age} anos`}</p>
+                <div className='musician-type-container'>
+                    {
+                        foundMusician.types
+                            ? foundMusician.types.map(
+                                type => (
+                                    <Tag
+                                        key={`${foundMusician.uuid}-${type.name}`}
+                                        value={type.name}
+                                        rounded
+                                    />
+                                )
+                            ) : []
+                    }
+                </div>
+                <Button
+                    label="Vincular"
+                    className="p-button-success assoc-button"
+                    icon="pi pi-plus"
+                    onClick={() => this.associateMusician()}
+                />
+            </Col>
         );
     }
 
@@ -235,8 +231,6 @@ class _AssociateMusicianPage extends React.Component {
         ).finally(() => this.setState({isLoading: false, searched: true}))
     }
 }
-
-const STYLE_ALIGN_ITEM_CENTER = {display: 'flex', alignItems: 'center', justifyContent: 'center'};
 
 
 const mapStateToProps = state => {

@@ -1,0 +1,11 @@
+.p-fileupload>.p-button{
+    font-size: 12px !important;
+    width: 100%;
+}
+.p-button-warning{
+    font-size: 12px !important;
+}
+
+img {
+    border: #b7b7b7 1px solid !important;
+}

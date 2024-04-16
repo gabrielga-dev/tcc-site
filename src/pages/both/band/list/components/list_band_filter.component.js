@@ -1,16 +1,15 @@
 import React from "react";
 import {Accordion, AccordionTab} from "primereact/accordion";
 import {Col, Container, Row} from "react-bootstrap";
-import {InputText} from "primereact/inputtext";
 import {ListBandCriteria} from "../../../../../domain/new/band/criteria/list_band.criteria";
-import {StyleConstants} from "../../../../../service/style.constants";
-import {Dropdown} from "primereact/dropdown";
 import {LocationService} from "../../../../../service/new/location.service";
 import {ToastUtils} from "../../../../../util/toast.utils";
 import {StateResponse} from "../../../../../domain/new/location/response/state.response";
 import {ActivityIndicatorComponent} from "../../../../../components/activity_indicator.component";
 import {CityResponse} from "../../../../../domain/new/location/response/city.response";
 import {FormEndingComponent} from "../../../../../components/form_ending.component";
+import {TextFieldComponent} from "../../../../../components/form/input/text_field.component";
+import {DropDownFieldComponent} from "../../../../../components/form/input/dropdown_field.component";
 
 
 export class ListBandFilterComponent extends React.Component {
@@ -74,40 +73,39 @@ export class ListBandFilterComponent extends React.Component {
             <AccordionTab header="Filtros">
                 <Container>
                     <Row>
-                        <Col md={4} sm={12} style={FIELD_MARGIN}>
-                            <h5>Nome</h5>
-                            <InputText
-                                style={StyleConstants.WIDTH_100_PERCENT}
+                        <Col md={4} sm={12}>
+                            <TextFieldComponent
+                                label='Nome'
+                                placeHolder='Digite o nome da banda'
+                                optional={true}
                                 value={this.state.criteria.name}
                                 maxLength={100}
-                                onChange={(e) => this.setName(e.target.value)}
+                                onChange={(e) => this.setName(e)}
                             />
                         </Col>
-                        <Col md={4} sm={12} style={FIELD_MARGIN}>
-                            <h5>Estado</h5>
-                            <Dropdown
-                                style={StyleConstants.WIDTH_100_PERCENT}
-                                optionLabel="name"
+                        <Col md={4} sm={12}>
+                            <DropDownFieldComponent
+                                label='Estado'
+                                optional={true}
+                                placeHolder="Selecione um estado"
+                                emptyMessage="Nenhum estado encontrado"
                                 value={selectedState}
                                 options={states}
-                                onChange={(e) => this.setStateLocation(e.value)}
-                                placeholder="Selecione um estado"
-                                emptyMessage="Nenhum estado encontrado"
-                                filter={true}
+                                optionLabel="name"
+                                onChange={(e) => this.setStateLocation(e)}
                             />
                         </Col>
-                        <Col md={4} sm={12} style={FIELD_MARGIN}>
-                            <h5>Cidade</h5>
-                            <Dropdown
+                        <Col md={4} sm={12}>
+                            <DropDownFieldComponent
                                 disabled={!selectedState}
-                                style={StyleConstants.WIDTH_100_PERCENT}
-                                optionLabel="name"
+                                label='Cidade'
+                                optional={true}
+                                placeHolder="Selecione uma cidade"
+                                emptyMessage="Nenhuma cidade encontrada"
                                 value={selectedCity}
                                 options={cities}
-                                onChange={(e) => this.setCityLocation(e.value)}
-                                placeholder="Selecione uma cidade"
-                                emptyMessage="Nenhuma cidade encontrada"
-                                filter={true}
+                                optionLabel="name"
+                                onChange={(e) => this.setCityLocation(e)}
                             />
                         </Col>
                     </Row>
@@ -172,5 +170,3 @@ export class ListBandFilterComponent extends React.Component {
         search(newCriteria);
     }
 }
-
-const FIELD_MARGIN = {marginBottom: 20};

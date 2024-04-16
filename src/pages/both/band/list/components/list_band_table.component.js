@@ -1,9 +1,9 @@
 import {Col, Container, Row} from "react-bootstrap";
 import {ActivityIndicatorComponent} from "../../../../../components/activity_indicator.component";
-import {Card} from "primereact/card";
 import {FileService} from "../../../../../service/new/file.service";
-import {Button} from "primereact/button";
 import {StyleConstants} from "../../../../../service/style.constants";
+import {ColorConstants} from "../../../../../style/color.constants";
+import './list_band_table_style.css';
 
 export const ListBandTableComponent = ({bands, navigateTo, isLoading}) => {
     if (isLoading) {
@@ -23,15 +23,36 @@ export const ListBandTableComponent = ({bands, navigateTo, isLoading}) => {
 
 
 const generateBandCard = (band, navigateTo) => (
-    <Col md={4} sm={12} key={band.uuid}>
-        <Card
-            title={band.name}
-            subTitle={`${band.address.city}, ${band.address.state}`}
-            header={generateBandCardHeader(band.profilePictureUuid)}
-            footer={generateBandCardFooter(band.uuid, navigateTo)}
+    <Col md={3} sm={12} key={band.uuid}>
+        <div
+            className="band-card"
+            key={band.uuid}
+            onClick={() => navigateTo(`/servicos/bandas/${band.uuid}`)}
         >
-            <p>{band.description}</p>
-        </Card>
+            {generateBandCardHeader(band.profilePictureUuid)}
+            <p
+                style={
+                    {
+                        marginBottom: 0,
+                        color: ColorConstants.TEXT_COLOR_MAIN,
+                        fontSize: 18
+                    }
+                }
+            >
+                <b>{band.name}</b>
+            </p>
+            <p
+                style={
+                    {
+                        marginBottom: 0,
+                        color: ColorConstants.TEXT_COLOR_MAIN,
+                        fontSize: 12
+                    }
+                }
+            >
+                {`${band.address.city}, ${band.address.state}`}
+            </p>
+        </div>
     </Col>
 );
 
@@ -48,14 +69,4 @@ const generateBandCardHeader = (profilePictureUuid) => (
             onError={(e) => e.target.src = 'images/band_default_icon.png'}
         />
     </div>
-);
-
-const generateBandCardFooter = (bandUuid, navigateTo) => (
-    <Button
-        style={StyleConstants.WIDTH_100_PERCENT}
-        label="Ver perfil"
-        icon="pi pi-user"
-        className="p-button-sm"
-        onClick={() => navigateTo(`/servicos/bandas/${bandUuid}`)}
-    />
 );

@@ -1,0 +1,53 @@
+.main-card {
+    background-color: transparent;
+    color: #b7b7b7;
+}
+
+.wrapper {
+    position: relative;
+    padding-bottom: 50px
+}
+.left-image {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50%;
+    z-index: 1;
+}
+
+.left-image>img {
+    margin: 50px 25px 25px;
+    border-radius: 300px;
+    width: 250px;
+    background-color: white;
+}
+
+.banner{
+    width: 100%;
+    max-height: 200px;
+    overflow: hidden;
+    z-index: 0
+}
+.banner img {
+    width: 100%;
+    filter: blur(8px);
+    transition: transform 0.3s ease;
+    transform: scale(1.2);
+    transform-origin: center;
+    background-color: white;
+}
+
+.band-name{
+    margin-top: 25px
+}
+.band-location{
+    color: #d5d5d5
+}
+.location-icon{
+    padding-right: 5px;
+    color: #d5d5d5
+}
+
+.band-contact{
+    color: black;
+}

@@ -1,0 +1,30 @@
+.input-field-label {
+    font-size: 14px;
+    color: #d5d5d5;
+}
+.p-inputnumber-input{
+    width: 100% !important;
+    font-size: 12px !important;
+    background-color: #d5d5d5 !important;
+    border-color: #d5d5d5 !important;
+    border-radius: 3px !important;
+}
+.input-field{
+    width: 100% !important;
+    font-size: 12px !important;
+    background-color: #d5d5d5 !important;
+    border-color: #d5d5d5 !important;
+}
+select#fixed {
+    -webkit-appearance: none;
+}
+.p-dropdown-label{
+    font-size: 12px !important;
+}
+.p-dropdown-items{
+    background-color: #b7b7b7 !important;
+}
+.p-dropdown-item{
+    font-size: 12px !important;
+    background-color: #b7b7b7 !important;
+}

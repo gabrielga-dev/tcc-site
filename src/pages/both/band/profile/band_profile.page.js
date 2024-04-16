@@ -19,6 +19,7 @@ import {ContactType} from "../../../../domain/new/enum/contact_type.enum";
 import {MarginStyle} from "../../../../style/margin.style";
 import {Tag} from "primereact/tag";
 import {RoleEnum} from "../../../../domain/new/enum/role.enum";
+import './band_profile_style.css';
 
 const BandProfilePage = ({token, user}) => {
     const toast = useRef(null);
@@ -87,35 +88,38 @@ class _BandProfilePage extends React.Component {
         let {bandProfile, authenticatedUser, navigateTo} = this.state;
         return (
             <HomeTemplate steps={['Home', 'Bandas', this.state.bandProfile?.name]}>
-                <Card>
+                <Card className='main-card'>
                     <Container>
                         <Row>
-                            <Col/>
-                            <Col>
-                                <Row>
-                                    <Col style={STYLE_ALIGN_ITEM_CENTER}>
-                                        {
+                            <div className='wrapper'>
+                                <div className='left-image'>
+                                    <img
+                                        src={
                                             !!!bandProfile.profilePictureUuid
-                                                ? (<Avatar label={bandProfile.name[0]} size="xlarge"/>)
-                                                : (
-                                                    <Image
-                                                        src={FileService.GET_IMAGE_URL(bandProfile.profilePictureUuid)}
-                                                        alt={`Imagem da banda ${bandProfile.name}`}
-                                                        width="250"
-                                                        height="250"
-                                                        imageStyle={{borderRadius: 180}}
-                                                    />
-                                                )
+                                                ? '/images/band_default_icon.png'
+                                                : FileService.GET_IMAGE_URL(bandProfile.profilePictureUuid)
                                         }
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <h3 align="center">{bandProfile.name}</h3>
-                                    </Col>
-                                </Row>
-                            </Col>
-                            <Col/>
+                                        alt={`Imagem da banda ${bandProfile.name}`}
+                                        width="250"
+                                        height="250"
+                                    />
+                                </div>
+                                <div className='banner'>
+                                    <img
+                                        src={
+                                            !!!bandProfile.profilePictureUuid
+                                                ? '/images/band_default_icon.png'
+                                                : FileService.GET_IMAGE_URL(bandProfile.profilePictureUuid)
+                                        }
+                                        alt={`Imagem da banda ${bandProfile.name}`}
+                                    />
+                                </div>
+                                <h2 align='center' className='band-name'>{bandProfile.name}</h2>
+                                <h6 align='center' className='band-location'>
+                                    <i className='pi pi-map-marker location-icon'/>
+                                    {bandProfile.address.city}, {bandProfile.address.state}
+                                </h6>
+                            </div>
                         </Row>
                         <Row>
                             <Col>
@@ -228,7 +232,7 @@ class _BandProfilePage extends React.Component {
                 <Avatar
                     icon={ContactType[contact.type].ICON}
                     key={contact.uuid}
-                    className="mr-2"
+                    className="mr-2 band-contact"
                     size="large"
                     shape="circle"
                     onClick={

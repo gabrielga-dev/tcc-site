@@ -1,4 +1,3 @@
-import {StyleConstants} from "../../../service/style.constants";
 import React from "react";
 import {InputNumber} from "primereact/inputnumber";
 
@@ -12,17 +11,17 @@ export const NumericFieldComponent = (
         onChange = (value) => {
             console.log(value)
         },
-        optional=false
+        optional = false
     }
 ) => (
     <>
-        <h6>{label}{!optional ? '*' : ''}</h6>
+        <h6 className='input-field-label'>{label}{!optional ? '*' : ''}</h6>
         <InputNumber
+            className="p-inputnumber-input"
             placeholder={placeHolder}
             value={value}
             maxLength={maxLength}
             minLength={minLength}
-            style={StyleConstants.WIDTH_100_PERCENT}
             onChange={(e) => onChange(e.value)}
         />
     </>

@@ -1,0 +1,10 @@
+.band-card{
+    padding: 5px;
+    border-radius: 10px;
+    margin: 5px;
+}
+
+.band-card:hover{
+    background-color: #4b4b4b;
+    cursor: pointer;
+}
