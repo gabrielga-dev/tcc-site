@@ -30,6 +30,7 @@ import {DateUtil} from "../../../../util/date.util";
 import {Button} from "primereact/button";
 import {Dialog} from "primereact/dialog";
 import {FileService} from "../../../../service/new/file.service";
+import './create_musician.style.css';
 
 const CreateMusicianPage = ({token, user}) => {
     const toast = useRef(null);
@@ -99,7 +100,7 @@ class _CreateMusicianPage extends React.Component {
         }
         return (
             <HomeTemplate steps={['Home', 'Bandas', this.state.bandProfile?.name, 'Musicos', 'Cadastrar']}>
-                <Card>
+                <Card className='main-card'>
                     <Container>
                         <FormAreaComponent>
                             <Row style={{marginBottom: 10}}>

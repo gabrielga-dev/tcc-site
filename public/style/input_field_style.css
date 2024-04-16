@@ -28,3 +28,10 @@ select#fixed {
     font-size: 12px !important;
     background-color: #b7b7b7 !important;
 }
+
+.p-calendar>.p-inputtext{
+    width: 100% !important;
+    font-size: 12px !important;
+    background-color: #d5d5d5 !important;
+    border-color: #d5d5d5 !important;
+}

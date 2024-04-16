@@ -51,3 +51,39 @@
 .band-contact{
     color: black;
 }
+
+
+.musician-card-active {
+    background-color: transparent;
+    width: 200px !important;
+    padding: 5px;
+}
+
+.musician-card-non-active {
+    background-color: #171717;
+    padding: 5px;
+    border-radius: 25px;
+}
+
+.musician-img-container{
+    width: 100%;
+    text-align: center;
+}
+.musician-img {
+    background-color: white;
+    width: 150px;
+    border-radius: 200px;
+}
+
+.musician-name {
+    margin: 0;
+}
+
+.musician-age {
+    font-size: 10px;
+    margin: 0;
+}
+
+.musician-type-container {
+    width: 100%;
+}

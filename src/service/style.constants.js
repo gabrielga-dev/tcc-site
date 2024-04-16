@@ -8,5 +8,6 @@ export const StyleConstants = {
         borderRadius: 90,
         borderColor: '#000',
         overflow: 'hidden',
+        backgroundColor: '#ffffff'
     }
 }
