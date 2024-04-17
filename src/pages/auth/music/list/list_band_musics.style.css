@@ -4,3 +4,7 @@
 .row-accessories img {
     opacity: 0.6 !important;
 }
+
+.main-card {
+    background-color: transparent;
+}

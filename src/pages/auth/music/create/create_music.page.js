@@ -18,6 +18,8 @@ import ValidationUtil from "../../../../util/validation/validation.util";
 import {MusicService} from "../../../../service/new/music.service";
 import axios from "axios";
 
+import './create_music.style.css';
+
 const CreateMusicPage = ({token, user}) => {
     const toast = useRef(null);
     let {band_uuid, music_uuid} = useParams();
@@ -97,14 +99,14 @@ class _CreateMusicPage extends React.Component {
             <HomeTemplate
                 steps={['Home', 'Bandas', this.state.bandName, 'Gerenciar Músicas', isEditing ? 'Editar': 'Criar']}
             >
-                <Card>
+                <Card className='main-card'>
                     <Container>
                         <Row>
                             <Col>
                                 <FormAreaComponent>
                                     <Container>
                                         <Row>
-                                            <Col md={4} sm={12} style={FIELD_STYLE}>
+                                            <Col md={4} sm={12}>
                                                 <TextFieldComponent
                                                     disabled={isLoading}
                                                     label='Nome'
@@ -115,7 +117,7 @@ class _CreateMusicPage extends React.Component {
                                                     onChange={(value) => this.changeValue('name', value)}
                                                 />
                                             </Col>
-                                            <Col md={4} sm={12} style={FIELD_STYLE}>
+                                            <Col md={4} sm={12}>
                                                 <TextFieldComponent
                                                     disabled={isLoading}
                                                     label='Autor'
@@ -126,7 +128,7 @@ class _CreateMusicPage extends React.Component {
                                                     onChange={(value) => this.changeValue('author', value)}
                                                 />
                                             </Col>
-                                            <Col md={4} sm={12} style={FIELD_STYLE}>
+                                            <Col md={4} sm={12} >
                                                 <TextFieldComponent
                                                     disabled={isLoading}
                                                     label='Artist'
@@ -139,23 +141,25 @@ class _CreateMusicPage extends React.Component {
                                             </Col>
                                         </Row>
                                         <Row>
-                                            <TextAreaComponent
-                                                disabled={isLoading}
-                                                optional={true}
-                                                label='Observação'
-                                                placeHolder='Informações sobre a música, estilo, etc.'
-                                                value={request.observation}
-                                                onChange={(value) => this.changeValue('observation', value)}
-                                                maxLength={1000}
-                                            />
+                                            <Col>
+                                                <TextAreaComponent
+                                                    disabled={isLoading}
+                                                    optional={true}
+                                                    label='Observação'
+                                                    placeHolder='Informações sobre a música, estilo, etc.'
+                                                    value={request.observation}
+                                                    onChange={(value) => this.changeValue('observation', value)}
+                                                    maxLength={1000}
+                                                />
+                                            </Col>
                                         </Row>
                                     </Container>
                                 </FormAreaComponent>
                             </Col>
                         </Row>
                         <Row>
-                            <Col md={6} sm={0}/>
-                            <Col md={6} sm={12}>
+                            <Col md={8} sm={0}/>
+                            <Col md={4} sm={12}>
                                 <FormEndingComponent
                                     showFirst={false}
                                     showSecond={false}
@@ -232,8 +236,6 @@ class _CreateMusicPage extends React.Component {
         }
     }
 }
-
-const FIELD_STYLE = {marginBottom: 10};
 
 const mapStateToProps = state => {
     return state

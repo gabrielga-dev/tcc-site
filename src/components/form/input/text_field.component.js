@@ -12,7 +12,8 @@ export const TextFieldComponent = (
         onChange = (value) => {
             console.log(value)
         },
-        optional = false
+        optional = false,
+        tooltip = null
     }
 ) => (
     <>
@@ -25,6 +26,7 @@ export const TextFieldComponent = (
             maxLength={maxLength}
             minLength={minLength}
             onChange={(e) => onChange(e.target.value)}
+            tooltip={tooltip}
         />
     </>
 );
