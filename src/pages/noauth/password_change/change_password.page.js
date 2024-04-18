@@ -8,10 +8,11 @@ import {EmailValidationService} from "../../../service/new/ms_auth/email_validat
 import {ActivityIndicatorComponent} from "../../../components/activity_indicator.component";
 import {ToastUtils} from "../../../util/toast.utils";
 import {UserChangePasswordRequest} from "../../../domain/new/person/request/user_change_password_request";
-import {Password} from "primereact/password";
 import {StyleConstants} from "../../../service/style.constants";
 import {Button} from "primereact/button";
 import {UserService} from "../../../service/new/ms_auth/user.service";
+import './password.style.css'
+import {PasswordFieldComponent} from "../../../components/form/input/password_field.component";
 
 export const ChangePasswordPage = () => {
     const toast = useRef(null);
@@ -52,7 +53,7 @@ export default class _ChangePasswordPage extends React.Component {
         this.setState({isLoading: true});
 
         EmailValidationService.CHECK_IF_EMAIL_VALIDATION_EXISTS(validationUuid)
-            .then(response => this.setState({isLoading: false}))
+            .then(() => this.setState({isLoading: false}))
             .catch(
                 error => {
                     showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error));
@@ -75,12 +76,12 @@ export default class _ChangePasswordPage extends React.Component {
     }
 
     renderContent() {
-        let {request, passwordChanged} = this.state;
+        let {passwordChanged, isLoading} = this.state;
         if (passwordChanged) {
             return this.renderSuccess()
         }
         return (
-            <Card>
+            <Card className='main-card'>
                 <Container className="p-fluid">
                     <Row>
                         <Col style={{marginBottom: 25}}>
@@ -89,27 +90,30 @@ export default class _ChangePasswordPage extends React.Component {
                     </Row>
                     <Row>
                         <Col md={6} sm={12} style={{marginBottom: 25}}>
-                            <h6>Digite sua nova senha</h6>
-                            <Password
-                                value={request.password}
-                                onChange={(e) => this.setPassword(e.target.value)}
-                                toggleMask
+                            <PasswordFieldComponent
+                                label='Nova senha'
+                                placeHolder='Digite sua nova senha aqui'
+                                disabled={isLoading}
+                                toggleMask={true}
+                                onChange={(e) => this.setPassword(e)}
                             />
                         </Col>
                         <Col md={6} sm={12} style={{marginBottom: 25}}>
-                            <h6>Repita sua nova senha</h6>
-                            <Password
-                                value={request.passwordRepeated}
-                                onChange={(e) => this.setPasswordRepeated(e.target.value)}
+                            <PasswordFieldComponent
+                                label='Nova senha'
+                                placeHolder='Digite sua nova senha aqui'
+                                disabled={isLoading}
                                 toggleMask={true}
-                                feedback={false}
+                                onChange={(e) => this.setPasswordRepeated(e)}
                             />
                         </Col>
                     </Row>
                     <Row>
-                        <Col>
+                        <Col md={6} sm={0}/>
+                        <Col md={6} sm={12}>
                             <Button
                                 label="Enviar"
+                                icon='pi pi-send'
                                 style={StyleConstants.WIDTH_100_PERCENT}
                                 onClick={() => this.submitForm()}
                             />
@@ -165,7 +169,7 @@ export default class _ChangePasswordPage extends React.Component {
         this.setState({isLoading: true});
         UserService.CHANGE_PASSWORD(validationUuid, request)
             .then(
-                response => {
+                () => {
                     showToast(ToastUtils.BUILD_TOAST_SUCCESS_BODY('Sua senha foi alterada com sucesso!'))
                     this.setState({passwordChanged: true})
                     setTimeout(() => navigateTo('/login'), 2500);

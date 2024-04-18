@@ -1,8 +1,6 @@
 import React, {useRef} from "react";
-import {Col, Row} from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
 import {Card} from "primereact/card";
-import {InputText} from "primereact/inputtext";
-import {Password} from "primereact/password";
 import {Button} from "primereact/button";
 import {Toast} from 'primereact/toast';
 import {UserRequest} from "../../../domain/new/person/request/user_request";
@@ -10,10 +8,13 @@ import {UserService} from "../../../service/new/ms_auth/user.service";
 import ValidationUtil from "../../../util/validation/validation.util";
 import {useNavigate} from 'react-router-dom';
 import {ToastUtils} from "../../../util/toast.utils";
-import {InputMask} from "primereact/inputmask";
 import HomeTemplate from "../../template/home_template";
 import {Divider} from "primereact/divider";
 import {RoleEnum} from "../../../domain/new/enum/role.enum";
+import './create_account.style.css'
+import {TextFieldComponent} from "../../../components/form/input/text_field.component";
+import {TextMaskFieldComponent} from "../../../components/form/input/text_mask_field.component";
+import {PasswordFieldComponent} from "../../../components/form/input/password_field.component";
 
 export const CreateAccountPage = () => {
     const toast = useRef(null);
@@ -58,7 +59,7 @@ export default class _CreateAccountPage extends React.Component {
     render() {
         return (
             <HomeTemplate steps={['Cadastrar', this.getRegistrationTypeLabel()]}>
-                <Card>
+                <Card className='main-card'>
                     <div className="p-fluid">
                         <div>
                             <Divider type="dashed" align="center">
@@ -66,12 +67,18 @@ export default class _CreateAccountPage extends React.Component {
                             </Divider>
                             {this.personForm()}
                         </div>
-                        <div style={{marginTop: 10}}>
-                            <Button
-                                label="Enviar" icon="pi pi-check" iconPos="right"
-                                onClick={() => this.submitForm()}
-                            />
-                        </div>
+                        <span> * Campos obrigatórios</span>
+                        <Container>
+                            <Row>
+                                <Col md={6} sm={0}/>
+                                <Col md={6} sm={12}>
+                                    <Button
+                                        label="Enviar" icon="pi pi-send"
+                                        onClick={() => this.submitForm()}
+                                    />
+                                </Col>
+                            </Row>
+                        </Container>
                     </div>
                 </Card>
             </HomeTemplate>
@@ -79,67 +86,78 @@ export default class _CreateAccountPage extends React.Component {
     }
 
     personForm() {
+        let {isLoading} = this.state;
         let {firstName, lastName, cpf, email, password, passwordRepeated} = this.state.user;
         return (
-            <>
-                <Row>
-                    <Col md={6} sm={12} style={FIELD_MARGIN}>
-                        <h6>Nome</h6>
-                        <InputText
-                            id="firstName"
-                            value={firstName}
-                            maxLength={30}
-                            onChange={(e) => this.setField('firstName', e.target.value)}
-                        />
-                    </Col>
-                    <Col md={6} sm={12} style={FIELD_MARGIN}>
-                        <h6>Sobrenome</h6>
-                        <InputText
-                            value={lastName}
-                            maxLength={150}
-                            onChange={(e) => this.setField('lastName', e.target.value)}
-                        />
-                    </Col>
-                    <Col md={6} sm={12} style={FIELD_MARGIN}>
-                        <h6>CPF:</h6>
-                        <InputMask
-                            value={cpf}
-                            mask="999.999.999-99"
-                            placeholder="xxx.xxx.xxx-xx"
-                            onChange={(e) => this.setField('cpf', e.target.value)}
-                        />
-                    </Col>
-                    <Col md={6} sm={12} style={FIELD_MARGIN}>
-                        <h6>Email</h6>
-                        <InputText
-                            value={email}
-                            placeholder="exemplo@gmail.com"
-                            maxLength={100}
-                            onChange={(e) => this.setField('email', e.target.value)}
-                        />
-                    </Col>
-                    <Col md={6} sm={12} style={FIELD_MARGIN}>
-                        <h6>Senha</h6>
-                        <Password
-                            value={password}
-                            maxLength={100}
-                            onChange={(e) => this.setField('password', e.target.value)}
-                            toggleMask={true}
-                            feedback={false}
-                        />
-                    </Col>
-                    <Col md={6} sm={12} style={FIELD_MARGIN}>
-                        <h6>Repita sua senha</h6>
-                        <Password
-                            value={passwordRepeated}
-                            maxLength={100}
-                            onChange={(e) => this.setField('passwordRepeated', e.target.value)}
-                            toggleMask={true}
-                            feedback={false}
-                        />
-                    </Col>
-                </Row>
-            </>
+            <Row>
+                <Col md={6} sm={12} style={FIELD_MARGIN}>
+                    <TextFieldComponent
+                        label='Nome'
+                        optional={false}
+                        disabled={isLoading}
+                        value={firstName}
+                        maxLength={30}
+                        onChange={(e) => this.setField('firstName', e)}
+                    />
+                </Col>
+                <Col md={6} sm={12} style={FIELD_MARGIN}>
+                    <TextFieldComponent
+                        label='Sobrenome'
+                        optional={false}
+                        disabled={isLoading}
+                        value={lastName}
+                        maxLength={150}
+                        onChange={(e) => this.setField('lastName', e)}
+                    />
+                </Col>
+                <Col md={6} sm={12} style={FIELD_MARGIN}>
+                    <TextMaskFieldComponent
+                        label='CPF'
+                        mask="999.999.999-99"
+                        placeholder="xxx.xxx.xxx-xx"
+                        optional={false}
+                        disabled={isLoading}
+                        value={cpf}
+                        maxLength={150}
+                        onChange={(e) => this.setField('cpf', e)}
+                    />
+                </Col>
+                <Col md={6} sm={12} style={FIELD_MARGIN}>
+                    <TextFieldComponent
+                        label='Email'
+                        placeholder="exemplo@gmail.com"
+                        optional={false}
+                        disabled={isLoading}
+                        value={email}
+                        maxLength={100}
+                        onChange={(e) => this.setField('email', e)}
+                    />
+                </Col>
+                <Col md={6} sm={12} style={FIELD_MARGIN}>
+                    <PasswordFieldComponent
+                        label='Senha'
+                        placeHolder=''
+                        optional={false}
+                        maxLength={100}
+                        toggleMask={true}
+                        feedback={true}
+                        value={password}
+                        onChange={(e) => this.setField('password', e)}
+                    />
+                </Col>
+                <Col md={6} sm={12} style={FIELD_MARGIN}>
+                    <PasswordFieldComponent
+                        label='Repita sua senha'
+                        placeHolder=''
+                        optional={false}
+                        maxLength={100}
+                        toggleMask={true}
+                        feedback={false}
+                        value={passwordRepeated}
+                        onChange={(e) => this.setField('passwordRepeated', e)}
+                    />
+                </Col>
+            </Row>
         );
     }
 
@@ -160,7 +178,7 @@ export default class _CreateAccountPage extends React.Component {
         UserService.CREATE(
             this.state.user, this.getRegistrationType()
         ).then(
-            response => {
+            () => {
                 this.state.showToast(
                     ToastUtils.BUILD_TOAST_SUCCESS_BODY("Usuário criado com sucesso!")
                 )
