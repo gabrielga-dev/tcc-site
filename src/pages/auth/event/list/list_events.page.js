@@ -101,7 +101,7 @@ class _ListEventsPage extends React.Component {
         let {pageable, pagination, isLoading, criteria, authenticatedUser} = this.state;
         return (
             <HomeTemplate steps={['Home', 'Eventos', 'Meus eventos']}>
-                <Card>
+                <Card className='main-card'>
                     <Container>
                         <Row>
                             <Col>

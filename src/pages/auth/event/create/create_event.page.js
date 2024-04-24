@@ -75,7 +75,7 @@ class _CreateEventPage extends React.Component {
         let {request, eventDate, isLoading, showToast} = this.state;
         return (
             <HomeTemplate steps={['Home', 'Eventos', 'Criar']}>
-                <Card>
+                <Card className='main-card'>
                     <Container>
                         <Row>
                             <Col>
