@@ -16,6 +16,7 @@ import {StyleConstants} from "../../../../../service/style.constants";
 import SelectEventStep from "./steps/select_event_step.page";
 import {QuoteRequestRequest} from "../../../../../domain/new/quote_request/music/request/quote_request.request";
 import SelectMusicsStep from "./steps/select_musics_step.page";
+import SelectMusicianTypesStepPage from "./steps/select_musician_types_step.page";
 
 const CreateEventQuoteRequestPage = ({token, user}) => {
     const toast = useRef(null);
@@ -157,6 +158,15 @@ class _ListEventQuoteRequestsPage extends React.Component {
                     updatePlaylist={(newPlaylist => {
                         let {request} = this.state;
                         request.playlist = newPlaylist;
+                        this.setState({request: request});
+                    })}
+                />
+                <SelectMusicianTypesStepPage
+                    reference={this.refSteps[2]}
+                    currentStep={step}
+                    updateMusiciansTypes={(newMusicianTypes => {
+                        let {request} = this.state;
+                        request.musicianTypes = newMusicianTypes;
                         this.setState({request: request});
                     })}
                 />

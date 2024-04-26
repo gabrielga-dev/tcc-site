@@ -3,6 +3,8 @@ import {InputNumber} from "primereact/inputnumber";
 
 export const NumericFieldComponent = (
     {
+        className = '',
+        disabled = false,
         label = 'INPUT_NUMBER',
         placeHolder = 'PLACE_HOLDER',
         value,
@@ -11,18 +13,23 @@ export const NumericFieldComponent = (
         onChange = (value) => {
             console.log(value)
         },
+        onBlur = ()  => {
+            console.log('blur')
+        },
         optional = false
     }
 ) => (
     <>
         <h6 className='input-field-label'>{label}{!optional ? '*' : ''}</h6>
         <InputNumber
-            className="p-inputnumber-input"
+            disabled={disabled}
+            className={`p-inputnumber-input ${className}`}
             placeholder={placeHolder}
             value={value}
             maxLength={maxLength}
             minLength={minLength}
             onChange={(e) => onChange(e.value)}
+            onBlur={() => onBlur()}
         />
     </>
 );

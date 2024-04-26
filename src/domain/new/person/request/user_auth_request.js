@@ -3,7 +3,7 @@ export class UserAuthRequest {
     password;
 
     constructor() {
-        this.username = 'dealmeida.gabriel.d@gmail.com';
-        this.password = '12345678';
+        this.username = 'totaf99881@darkse.com';
+        this.password = '123456789';
     }
 }
