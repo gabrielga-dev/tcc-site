@@ -17,6 +17,8 @@ import SelectEventStep from "./steps/select_event_step.page";
 import {QuoteRequestRequest} from "../../../../../domain/new/quote_request/music/request/quote_request.request";
 import SelectMusicsStep from "./steps/select_musics_step.page";
 import SelectMusicianTypesStepPage from "./steps/select_musician_types_step.page";
+import {QuoteRequestBriefStepPage} from "./steps/quote_request_brief_step.page";
+import {QuoteRequestService} from "../../../../../service/new/quote_request.service";
 
 const CreateEventQuoteRequestPage = ({token, user}) => {
     const toast = useRef(null);
@@ -145,11 +147,7 @@ class _ListEventQuoteRequestsPage extends React.Component {
                     currentStep={step}
                     selectedEventUuid={request.eventUuid}
                     selectEventAction={
-                        (newUuid, ) => {
-                            let {request} = this.state;
-                            request.eventUuid = newUuid;
-                            this.setState({request: request});
-                        }
+                        (newUuid) => this.setState({eventUuid: newUuid})
                     }/>
                 <SelectMusicsStep
                     reference={this.refSteps[1]}
@@ -163,6 +161,15 @@ class _ListEventQuoteRequestsPage extends React.Component {
                 />
                 <SelectMusicianTypesStepPage
                     reference={this.refSteps[2]}
+                    currentStep={step}
+                    updateMusiciansTypes={(newMusicianTypes => {
+                        let {request} = this.state;
+                        request.musicianTypes = newMusicianTypes;
+                        this.setState({request: request});
+                    })}
+                />
+                <QuoteRequestBriefStepPage
+                    quoteRequest={request}
                     currentStep={step}
                     updateMusiciansTypes={(newMusicianTypes => {
                         let {request} = this.state;
@@ -217,6 +224,7 @@ class _ListEventQuoteRequestsPage extends React.Component {
                             icon='pi pi-send'
                             iconPos='right'
                             className='p-button-success'
+                            onClick={() => this.submitRequest()}
                         />
                     </Col>
                 </>
@@ -262,6 +270,21 @@ class _ListEventQuoteRequestsPage extends React.Component {
                 stepRef => stepRef.current.updateStep(step - 1)
             );
         this.setState({step: step - 1})
+    }
+
+    submitRequest() {
+        this.setState({isLoading: true});
+        let {eventUuid, bandUuid, request, token, showToast, navigateTo} = this.state;
+        QuoteRequestService.CREATE_FOR_BAND(eventUuid, bandUuid, request, token)
+            .then(() => {
+                showToast(ToastUtils.BUILD_TOAST_SUCCESS_BODY('Pedido de orçamento criado com sucesso!'))
+                setTimeout(() => navigateTo(`/eventos/${eventUuid}/pedidos-orcamentos`))
+            }).catch(
+            error => {
+                showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error));
+                this.setState({isLoading: false});
+            }
+        );
     }
 }
 

@@ -218,6 +218,7 @@ class _SelectMusicianTypesStepPage extends React.Component {
                             label=''
                             placeHolder={`Insira a quantidade`}
                             value={isSelected ? selectedMusicianType.quantity : null}
+                            min={0}
                             onBlur={
                                 () => {
                                     if (isSelected) {

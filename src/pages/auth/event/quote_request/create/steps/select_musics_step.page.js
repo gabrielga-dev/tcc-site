@@ -363,6 +363,7 @@ class _SelectMusicsStep extends React.Component {
     }
 
     onRowReorder(resortedMusics) {
+        resortedMusics.forEach((music, index) => music.order = index + 1)
         this.setState({playlist: resortedMusics});
     }
 

@@ -10,6 +10,7 @@ export const NumericFieldComponent = (
         value,
         maxLength = 75,
         minLength = 3,
+        min= null,
         onChange = (value) => {
             console.log(value)
         },
@@ -28,6 +29,7 @@ export const NumericFieldComponent = (
             value={value}
             maxLength={maxLength}
             minLength={minLength}
+            min={min}
             onChange={(e) => onChange(e.value)}
             onBlur={() => onBlur()}
         />
