@@ -10,7 +10,7 @@ export class QuoteRequestTypeResponse {
     constructor(data) {
         if (data){
             this.name = data.name;
-            this.serviceType = ServiceType[data.serviceType];
+            this.serviceType = ServiceType[data['businessType']];
             this.quoteRequests = data.quoteRequests.map(r => (new QuoteRequestResponse(r)));
         }
     }

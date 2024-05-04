@@ -2,14 +2,13 @@ import React from "react";
 import {Col, Container, Row} from "react-bootstrap";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
-import {ServiceType} from "../../../../../domain/new/quote_request/service.type";
 import {ToastUtils} from "../../../../../util/toast.utils";
 import {Button} from "primereact/button";
 import {QuoteRequestStatusType} from "../../../../../domain/new/quote_request/quote_request_status.type";
 
 export const QuoteRequestsTableComponent = (
     {
-        type = ServiceType.BAND,
+        type,
         quoteRequests = [],
         isLoading = false,
         token = '',
@@ -49,17 +48,21 @@ class _QuoteRequestsTableComponent extends React.Component {
 
         if (type.service) {
             let uuids = quoteRequests.map(r => r.serviceUuid);
-            type.service.FIND_NAMES(uuids, token)
-                .then(
-                    response => {
-                        this.setState({names: response.data, isLocalLoading: false});
+            if (uuids.length > 0) {
+                type.service.FIND_NAMES(uuids, token)
+                    .then(
+                        response => {
+                            this.setState({names: response.data, isLocalLoading: false});
+                        }
+                    ).catch(
+                    error => {
+                        showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error));
+                        setTimeout(() => navigateTo('/eventos'), 1000);
                     }
-                ).catch(
-                error => {
-                    showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error));
-                    setTimeout(() => navigateTo('/eventos'), 1000);
-                }
-            );
+                );
+            } else {
+                this.setState({isLocalLoading: false});
+            }
         } else {
             this.setState({isLocalLoading: false});
         }
