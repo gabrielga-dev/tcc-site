@@ -2,8 +2,9 @@ import {Col, Container, Row} from "react-bootstrap";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import React from "react";
+import {TextAreaComponent} from "../../../../../../components/form/input/text_area.component";
 
-export const QuoteRequestBriefStepPage = ({quoteRequest, currentStep}) => {
+export const QuoteRequestBriefStepPage = ({quoteRequest, currentStep, description, updateDescription}) => {
     if (currentStep !== 3) {
         return (<></>)
     }
@@ -67,6 +68,18 @@ export const QuoteRequestBriefStepPage = ({quoteRequest, currentStep}) => {
                             }
                         />
                     </DataTable>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <TextAreaComponent
+                        optional={true}
+                        label='Mensagem adicional'
+                        placeHolder='Digite aqui qualquer informação adicional'
+                        value={description}
+                        maxLength={1000}
+                        onChange={newValue => updateDescription(newValue)}
+                    />
                 </Col>
             </Row>
             <Row>

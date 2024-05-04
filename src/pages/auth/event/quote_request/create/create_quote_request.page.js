@@ -147,7 +147,11 @@ class _ListEventQuoteRequestsPage extends React.Component {
                     currentStep={step}
                     selectedEventUuid={request.eventUuid}
                     selectEventAction={
-                        (newUuid) => this.setState({eventUuid: newUuid})
+                        (newUuid) => {
+                            let {request} = this.state;
+                            request.eventUuid = newUuid;
+                            this.setState({eventUuid: newUuid, request: request})
+                        }
                     }/>
                 <SelectMusicsStep
                     reference={this.refSteps[1]}
@@ -171,11 +175,14 @@ class _ListEventQuoteRequestsPage extends React.Component {
                 <QuoteRequestBriefStepPage
                     quoteRequest={request}
                     currentStep={step}
-                    updateMusiciansTypes={(newMusicianTypes => {
-                        let {request} = this.state;
-                        request.musicianTypes = newMusicianTypes;
-                        this.setState({request: request});
-                    })}
+                    description={request.description}
+                    updateDescription={
+                        (newDescription => {
+                            let {request} = this.state;
+                            request.description = newDescription;
+                            this.setState({request: request});
+                        })
+                    }
                 />
             </>
         );
