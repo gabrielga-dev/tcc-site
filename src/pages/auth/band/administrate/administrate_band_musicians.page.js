@@ -11,15 +11,13 @@ import {Col, Container, Row} from "react-bootstrap";
 import {ActivityIndicatorComponent} from "../../../../components/activity_indicator.component";
 import {Button} from "primereact/button";
 import {StyleConstants} from "../../../../service/style.constants";
-import {MarginStyle} from "../../../../style/margin.style";
-import {Avatar} from "primereact/avatar";
-import {Image} from "primereact/image";
 import {FileService} from "../../../../service/new/file.service";
-import {Tag} from "primereact/tag";
 import {Divider} from "primereact/divider";
 import {MusicianResponse} from "../../../../domain/new/musician/response/musician.response";
 import {Dialog} from "primereact/dialog";
 import {MusicianService} from "../../../../service/new/musician.service";
+import './administrate_band_musicians.style.css';
+import {Tag} from "primereact/tag";
 
 const AdministrateBandMusicians = ({token, user}) => {
     const toast = useRef(null);
@@ -84,14 +82,14 @@ class _AdministrateBandMusicians extends React.Component {
         let {navigateTo} = this.state;
         return (
             <HomeTemplate steps={['Home', 'Bandas', this.state.bandProfile?.name, 'Gerenciar Músicos']}>
-                <Card>
+                <Card className='main-card'>
                     <Container>
                         <Row>
                             <Col md={4} sm={0}/>
                             <Col md={4} sm={12}>
                                 <Button
                                     disabled={isLoading}
-                                    label="Cadastrar músico"
+                                    label="Cadastrar"
                                     className="p-button-success"
                                     style={StyleConstants.WIDTH_100_PERCENT}
                                     icon="pi pi-plus"
@@ -101,7 +99,7 @@ class _AdministrateBandMusicians extends React.Component {
                             <Col md={4} sm={12}>
                                 <Button
                                     disabled={isLoading}
-                                    label="Vincular músico já cadastrado"
+                                    label="Vincular"
                                     className="info"
                                     style={StyleConstants.WIDTH_100_PERCENT}
                                     icon="pi pi-plus"
@@ -238,97 +236,79 @@ class _AdministrateBandMusicians extends React.Component {
                 : bandProfile.createdMusicians
         ).map(
             musician => (
-                <Col key={musician.uuid} xl={3} lg={4} md={6} sm={12} style={MarginStyle.makeMargin(0, 5, 0, 5)}>
-                    <Card key={musician.uuid} style={musician.active ? {} : {backgroundColor: 'rgba(0, 0, 0, 0.15)'}}>
-                        <Container>
-                            <Row>
-                                <Col style={STYLE_ALIGN_ITEM_CENTER}>
-                                    {
-                                        !!!musician.avatarUuid
-                                            ? (<Avatar label={musician.firstName[0]} size=" large"/>)
-                                            : (
-                                                <Image
-                                                    src={FileService.GET_IMAGE_URL(musician.avatarUuid)}
-                                                    alt={`Imagem do integrante ${musician.name}`}
-                                                    width="100"
-                                                    height="100"
-                                                />
-                                            )
-                                    }
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col md={12} style={STYLE_ALIGN_ITEM_CENTER}>
-                                    <h5>{`${musician.firstName} ${musician.lastName}`}</h5>
-                                </Col>
-                                <Col md={12} style={STYLE_ALIGN_ITEM_CENTER}>
-                                    <h6>{`${musician.age} anos`}</h6>
-                                </Col>
-                            </Row>
-                            <Row>
-                                {
-                                    musician.types
-                                        ? musician.types.map(
-                                            type => (
-                                                <Col key={`${musician.uuid}_${type.uuid}`} md={6} style={{marginTop: 5}}>
-                                                    <Tag
-                                                        style={StyleConstants.WIDTH_100_PERCENT}
-                                                        value={type.name}
-                                                        rounded
-                                                    />
-                                                </Col>
-                                            )
-                                        ) : []
-                                }
-                            </Row>
-                            <Divider/>
-                            <Row style={{marginTop: 5}}>
-                                <Col md={onlyAssociated ? 12 : 6} sm={12} style={{marginBottom: 5}}>
-                                    <Button
-                                        disabled={!onlyAssociated && musician.hasAccount}
-                                        tooltip={
-                                            onlyAssociated
-                                                ? 'Desvincular'
-                                                : (
-                                                    musician.active
-                                                        ? 'Desativar' : 'Ativar'
-                                                )
-                                        }
-                                        tooltipOptions={{position: "top"}}
-                                        className={
-                                            onlyAssociated || musician.active
-                                                ? 'p-button-danger'
-                                                : 'p-button-success'
-                                        }
-                                        icon={onlyAssociated ? 'pi pi-trash' : 'pi pi-power-off'}
-                                        style={StyleConstants.WIDTH_100_PERCENT}
-                                        onClick={() => this.showDialogRemoveMusician(musician, onlyAssociated)}
-                                    />
-                                </Col>
-                                {
-                                    onlyAssociated
-                                        ? (<></>)
-                                        : (
-                                            <Col md={6} sm={12} style={{marginBottom: 5}}>
-                                                <Button
-                                                    disabled={musician.hasAccount}
-                                                    tooltip={
-                                                        !musician.hasAccount
-                                                            ? 'Editar'
-                                                            : 'Impossível editar, músico vinculado'
-                                                    }
-                                                    tooltipOptions={{position: "top"}}
-                                                    className="p-button-warning"
-                                                    icon="pi pi-pencil"
-                                                    style={StyleConstants.WIDTH_100_PERCENT}
-                                                    onClick={() => navigateTo(`${musician.uuid}/editar`)}
-                                                />
-                                            </Col>
-                                        )
-                                }
-                            </Row>
-                        </Container>
-                    </Card>
+                <Col
+                    key={musician.uuid}
+                    xl={2} lg={3} md={4} sm={12}
+                    className={musician.active ? 'musician-musician-card-active' : 'musician-card-non-active'}
+                >
+                    <div
+                        className='musician-img-container'
+                    >
+                        <img
+                            className='musician-img'
+                            src={
+                                !!musician.avatarUuid
+                                    ? FileService.GET_IMAGE_URL(musician.avatarUuid)
+                                    : '/images/musician_default_icon.png'
+                            }
+                            alt={`Imagem do integrante ${musician.name}`}
+                        />
+                    </div>
+                    <p className='musician-name'>{musician.firstName}</p>
+                    <p className='musician-age'>{`${musician.age} anos`}</p>
+                    <div className='musician-type-container'>
+                        {
+                            musician.types
+                                ? musician.types.map(
+                                    type => (
+                                        <Tag
+                                            key={`${musician.uuid}-${type.name}`}
+                                            value={type.name}
+                                            rounded
+                                        />
+                                    )
+                                ) : []
+                        }
+                    </div>
+                    <div className='btn-container'>
+                        <Button
+                            disabled={!onlyAssociated && musician.hasAccount}
+                            tooltip={
+                                onlyAssociated
+                                    ? 'Desvincular'
+                                    : (
+                                        musician.active
+                                            ? 'Desativar' : 'Ativar'
+                                    )
+                            }
+                            tooltipOptions={{position: "top"}}
+                            className={
+                                `opt-button ${onlyAssociated || musician.active ? 'p-button-danger' : 'p-button-success'}`
+                            }
+                            icon={onlyAssociated ? 'pi pi-trash' : 'pi pi-power-off'}
+                            onClick={() => this.showDialogRemoveMusician(musician, onlyAssociated)}
+                        />
+                        {
+                            onlyAssociated
+                                ? (<></>)
+                                : (
+                                    <Col md={6} sm={12} style={{marginBottom: 5}}>
+                                        <Button
+                                            disabled={musician.hasAccount}
+                                            tooltip={
+                                                !musician.hasAccount
+                                                    ? 'Editar'
+                                                    : 'Impossível editar, músico vinculado'
+                                            }
+                                            tooltipOptions={{position: "top"}}
+                                            className="opt-button p-button-warning"
+                                            icon="pi pi-pencil"
+                                            onClick={() => navigateTo(`${musician.uuid}/editar`)}
+                                        />
+                                    </Col>
+                                )
+                        }
+                    </div>
                 </Col>
             )
         )
@@ -390,8 +370,6 @@ class _AdministrateBandMusicians extends React.Component {
         this.setState({isLoading: false, selectedMusician: null, showDeleteDialog: false})
     }
 }
-
-const STYLE_ALIGN_ITEM_CENTER = {display: 'flex', alignItems: 'center', justifyContent: 'center'};
 
 const mapStateToProps = state => {
     return state

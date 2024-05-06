@@ -1,4 +1,3 @@
-import {StyleConstants} from "../../../service/style.constants";
 import React from "react";
 import {Dropdown} from "primereact/dropdown";
 
@@ -13,12 +12,13 @@ export const DropDownFieldComponent = (
         },
         optionLabel = 'name',
         disabled = false,
+        optional = false
     }
 ) => (
     <>
-        <h6>{label}</h6>
+        <h6 className='input-field-label'>{label}{!optional ? '*' : ''}</h6>
         <Dropdown
-            style={StyleConstants.WIDTH_100_PERCENT}
+            className="input-field"
             optionLabel={optionLabel}
             placeholder={placeHolder}
             emptyFilterMessage="Nenhum dado encontrado 😢"

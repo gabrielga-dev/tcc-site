@@ -61,4 +61,9 @@ export const BandService = {
     REMOVE_PROFILE_PICTURE: (bandUuid, token) => (
         axios.delete(`${BASE_URL_BAND}/v1/band/uuid/${bandUuid}/picture`, BaseService.MAKE_HEADERS(token))
     ),
+
+    FIND_NAMES: (uuids = [], token) => {
+        let params = uuids.map(uuid => `bandsUuids=${uuid}`).join('&');
+        return axios.get(`${BASE_URL_BAND}/v1/band/name?${params}`, BaseService.MAKE_HEADERS(token));
+    },
 }

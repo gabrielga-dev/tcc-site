@@ -14,6 +14,14 @@ export const MusicService = {
         return axios.get(url, BaseService.MAKE_HEADERS(token))
     },
 
+    LIST_MUSICS: (token, criteria, pagination) => {
+        let url = `${BASE_URL_BAND}/v1/music?${pagination.toRequestParameters()}`;
+        if (!criteria.isEmpty()) {
+            url = `${url}&${criteria.toRequestParameters()}`
+        }
+        return axios.get(url, BaseService.MAKE_HEADERS(token))
+    },
+
     CREATE: (bandUuid, music, token) => (
         axios.post(`${BASE_URL_BAND}/v1/music/band/${bandUuid}`, music, BaseService.MAKE_HEADERS(token))
     ),

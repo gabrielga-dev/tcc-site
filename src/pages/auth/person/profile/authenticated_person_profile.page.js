@@ -12,6 +12,7 @@ import ProfileInformationPage from "./profile_information.page";
 import {Toast} from "primereact/toast";
 import ChangePersonEmailPage from "./change_person_email.page";
 import PersonRoleInformationPage from "./person_role_information.page";
+import './authenticated_person_profile.style.css';
 
 const AuthenticatedPersonProfilePage = ({token, user}) => {
     const toast = useRef(null);
@@ -72,7 +73,7 @@ class _AuthenticatedPersonProfilePage extends React.Component {
                 token={token}
                 steps={['Home', 'Meu Perfil']}
             >
-                <Card>
+                <Card className='main-card'>
                     <Container>
                         <Row>
                             <Col md={3}>

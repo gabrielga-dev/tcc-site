@@ -4,7 +4,6 @@ import {updateToken} from "../../../../service/redux/action/token.action";
 import {updateUser} from "../../../../service/redux/action/user.action";
 import {connect} from "react-redux";
 import {Col, Container, Row} from "react-bootstrap";
-import {InputText} from "primereact/inputtext";
 import {Divider} from "primereact/divider";
 import {Button} from "primereact/button";
 import {StyleConstants} from "../../../../service/style.constants";
@@ -13,8 +12,12 @@ import ValidationUtil from "../../../../util/validation/validation.util";
 import {ToastUtils} from "../../../../util/toast.utils";
 import {UserService} from "../../../../service/new/ms_auth/user.service";
 import {ActivityIndicatorComponent} from "../../../../components/activity_indicator.component";
+import {TextFieldComponent} from "../../../../components/form/input/text_field.component";
 
-const ProfileInformationPage = ({token, user, showToast = () => {}, updateUser}) => {
+const ProfileInformationPage = ({
+                                    token, user, showToast = () => {
+    }, updateUser
+                                }) => {
     let {uuid} = useParams();
 
     const navigate = useNavigate();
@@ -61,8 +64,8 @@ class _ProfileInformationPage extends React.Component {
         let {cpf, email} = this.state.authenticatedUser;
         let {firstName, lastName} = this.state.request;
 
-        if (isLoading){
-            return (<ActivityIndicatorComponent />);
+        if (isLoading) {
+            return (<ActivityIndicatorComponent/>);
         }
 
         return (
@@ -73,35 +76,38 @@ class _ProfileInformationPage extends React.Component {
                             <span>Meus Dados</span>
                         </Divider>
                         <Col md={6} sm={12} style={FIELD_MARGIN}>
-                            <h6>Nome</h6>
-                            <InputText
+                            <TextFieldComponent
+                                label='Nome'
+                                optional={!isEditing}
                                 disabled={!isEditing}
-                                id="firstName"
                                 value={firstName}
                                 maxLength={30}
-                                onChange={(e) => this.setField('firstName', e.target.value)}
+                                onChange={(e) => this.setField('firstName', e)}
                             />
                         </Col>
                         <Col md={6} sm={12} style={FIELD_MARGIN}>
-                            <h6>Sobrenome</h6>
-                            <InputText
+                            <TextFieldComponent
+                                label='Sobrenome'
+                                optional={!isEditing}
                                 disabled={!isEditing}
                                 value={lastName}
                                 maxLength={150}
-                                onChange={(e) => this.setField('lastName', e.target.value)}
+                                onChange={(e) => this.setField('lastName', e)}
                             />
                         </Col>
                         <Col md={6} sm={12} style={FIELD_MARGIN}>
-                            <h6>CPF:</h6>
-                            <InputText
+                            <TextFieldComponent
+                                label='CPF'
+                                optional={true}
                                 disabled={true}
                                 value={cpf}
-                                tooltip="Não é possível modificar o CPF por aqui! Caso queira alterar, entre em contato com o suporte."
+                                tooltip='Não é possível modificar o CPF por aqui! Caso queira alterar, entre em contato com o suporte.'
                             />
                         </Col>
                         <Col md={6} sm={12} style={FIELD_MARGIN}>
-                            <h6>Email</h6>
-                            <InputText
+                            <TextFieldComponent
+                                label='Email'
+                                optional={true}
                                 disabled={true}
                                 value={email}
                                 tooltip="Não é possível modificar o email por aqui! Caso queira alterar, vá à seção 'Mudar Email'."
@@ -120,7 +126,8 @@ class _ProfileInformationPage extends React.Component {
         if (isEditing) {
             return (
                 <Row>
-                    <Col>
+                    <Col md={6} sm={0}/>
+                    <Col md={3} sm={12}>
                         <Button
                             label="Voltar"
                             style={StyleConstants.WIDTH_100_PERCENT}
@@ -129,7 +136,7 @@ class _ProfileInformationPage extends React.Component {
                             onClick={() => this.back()}
                         />
                     </Col>
-                    <Col>
+                    <Col md={3} sm={12}>
                         <Button
                             label="Enviar"
                             className="p-button-success"
@@ -143,7 +150,8 @@ class _ProfileInformationPage extends React.Component {
         }
         return (
             <Row>
-                <Col>
+                <Col md={6} sm={0}/>
+                <Col md={6} sm={12}>
                     <Button
                         label="Editar"
                         style={StyleConstants.WIDTH_100_PERCENT}
@@ -162,7 +170,7 @@ class _ProfileInformationPage extends React.Component {
         this.setState({request});
     }
 
-    back(){
+    back() {
         let {request, authenticatedUser} = this.state;
         request.firstName = authenticatedUser.firstName;
         request.lastName = authenticatedUser.lastName;
@@ -185,19 +193,19 @@ class _ProfileInformationPage extends React.Component {
         let {token} = this.state;
         UserService.UPDATE(uuid, request, token)
             .then(
-                response => {
+                () => {
                     showToast(ToastUtils.BUILD_TOAST_SUCCESS_BODY('Edição efetuada com sucesso!'))
                     this.afterUpdate();
                 }
             ).catch(
-                error => {
-                    console.log(error)
-                    showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error));
-                }
+            error => {
+                console.log(error)
+                showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error));
+            }
         ).finally(() => this.setState({isLoading: false}))
     }
 
-    afterUpdate(){
+    afterUpdate() {
         let {request, authenticatedUser, updateUser} = this.state;
         authenticatedUser.firstName = request.firstName;
         authenticatedUser.lastName = request.lastName;

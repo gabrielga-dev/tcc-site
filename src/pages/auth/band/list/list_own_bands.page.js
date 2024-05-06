@@ -13,7 +13,6 @@ import {ToastUtils} from "../../../../util/toast.utils";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {BandResponse} from "../../../../domain/new/band/response/band.response";
-import {StyleConstants} from "../../../../service/style.constants";
 import {FileService} from "../../../../service/new/file.service";
 import {Button} from "primereact/button";
 import './list_own_bands.style.css'
@@ -104,7 +103,7 @@ class _ListOwnBandsPage extends React.Component {
         let {isTableLoading, pagination, pageable} = this.state;
         return (
             <HomeTemplate steps={['Home', 'Minhas Bandas']}>
-                <Card>
+                <Card className='main-card'>
                     <Container>
                         <Row>
                             <ListBandFilterComponent
@@ -120,15 +119,16 @@ class _ListOwnBandsPage extends React.Component {
                                     responsiveLayout="scroll"
                                     size="small"
                                     rowClassName={this.rowClass}
+                                    rowHover={true}
                                 >
                                     <Column
                                         style={{width: '20%'}}
                                         header="Avatar"
                                         body={this.renderBandAvatar}
                                     />
-                                    <Column style={{width: '60%'}} field="name" header="Nome"/>
+                                    <Column style={{width: '40%'}} field="name" header="Nome"/>
                                     <Column
-                                        style={{width: '20%'}}
+                                        style={{width: '40%'}}
                                         header="Ações"
                                         body={(band) => this.renderBandActions(band)}
                                     />
@@ -184,7 +184,7 @@ class _ListOwnBandsPage extends React.Component {
     renderBandAvatar(band) {
         return (
             <img
-                style={StyleConstants.IMAGE_STYLE}
+                className='band-img'
                 alt={`Avatar da banda ${band.name}`}
                 src={
                     (!band.profilePictureUuid)
@@ -201,7 +201,7 @@ class _ListOwnBandsPage extends React.Component {
         return (
             <Container>
                 <Row>
-                    <Col sm={12} md={4} style={{marginBottom: 10}}>
+                    <Col style={{marginBottom: 10}}>
                         <Button
                             tooltip="Visualizar perfil da banda"
                             tooltipOptions={{position: 'top'}}
@@ -210,7 +210,7 @@ class _ListOwnBandsPage extends React.Component {
                             onClick={() => this.state.navigateTo(`/servicos/bandas/${band.uuid}`)}
                         />
                     </Col>
-                    <Col sm={12} md={4} style={{marginBottom: 10}}>
+                    <Col style={{marginBottom: 10}}>
                         <Button
                             tooltip={
                                 band.active
@@ -231,7 +231,7 @@ class _ListOwnBandsPage extends React.Component {
                             }
                         />
                     </Col>
-                    <Col sm={12} md={4} style={{marginBottom: 10}}>
+                    <Col style={{marginBottom: 10}}>
                         <Button
                             disabled={!band.active}
                             tooltip="Editar banda"
@@ -241,7 +241,7 @@ class _ListOwnBandsPage extends React.Component {
                             onClick={() => navigateTo(`/bandas/${band.uuid}/editar`)}
                         />
                     </Col>
-                    <Col sm={12} md={4} style={{marginBottom: 10}}>
+                    <Col style={{marginBottom: 10}}>
                         <Button
                             disabled={!band.active}
                             tooltip="Administrar músicos"
@@ -251,7 +251,7 @@ class _ListOwnBandsPage extends React.Component {
                             onClick={() => navigateTo(`/bandas/${band.uuid}/gerenciar-musicos`)}
                         />
                     </Col>
-                    <Col sm={12} md={4} style={{marginBottom: 10}}>
+                    <Col style={{marginBottom: 10}}>
                         <Button
                             disabled={!band.active}
                             tooltip="Administrar músicas"

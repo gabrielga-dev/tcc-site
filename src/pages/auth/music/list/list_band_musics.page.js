@@ -111,7 +111,7 @@ class _ListBandMusicsPage extends React.Component {
         let {isTableLoading, musics, navigateTo, pagination, pageable, criteria} = this.state;
         return (
             <HomeTemplate steps={['Home', 'Bandas', this.state.bandName, 'Gerenciar Músicas']}>
-                <Card>
+                <Card className='main-card'>
                     <Container>
                         <Row>
                             <Col sm={12} md={8}/>

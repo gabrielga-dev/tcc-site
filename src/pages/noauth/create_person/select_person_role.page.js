@@ -117,4 +117,8 @@ const CARD_BUTTON_STYLE = Object.assign(
     StyleConstants.FONT_BOLD
 );
 
-const CARD_STYLE = {border: '2px solid #333'};
+const CARD_STYLE = {
+    border: '2px solid #333',
+    backgroundColor: 'transparent',
+    color: '#bbbbbb'
+};

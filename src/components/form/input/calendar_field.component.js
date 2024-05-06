@@ -1,4 +1,3 @@
-import {StyleConstants} from "../../../service/style.constants";
 import React from "react";
 import {Calendar} from "primereact/calendar";
 
@@ -14,21 +13,20 @@ export const CalendarFieldComponent = (
             console.log(value)
         },
         optional = false,
-        dateFormat="dd/mm/yy",
+        dateFormat = "dd/mm/yy",
     }
 ) => (
     <>
-        <h6>{label}{!optional ? '*' : ''}</h6>
+        <h6 className='input-field-label'>{label}{!optional ? '*' : ''}</h6>
         <Calendar
+            className="input-field"
             disabled={disabled}
             placeholder={placeHolder}
             value={value}
             maxDate={maxDate}
             minDate={minDate}
             dateFormat={dateFormat}
-            style={StyleConstants.WIDTH_100_PERCENT}
             onChange={(e) => {
-                console.log(e.value)
                 onChange(e.value)
             }}
         />

@@ -1,6 +1,17 @@
 .row-accessories {
-    background-color: rgba(0, 0, 0, 0.15) !important;
+    background-color: pink !important;
 }
 .row-accessories img {
     opacity: 0.6 !important;
+}
+.main-card{
+    background-color: transparent;
+}
+
+.band-img{
+    width:110px;
+    height:110px;
+    border-radius: 90px;
+    border-color: #000;
+    overflow: hidden;
 }

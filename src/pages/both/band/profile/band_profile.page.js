@@ -10,15 +10,14 @@ import {ActivityIndicatorComponent} from "../../../../components/activity_indica
 import {Card} from "primereact/card";
 import {Col, Container, Row} from "react-bootstrap";
 import {Avatar} from "primereact/avatar";
-import {Image} from "primereact/image";
 import {FileService} from "../../../../service/new/file.service";
 import {Divider} from "primereact/divider";
 import {Button} from "primereact/button";
 import {StyleConstants} from "../../../../service/style.constants";
 import {ContactType} from "../../../../domain/new/enum/contact_type.enum";
-import {MarginStyle} from "../../../../style/margin.style";
 import {Tag} from "primereact/tag";
 import {RoleEnum} from "../../../../domain/new/enum/role.enum";
+import './band_profile_style.css';
 
 const BandProfilePage = ({token, user}) => {
     const toast = useRef(null);
@@ -84,38 +83,41 @@ class _BandProfilePage extends React.Component {
         if (this.state.isLoading) {
             return (<ActivityIndicatorComponent/>);
         }
-        let {bandProfile, authenticatedUser} = this.state;
+        let {bandProfile, authenticatedUser, navigateTo} = this.state;
         return (
             <HomeTemplate steps={['Home', 'Bandas', this.state.bandProfile?.name]}>
-                <Card>
+                <Card className='main-card'>
                     <Container>
                         <Row>
-                            <Col/>
-                            <Col>
-                                <Row>
-                                    <Col style={STYLE_ALIGN_ITEM_CENTER}>
-                                        {
+                            <div className='wrapper'>
+                                <div className='left-image'>
+                                    <img
+                                        src={
                                             !!!bandProfile.profilePictureUuid
-                                                ? (<Avatar label={bandProfile.name[0]} size="xlarge"/>)
-                                                : (
-                                                    <Image
-                                                        src={FileService.GET_IMAGE_URL(bandProfile.profilePictureUuid)}
-                                                        alt={`Imagem da banda ${bandProfile.name}`}
-                                                        width="250"
-                                                        height="250"
-                                                        imageStyle={{borderRadius: 180}}
-                                                    />
-                                                )
+                                                ? '/images/band_default_icon.png'
+                                                : FileService.GET_IMAGE_URL(bandProfile.profilePictureUuid)
                                         }
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <h3 align="center">{bandProfile.name}</h3>
-                                    </Col>
-                                </Row>
-                            </Col>
-                            <Col/>
+                                        alt={`Imagem da banda ${bandProfile.name}`}
+                                        width="250"
+                                        height="250"
+                                    />
+                                </div>
+                                <div className='banner'>
+                                    <img
+                                        src={
+                                            !!!bandProfile.profilePictureUuid
+                                                ? '/images/band_default_icon.png'
+                                                : FileService.GET_IMAGE_URL(bandProfile.profilePictureUuid)
+                                        }
+                                        alt={`Imagem da banda ${bandProfile.name}`}
+                                    />
+                                </div>
+                                <h2 align='center' className='band-name'>{bandProfile.name}</h2>
+                                <h6 align='center' className='band-location'>
+                                    <i className='pi pi-map-marker location-icon'/>
+                                    {bandProfile.address.city}, {bandProfile.address.state}
+                                </h6>
+                            </div>
                         </Row>
                         <Row>
                             <Col>
@@ -133,6 +135,9 @@ class _BandProfilePage extends React.Component {
                                                 style={StyleConstants.WIDTH_100_PERCENT}
                                                 icon="pi pi-dollar"
                                                 className="p-button-success"
+                                                onClick={
+                                                    () => navigateTo(`/band/${this.state.bandUuid}/pedir-orcamento`)
+                                                }
                                             />
                                         </Col>
                                     </Row>
@@ -163,51 +168,86 @@ class _BandProfilePage extends React.Component {
 
         let cols = bandProfile.musicians.map(
             musician => (
-                <Col key={musician.uuid} xl={3} lg={4} md={6} sm={12} style={MarginStyle.makeMargin(0, 5, 0, 5)}>
-                    <Card>
-                        <Container>
-                            <Row>
-                                <Col style={STYLE_ALIGN_ITEM_CENTER}>
-                                    {
-                                        !!!musician.avatarUuid
-                                            ? (<Avatar label={musician.firstName[0]} size=" large"/>)
-                                            : (
-                                                <Image
-                                                    src={FileService.GET_IMAGE_URL(musician.avatarUuid)}
-                                                    alt={`Imagem do integrante ${musician.name}`}
-                                                    width="100"
-                                                    height="100"
-                                                />
-                                            )
-                                    }
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col md={12} style={STYLE_ALIGN_ITEM_CENTER}>
-                                    <h5>{`${musician.firstName} ${musician.lastName}`}</h5>
-                                </Col>
-                                <Col md={12} style={STYLE_ALIGN_ITEM_CENTER}>
-                                    <h6>{`${musician.age} anos`}</h6>
-                                </Col>
-                            </Row>
-                            <Row>
-                                {
-                                    musician.types.map(
-                                        type => (
-                                            <Col md={6} style={{marginTop: 5}}>
-                                                <Tag
-                                                    style={StyleConstants.WIDTH_100_PERCENT}
-                                                    value={type.name}
-                                                    rounded
-                                                />
-                                            </Col>
-                                        )
+                <Col
+                    key={musician.uuid}
+                    xl={2} lg={3} md={4} sm={12}
+                    className={musician.active ? 'musician-musician-card-active' : 'musician-card-non-active'}
+                >
+                    <div
+                        className='musician-img-container'
+                    >
+                        <img
+                            className='musician-img'
+                            src={
+                                !!musician.avatarUuid
+                                    ? FileService.GET_IMAGE_URL(musician.avatarUuid)
+                                    : '/images/musician_default_icon.png'
+                            }
+                            alt={`Imagem do integrante ${musician.name}`}
+                        />
+                    </div>
+                    <p className='musician-name'>{musician.firstName}</p>
+                    <p className='musician-age'>{`${musician.age} anos`}</p>
+                    <div className='musician-type-container'>
+                        {
+                            musician.types
+                                ? musician.types.map(
+                                    type => (
+                                        <Tag
+                                            key={`${musician.uuid}-${type.name}`}
+                                            value={type.name}
+                                            rounded
+                                        />
                                     )
-                                }
-                            </Row>
-                        </Container>
-                    </Card>
+                                ) : []
+                        }
+                    </div>
                 </Col>
+                // <Col key={musician.uuid} xl={3} lg={4} md={6} sm={12} style={MarginStyle.makeMargin(0, 5, 0, 5)}>
+                //     <Card>
+                //         <Container>
+                //             <Row>
+                //                 <Col style={STYLE_ALIGN_ITEM_CENTER}>
+                //                     {
+                //                         !!!musician.avatarUuid
+                //                             ? (<Avatar label={musician.firstName[0]} size=" large"/>)
+                //                             : (
+                //                                 <Image
+                //                                     src={FileService.GET_IMAGE_URL(musician.avatarUuid)}
+                //                                     alt={`Imagem do integrante ${musician.name}`}
+                //                                     width="100"
+                //                                     height="100"
+                //                                 />
+                //                             )
+                //                     }
+                //                 </Col>
+                //             </Row>
+                //             <Row>
+                //                 <Col md={12} style={STYLE_ALIGN_ITEM_CENTER}>
+                //                     <h5>{`${musician.firstName} ${musician.lastName}`}</h5>
+                //                 </Col>
+                //                 <Col md={12} style={STYLE_ALIGN_ITEM_CENTER}>
+                //                     <h6>{`${musician.age} anos`}</h6>
+                //                 </Col>
+                //             </Row>
+                //             <Row>
+                //                 {
+                //                     musician.types.map(
+                //                         type => (
+                //                             <Col md={6} style={{marginTop: 5}}>
+                //                                 <Tag
+                //                                     style={StyleConstants.WIDTH_100_PERCENT}
+                //                                     value={type.name}
+                //                                     rounded
+                //                                 />
+                //                             </Col>
+                //                         )
+                //                     )
+                //                 }
+                //             </Row>
+                //         </Container>
+                //     </Card>
+                // </Col>
             )
         )
 
@@ -225,7 +265,7 @@ class _BandProfilePage extends React.Component {
                 <Avatar
                     icon={ContactType[contact.type].ICON}
                     key={contact.uuid}
-                    className="mr-2"
+                    className="mr-2 band-contact"
                     size="large"
                     shape="circle"
                     onClick={
@@ -250,8 +290,6 @@ class _BandProfilePage extends React.Component {
         );
     }
 }
-
-const STYLE_ALIGN_ITEM_CENTER = {display: 'flex', alignItems: 'center', justifyContent: 'center'};
 
 const mapStateToProps = state => {
     return state

@@ -3,6 +3,7 @@ import {Col, Container, Row} from "react-bootstrap";
 import {Button} from "primereact/button";
 import {FileUpload} from "primereact/fileupload";
 import React, {useRef} from "react";
+import './update_image_style.css';
 
 export const UpdateImageComponent = (
     {
@@ -44,6 +45,7 @@ export const UpdateImageComponent = (
                     </Col>
                     <Col md={6} sm={12} style={{marginBottom: 15}}>
                         <FileUpload
+                            style={{width: '100%'}}
                             disabled={isLoading}
                             ref={fileUploadRef}
                             name="profilePicture"

@@ -46,7 +46,7 @@ export class BandContactComponent extends React.Component {
         if (!!value.uuid) {
             this.setState({isLoading: true});
             ContactService.DELETE_CONTACT(this.state.bandUuid, value.uuid, this.state.token)
-                .then(response => {
+                .then(() => {
                 })
                 .catch(error => this.state.showToast(ToastUtils.BUILD_TOAST_FORM_ERROR(error)))
                 .finally(() => this.setState({isLoading: false}))
@@ -72,7 +72,7 @@ export class BandContactComponent extends React.Component {
         if (isEditing) {
             this.setState({isLoading: true})
             ContactService.CREATE(request, bandUuid, token)
-                .then(response => {
+                .then(() => {
                     insertedContacts.push(request);
                     this.setState({insertedContacts: insertedContacts});
                     this.cleanRequest()
@@ -163,6 +163,7 @@ export class BandContactComponent extends React.Component {
                 <Col md={2} sm={6}>
                     <Button
                         label="Adicionar"
+                        className="p-button-info"
                         style={StyleConstants.WIDTH_100_PERCENT}
                         icon="pi pi-plus"
                         onClick={() => this.insertRequest()}
@@ -262,7 +263,7 @@ export class BandContactComponent extends React.Component {
                                     if (!!value.uuid) {
                                         this.setState({isLoading: true});
                                         ContactService.UPDATE(value, bandUuid, value.uuid, token)
-                                            .then(response => {
+                                            .then(() => {
                                             })
                                             .catch(error => showToast(ToastUtils.BUILD_TOAST_FORM_ERROR(error)))
                                             .finally(() => this.setState({isLoading: false}))

@@ -1,0 +1,7 @@
+body{
+    height: 100vh !important;
+    margin: 0 !important;
+    background: rgb(2,0,36) !important;
+    /*background: linear-gradient(0deg, rgb(0, 0, 0) 0%, rgb(17, 17, 17) 79%, rgb(33, 33, 33) 100%, rgb(44, 44, 44) 100%) !important;*/
+    color: white !important;
+}

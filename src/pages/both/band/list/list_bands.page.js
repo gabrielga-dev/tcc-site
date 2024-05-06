@@ -12,7 +12,6 @@ import {PageResponse} from "../../../../domain/new/commom/response/page.response
 import {BandService} from "../../../../service/new/band.service";
 import {ToastUtils} from "../../../../util/toast.utils";
 import {BandResponse} from "../../../../domain/new/band/response/band.response";
-import {Card} from "primereact/card";
 
 const ListBandsPage = ({token, user}) => {
     const toast = useRef(null);
@@ -52,7 +51,7 @@ class _ListBandsPage extends React.Component {
 
             isTableLoading: false,
             bands: [],
-            pagination: new PaginationRequest(3),
+            pagination: new PaginationRequest(8),
             pageable: new PageResponse(),
             first: 0,
         }
@@ -82,30 +81,28 @@ class _ListBandsPage extends React.Component {
     render() {
         return (
             <HomeTemplate steps={['Home', 'Bandas']}>
-                <Card>
-                    <Container>
-                        <Row>
-                            <Col>
-                                <ListBandFilterComponent
-                                    showToast={this.state.showToast}
-                                    search={(criteria) => this.search(criteria)}
-                                />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <ListBandTableComponent
-                                    bands={this.state.bands}
-                                    navigateTo={this.state.navigateTo}
-                                    isLoading={this.state.isTableLoading}
-                                />
-                            </Col>
-                        </Row>
-                        <Row>
-                            {this.renderPaginator()}
-                        </Row>
-                    </Container>
-                </Card>
+                <Container>
+                    <Row>
+                        <Col>
+                            <ListBandFilterComponent
+                                showToast={this.state.showToast}
+                                search={(criteria) => this.search(criteria)}
+                            />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <ListBandTableComponent
+                                bands={this.state.bands}
+                                navigateTo={this.state.navigateTo}
+                                isLoading={this.state.isTableLoading}
+                            />
+                        </Col>
+                    </Row>
+                    <Row>
+                        {this.renderPaginator()}
+                    </Row>
+                </Container>
             </HomeTemplate>
         );
     }

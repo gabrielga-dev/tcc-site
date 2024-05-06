@@ -1,0 +1,14 @@
+.selected-marker{
+    color: #00be00;
+}
+.p-tabview-nav {
+    background-color: #4b4b4b !important;
+    border-color: #4b4b4b !important;
+}
+.p-tabview-nav-link {
+    background-color: #4b4b4b !important;
+    border-color: #4b4b4b !important;
+}
+.p-tabview-panels {
+    background-color: #000 !important;
+}

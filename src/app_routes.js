@@ -28,6 +28,11 @@ import CreateMusicianPage from "./pages/auth/musician/create/create_musician.pag
 import AssociateMusicianPage from "./pages/auth/musician/associate/associate_musician.page";
 import ListBandMusicsPage from "./pages/auth/music/list/list_band_musics.page";
 import CreateMusicPage from "./pages/auth/music/create/create_music.page";
+import CreateEventPage from "./pages/auth/event/create/create_event.page";
+import ListEventsPage from "./pages/auth/event/list/list_events.page";
+import CancelEventPage from "./pages/auth/event/cancel/cancel_event.page";
+import ListEventQuoteRequestsPage from "./pages/auth/event/quote_request/list/list_quote_request.page";
+import CreateEventQuoteRequestPage from "./pages/auth/event/quote_request/create/create_quote_request.page";
 
 const AppRoutes = ({token, user}) => {
     return (
@@ -53,8 +58,10 @@ const authRoutes = (user) => (
     <>
         <Route element={<AuthenticatedPersonProfilePage/>} path="/meu-perfil"/>
         <Route element={<ChangeEmailPage/>} path="/mudar-email/:validation_uuid"/>
+        <Route element={<ListBandsPage/>} path="/bandas"/>
 
         {generateBandOwnerRoutes(user)}
+        {generateContractorOwnerRoutes(user)}
 
         <Route element={<SearchAuthenticatedServices/>} path="/meus-servicos"/>
         <Route element={<SearchAuthenticatedPersonBandsPage/>} path="/meus-servicos/banda"/>
@@ -86,7 +93,21 @@ const generateBandOwnerRoutes = (user) => (
                 <Route element={<CreateMusicPage/>} path="/bandas/:band_uuid/gerenciar-musicas/:music_uuid/editar"/>
             </>
         )
+);
 
+const generateContractorOwnerRoutes = (user) => (
+    (!user.roles.some(role => (role.name === 'CONTRACTOR')))
+        ? (<></>)
+        : (
+            <>
+                <Route element={<CreateEventPage/>} path="/eventos/criar"/>
+                <Route element={<ListEventsPage/>} path="/eventos"/>
+                <Route element={<CancelEventPage/>} path="/eventos/:event_uuid/cancelar"/>
+                <Route element={<ListEventQuoteRequestsPage/>} path="/eventos/:event_uuid/pedidos-orcamentos"/>
+                {/*BAND QUOTE REQUEST*/}
+                <Route element={<CreateEventQuoteRequestPage/>} path="/band/:band_uuid/pedir-orcamento"/>
+            </>
+        )
 );
 
 const nonAuthRoutes = () => (

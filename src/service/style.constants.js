@@ -6,7 +6,8 @@ export const StyleConstants = {
         width: '150px',
         height: '150px',
         borderRadius: 90,
+        borderColor: '#000',
         overflow: 'hidden',
-        border: '2px solid #ccc'
+        backgroundColor: '#ffffff'
     }
 }

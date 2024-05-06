@@ -21,6 +21,7 @@ import {BandService} from "../../../../service/new/band.service";
 import {BandProfileDto} from "../../../../domain/new/dto/band/band_profile.dto";
 import {ContactRequest} from "../../../../domain/new/contact/request/contact.request";
 import {FileService} from "../../../../service/new/file.service";
+import './create_band_style.css';
 
 const CreateBandPage = ({token, user}) => {
     const toast = useRef(null);
@@ -121,7 +122,7 @@ class _CreateBandPage extends React.Component {
         }
         return (
             <HomeTemplate steps={['Home', 'Bandas', this.state.isEditing ? 'Editar' : 'Cadastrar']}>
-                <Card>
+                <Card className='main-card'>
                     <Container>
                         <Row>
                             {this.renderPictureSection()}
@@ -137,7 +138,9 @@ class _CreateBandPage extends React.Component {
                         <Row>
                             {this.renderBandContactSection()}
                         </Row>
-                        <Divider align="center"><span>Submeter</span></Divider>
+                        <br />
+                        <br />
+                        <br />
                         <Row>
                             {this.renderFormEnding()}
                         </Row>
@@ -187,7 +190,7 @@ class _CreateBandPage extends React.Component {
         let {name, description} = request;
         return (
             <>
-                <Col sm={12} style={{marginBottom: 20}}>
+                <Col sm={12} style={{marginBottom: 10}}>
                     <TextFieldComponent
                         label="Nome"
                         placeHolder="Insira aqui o nome da sua banda"
@@ -197,7 +200,7 @@ class _CreateBandPage extends React.Component {
                         onChange={(newName) => this.setBandValue('name', newName)}
                     />
                 </Col>
-                <Col sm={12} style={{marginBottom: 20}}>
+                <Col sm={12} style={{marginBottom: 10}}>
                     <TextAreaComponent
                         label="Descrição"
                         placeHolder="Escreva aqui um pouco da sua banda..."

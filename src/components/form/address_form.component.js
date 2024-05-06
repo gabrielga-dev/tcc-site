@@ -41,6 +41,10 @@ export class AddressFormComponent extends React.Component {
         this.componentDidMount()
     }
 
+    setIsLoading(isLoading){
+        this.setState({isLoading: isLoading});
+    }
+
     componentDidMount() {
         this.setState({isLoading: true});
 
@@ -110,6 +114,7 @@ export class AddressFormComponent extends React.Component {
                 <Row style={ROW_STYLE}>
                     <Col md={6} sm={12}>
                         <TextFieldComponent
+                            optional={true}
                             disabled={isLoading}
                             label="Complemento"
                             value={complement}

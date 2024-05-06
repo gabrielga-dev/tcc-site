@@ -1,4 +1,3 @@
-import {StyleConstants} from "../../../service/style.constants";
 import React from "react";
 import {InputMask} from "primereact/inputmask";
 
@@ -16,12 +15,12 @@ export const TextMaskFieldComponent = (
     }
 ) => (
     <>
-        <h6>{label}{!optional ? '*' : ''}</h6>
+        <h6 className='input-field-label'>{label}{!optional ? '*' : ''}</h6>
         <InputMask
+            className="input-field"
             placeholder={placeHolder}
             value={value}
             mask={mask}
-            style={StyleConstants.WIDTH_100_PERCENT}
             onChange={(e) => {
                 if (e.value) {
                     onChange(e.value);

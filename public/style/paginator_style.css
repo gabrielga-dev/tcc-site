@@ -1,0 +1,19 @@
+.p-paginator {
+    background-color: #343434 !important;
+    border-color: #343434 !important;
+    color: #b7b7b7 !important;
+}
+
+.p-paginator-pages>.p-button {
+    font-size: 12px;
+}
+
+.p-paginator-pages>.p-button:hover {
+    background-color: #606060 !important;
+}
+
+.p-paginator-pages>.p-highlight {
+    font-size: 12px;
+    color: black !important;
+    background-color: #606060 !important;
+}
