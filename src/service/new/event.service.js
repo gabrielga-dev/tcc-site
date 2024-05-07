@@ -29,4 +29,9 @@ export const EventService = {
     CANCEL: (eventUuid, token) => {
         return axios.delete(`${BASE_URL}/v1/event/${eventUuid}/cancel`, BaseService.MAKE_HEADERS(token));
     },
+
+    FIND_NAMES: (eventUuids, token) => {
+        let params = eventUuids.map(uuid => `eventUuids=${uuid}`).join('&');
+        return axios.get(`${BASE_URL}/v1/event/names?${params}`, BaseService.MAKE_HEADERS(token));
+    },
 }

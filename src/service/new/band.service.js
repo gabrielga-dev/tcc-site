@@ -66,4 +66,12 @@ export const BandService = {
         let params = uuids.map(uuid => `bandsUuids=${uuid}`).join('&');
         return axios.get(`${BASE_URL_BAND}/v1/band/name?${params}`, BaseService.MAKE_HEADERS(token));
     },
+
+    FIND_QUOTE_REQUESTS: (bandUuid, criteria, pagination, token) => {
+        let url = `${BASE_URL_BAND}/v1/band/${bandUuid}/quote-request?${pagination.toRequestParameters()}`;
+        if (!!criteria) {
+            url = `${url}&${criteria.toRequestParameters()}`
+        }
+        return axios.get(url, BaseService.MAKE_HEADERS(token));
+    },
 }
