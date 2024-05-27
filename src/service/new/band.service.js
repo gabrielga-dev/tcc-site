@@ -74,4 +74,19 @@ export const BandService = {
         }
         return axios.get(url, BaseService.MAKE_HEADERS(token));
     },
+
+    FIND_QUOTE_REQUEST_BY_UUID: (quoteRequestUuid, token) => (
+        axios.get(`${BASE_URL_BAND}/v1/quote-request/${quoteRequestUuid}`, BaseService.MAKE_HEADERS(token))
+    ),
+
+    DECLINE_QUOTE_REQUEST: (quoteRequestUuid, token) => (
+        axios.delete(`${BASE_URL_BAND}/v1/quote-request/${quoteRequestUuid}`, BaseService.MAKE_HEADERS(token))
+    ),
+
+    DOWNLOAD_PLAYLIST_PDF: (quoteRequestUuid, token) => (
+        axios.get(
+            `${BASE_URL_BAND}/v1/quote-request/${quoteRequestUuid}/playlist`,
+            BaseService.MAKE_HEADERS_TO_PDF(token)
+        )
+    )
 }

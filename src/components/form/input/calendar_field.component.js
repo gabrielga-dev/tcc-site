@@ -14,11 +14,13 @@ export const CalendarFieldComponent = (
         },
         optional = false,
         dateFormat = "dd/mm/yy",
+        showTime = true,
     }
 ) => (
     <>
         <h6 className='input-field-label'>{label}{!optional ? '*' : ''}</h6>
         <Calendar
+            showTime={showTime}
             className="input-field"
             disabled={disabled}
             placeholder={placeHolder}

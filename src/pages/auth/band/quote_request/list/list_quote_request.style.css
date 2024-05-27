@@ -6,3 +6,7 @@
     max-height: 36px;
     border-radius:  150px !important;
 }
+
+.p-checkbox-label{
+    margin-left: 5px;
+}
