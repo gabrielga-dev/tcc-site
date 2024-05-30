@@ -7,8 +7,8 @@ export const QuoteRequestStatusType = {
         translatedName: "Negado",
         name: "DECLINED"
     },
-    ACCEPTED: {
-        translatedName: "Aceito",
-        name: "ACCEPTED"
+    ANSWERED: {
+        translatedName: "Respondido",
+        name: "ANSWERED"
     },
 }

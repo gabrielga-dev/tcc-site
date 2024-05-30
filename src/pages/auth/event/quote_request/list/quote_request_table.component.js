@@ -120,7 +120,7 @@ class _QuoteRequestsTableComponent extends React.Component {
     renderActions(quoteRequest) {
         let {navigateTo, eventUuid} = this.state;
         switch (quoteRequest.status) {
-            case QuoteRequestStatusType.ACCEPTED:
+            case QuoteRequestStatusType.ANSWERED:
                 return (
                     <Col sm={12} md={4} style={{marginBottom: 10}}>
                         <Button

@@ -21,6 +21,10 @@ import {PickList} from "primereact/picklist";
 import {StyleConstants} from "../../../../../service/style.constants";
 import {FileService} from "../../../../../service/new/file.service";
 import {Tag} from "primereact/tag";
+import {FormEndingComponent} from "../../../../../components/form_ending.component";
+import {NumericFieldComponent} from "../../../../../components/form/input/numeric_field.component";
+import {TextAreaComponent} from "../../../../../components/form/input/text_area.component";
+import {AnswerQuoteRequestRequest} from "../../../../../domain/new/quote_request/request/answer_quote_request.request";
 
 const BuildLineupPage = ({token, user}) => {
     let {band_uuid, quote_uuid} = useParams();
@@ -73,6 +77,9 @@ class _BuildLineupPage extends React.Component {
             wantedMusicianTypesProgresses: new Map(),
             availableMusicians: [],
             lineupRequest: [],
+
+            finalValue: 0,
+            observation: '',
         }
     }
 
@@ -141,11 +148,58 @@ class _BuildLineupPage extends React.Component {
         )
     }
 
+    submitForm() {
+        let {finalValue, observation, showToast} = this.state;
+
+        if (finalValue < 0) {
+            showToast(ToastUtils.BUILD_TOAST_FORM_ERROR('Valor final inváilido!', 'Digite um valor final válido.'))
+            return
+        }
+        if (observation && observation.length > 1500) {
+            showToast(ToastUtils.BUILD_TOAST_FORM_ERROR(
+                'Observações inváilidas!',
+                'Descreva as observações com até 1500 caracteres.')
+            );
+            return;
+        }
+        let {wantedMusicianTypesProgresses, lineupRequest} = this.state;
+        let error = null;
+        wantedMusicianTypesProgresses.forEach(progress => {
+            if (progress.wanted > progress.current) {
+                error = ToastUtils.BUILD_TOAST_FORM_ERROR(
+                    `Falta(m) músico(s) do tipo ${progress.typeName}!`,
+                    `Por favor, adicione mais músicos do tipo ${progress.typeName}, ou cadastre/vincule mais à banda.`
+                )
+                return;
+            }
+        });
+        if (error) {
+            showToast(error);
+        }
+
+        let request = new AnswerQuoteRequestRequest(finalValue, observation, lineupRequest);
+
+        let {quoteRequestUuid, token, navigateTo, bandUuid} = this.state;
+        this.setState({isLoading: true});
+        BandService.ANSWER_QUOTE_REQUEST(quoteRequestUuid, request, token)
+            .then(
+                () => {
+                    showToast(ToastUtils.BUILD_TOAST_SUCCESS_BODY('Orçamento enviado!'));
+                    setTimeout(() => navigateTo(`/bandas/${bandUuid}/pedidos-de-orcamento`), 2000)
+                }
+            ).catch(
+                error => {
+                    showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error));
+                    this.setState({isLoading: false});
+                }
+        )
+    }
+
     render() {
         if (this.state.isMasterLoading) {
             return (<ActivityIndicatorComponent/>);
         }
-        let {bandName, eventName} = this.state;
+        let {bandName, eventName, isLoading} = this.state;
         return (
             <HomeTemplate steps={['Home', 'Bandas', bandName, 'Pedidos de orçamento', eventName, 'Montar escalação']}>
                 <Card className='main-card'>
@@ -155,6 +209,18 @@ class _BuildLineupPage extends React.Component {
                         </Row>
                         <Row>
                             {this.renderMusicianSelection()}
+                        </Row>
+                        {this.renderFields()}
+                        <Row>
+                            <Col sm={0} md={8}/>
+                            <Col sm={12} md={4}>
+                                <FormEndingComponent
+                                    showSecond={false}
+                                    showFirst={false}
+                                    onClickThird={() => this.submitForm()}
+                                    disableThird={isLoading}
+                                />
+                            </Col>
                         </Row>
                     </Container>
                 </Card>
@@ -217,19 +283,22 @@ class _BuildLineupPage extends React.Component {
     }
 
     renderMusicianSelection() {
-        let {availableMusicians, lineupRequest} = this.state;
+        let {availableMusicians, lineupRequest, isLoading} = this.state;
         return (
             <Col>
                 <h4>Selecione os músicos:</h4>
                 <PickList
+                    e
                     source={availableMusicians}
                     target={lineupRequest}
                     onChange={
                         (event) => {
-                            this.setState(
-                                {availableMusicians: event.source, lineupRequest: event.target}
-                            );
-                            this.updateMusicianTypesWanted(event.target)
+                            if (!isLoading) {
+                                this.setState(
+                                    {availableMusicians: event.source, lineupRequest: event.target}
+                                );
+                                this.updateMusicianTypesWanted(event.target)
+                            }
                         }
                     }
                     itemTemplate={(item) => (this.musicianTemplate(item))}
@@ -271,6 +340,45 @@ class _BuildLineupPage extends React.Component {
                 </Row>
             </Container>
         );
+    }
+
+    renderFields() {
+        let {finalValue, observation, isLoading} = this.state;
+        return (
+            <>
+                <Row>
+                    <Col sm={0} md={2}/>
+                    <Col>
+                        <NumericFieldComponent
+                            disabled={isLoading}
+                            label='Valor final'
+                            placeHolder='Digite aqui o valor do orçamento'
+                            value={finalValue}
+                            min={0}
+                            onChange={(newValue) => this.setState({finalValue: newValue})}
+                            onBlur={() => {
+                            }}
+                        />
+                    </Col>
+                    <Col sm={0} md={2}/>
+                </Row>
+                <Row>
+                    <Col sm={0} md={2}/>
+                    <Col>
+                        <TextAreaComponent
+                            disabled={isLoading}
+                            label='Observações'
+                            optional={true}
+                            placeHolder='Digite aqui qualquer observação'
+                            value={observation}
+                            maxLength={1500}
+                            onChange={(newValue) => this.setState({observation: newValue})}
+                        />
+                    </Col>
+                    <Col sm={0} md={2}/>
+                </Row>
+            </>
+        )
     }
 }
 

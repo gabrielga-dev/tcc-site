@@ -92,5 +92,9 @@ export const BandService = {
 
     FIND_ALL_MUSICIANS: (bandUuid, token) => (
         axios.get(`${BASE_URL_BAND}/v1/band/${bandUuid}/musicians`, BaseService.MAKE_HEADERS(token))
+    ),
+
+    ANSWER_QUOTE_REQUEST: (quoteRequestUuid, request, token) => (
+        axios.post(`${BASE_URL_BAND}/v1/quote-request/${quoteRequestUuid}`, request, BaseService.MAKE_HEADERS(token))
     )
 }

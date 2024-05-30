@@ -274,18 +274,18 @@ class _ListQuoteRequestsPage extends React.Component {
                             <Col>
                                 <Checkbox
                                     inputId="status_02"
-                                    value={QuoteRequestStatusType.ACCEPTED}
+                                    value={QuoteRequestStatusType.ANSWERED}
                                     onChange={(e) => {
                                         if (e.checked) {
-                                            criteria.addStatus(QuoteRequestStatusType.ACCEPTED);
+                                            criteria.addStatus(QuoteRequestStatusType.ANSWERED);
                                         } else {
-                                            criteria.removeStatus(QuoteRequestStatusType.ACCEPTED);
+                                            criteria.removeStatus(QuoteRequestStatusType.ANSWERED);
                                         }
                                         this.setState({criteria: criteria});
                                     }}
-                                    checked={criteria.hasStatus(QuoteRequestStatusType.ACCEPTED)}
+                                    checked={criteria.hasStatus(QuoteRequestStatusType.ANSWERED)}
                                 />
-                                <label htmlFor="status_02" className="p-checkbox-label">Aceito</label>
+                                <label htmlFor="status_02" className="p-checkbox-label">Respondido</label>
                             </Col>
                         </Row>
                         <Row style={{marginTop: 10}}>
@@ -372,7 +372,7 @@ class _ListQuoteRequestsPage extends React.Component {
         switch (qr.status) {
             case QuoteRequestStatusType.NON_ANSWERED:
                 return this.renderNonAnsweredButtons(qr);
-            case QuoteRequestStatusType.ACCEPTED:
+            case QuoteRequestStatusType.ANSWERED:
                 return this.renderAcceptedQuoteButtons(qr);
             case QuoteRequestStatusType.DECLINED:
                 return (<h6>Nenhuma ação disponível</h6>);
@@ -496,7 +496,7 @@ class _ListQuoteRequestsPage extends React.Component {
         switch (qr.status) {
             case QuoteRequestStatusType.NON_ANSWERED:
                 return (<h6>{qr.status.translatedName}</h6>);
-            case QuoteRequestStatusType.ACCEPTED:
+            case QuoteRequestStatusType.ANSWERED:
                 return (<h6 style={{color: 'green'}}>Aceito</h6>);
             case QuoteRequestStatusType.DECLINED:
                 return (<h6 style={{color: 'red'}}>Negado</h6>);
