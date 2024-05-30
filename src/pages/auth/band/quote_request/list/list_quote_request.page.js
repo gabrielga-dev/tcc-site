@@ -184,6 +184,7 @@ class _ListQuoteRequestsPage extends React.Component {
                         <Row>
                             <Col>
                                 {this.renderTable()}
+                                <ConfirmDialog/>
                             </Col>
                         </Row>
                         <Row>
@@ -395,7 +396,6 @@ class _ListQuoteRequestsPage extends React.Component {
                                 () => navigateTo(`/bandas/${bandUuid}/pedidos-de-orcamento/${qr.quoteRequestUuid}`)
                             }
                         />
-                        <ConfirmDialog/>
                         <Button
                             style={{marginRight: 20}}
                             tooltip="Negar"
@@ -407,6 +407,8 @@ class _ListQuoteRequestsPage extends React.Component {
                                     message: 'Tem certeza que deseja que deseja negar este pedido de orçamento?',
                                     header: 'Negar pedido de orçamento',
                                     icon: 'pi pi-exclamation-triangle',
+                                    acceptLabel: 'Sim',
+                                    rejectLabel: 'Não',
                                     acceptClassName: 'p-button-danger',
                                     rejectClassName: 'p-button-success p-button-text',
                                     accept: () => this.declineQuoteRequest(qr),
@@ -420,6 +422,22 @@ class _ListQuoteRequestsPage extends React.Component {
                             tooltipOptions={{position: 'top'}}
                             icon="pi pi-check"
                             className="p-button-rounded p-button-success"
+                            onClick={
+                                () => confirmDialog({
+                                    message: 'Deseja prosseguir para escalação da banda?',
+                                    header: 'Aceitar pedido de orçamento',
+                                    icon: 'pi pi-exclamation-triangle',
+                                    acceptLabel: 'Sim',
+                                    rejectLabel: 'Não',
+                                    acceptClassName: 'p-button-success',
+                                    rejectClassName: 'p-button-danger p-button-text',
+                                    accept: () => {
+                                        navigateTo(`/bandas/${bandUuid}/pedidos-de-orcamento/${qr.quoteRequestUuid}/escalacao`)
+                                    },
+                                    reject: () => {
+                                    }
+                                })
+                            }
                         />
                     </Col>
                 </Row>

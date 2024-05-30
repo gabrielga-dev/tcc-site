@@ -35,6 +35,7 @@ import ListEventQuoteRequestsPage from "./pages/auth/event/quote_request/list/li
 import CreateEventQuoteRequestPage from "./pages/auth/event/quote_request/create/create_quote_request.page";
 import ListQuoteRequestsPage from "./pages/auth/band/quote_request/list/list_quote_request.page";
 import BriefQuoteRequestPage from "./pages/auth/band/quote_request/brief/brief_quote_request.page";
+import BuildLineupPage from "./pages/auth/band/quote_request/lineup/build_line_up.page";
 
 const AppRoutes = ({token, user}) => {
     return (
@@ -96,6 +97,7 @@ const generateBandOwnerRoutes = (user) => (
 
                 <Route element={<ListQuoteRequestsPage/>} path="/bandas/:band_uuid/pedidos-de-orcamento"/>
                 <Route element={<BriefQuoteRequestPage/>} path="/bandas/:band_uuid/pedidos-de-orcamento/:quote_uuid"/>
+                <Route element={<BuildLineupPage/>} path="/bandas/:band_uuid/pedidos-de-orcamento/:quote_uuid/escalacao"/>
             </>
         )
 );

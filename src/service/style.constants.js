@@ -9,5 +9,13 @@ export const StyleConstants = {
         borderColor: '#000',
         overflow: 'hidden',
         backgroundColor: '#ffffff'
+    },
+    SM_IMAGE_STYLE: {
+        width: '70px',
+        height: '70px',
+        borderRadius: 90,
+        borderColor: '#000',
+        overflow: 'hidden',
+        backgroundColor: '#ffffff'
     }
 }
