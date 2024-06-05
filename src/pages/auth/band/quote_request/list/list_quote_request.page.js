@@ -26,6 +26,7 @@ import {Accordion, AccordionTab} from "primereact/accordion";
 import {StyleConstants} from "../../../../../service/style.constants";
 import {CalendarFieldComponent} from "../../../../../components/form/input/calendar_field.component";
 import {DateUtil} from "../../../../../util/date.util";
+import {FileUtil} from "../../../../../util/file.util";
 
 const ListQuoteRequestsPage = ({token, user}) => {
     let {band_uuid} = useParams();
@@ -374,12 +375,13 @@ class _ListQuoteRequestsPage extends React.Component {
                 return this.renderNonAnsweredButtons(qr);
             case QuoteRequestStatusType.ANSWERED:
                 return this.renderAcceptedQuoteButtons(qr);
+            case QuoteRequestStatusType.HIRED:
+                return this.renderHiredQuoteButtons(qr);
             case QuoteRequestStatusType.DECLINED:
                 return (<h6>Nenhuma ação disponível</h6>);
         }
     }
 
-    //todo button actions
     renderNonAnsweredButtons(qr) {
         let {navigateTo, bandUuid} = this.state;
         return (
@@ -460,7 +462,28 @@ class _ListQuoteRequestsPage extends React.Component {
 
     }
 
-    //todo button actions
+    downloadPlaylist(quoteRequest) {
+        let {showToast, token} = this.state;
+        showToast(ToastUtils.BUILD_TOAST_INFO_BODY('Solicitando PDF'));
+        BandService.DOWNLOAD_PLAYLIST_PDF(quoteRequest.quoteRequestUuid, token)
+            .then(
+                response => {
+                    FileUtil.DOWNLOAD_PDF('playlist.pdf', response.data);
+                }
+            ).catch(error => showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)));
+    }
+
+    downloadLineUp(quoteRequest) {
+        let {showToast, token} = this.state;
+        showToast(ToastUtils.BUILD_TOAST_INFO_BODY('Solicitando PDF'));
+        BandService.DOWNLOAD_LINEUP_PDF(quoteRequest.quoteRequestUuid, token)
+            .then(
+                response => {
+                    FileUtil.DOWNLOAD_PDF('lineup.pdf', response.data);
+                }
+            ).catch(error => showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)));
+    }
+
     renderAcceptedQuoteButtons(qr) {
         return (
             <Container>
@@ -472,6 +495,9 @@ class _ListQuoteRequestsPage extends React.Component {
                             tooltipOptions={{position: 'top'}}
                             icon="pi pi-list"
                             className="p-button-rounded p-button-info"
+                            onClick={
+                                () => this.downloadPlaylist(qr)
+                            }
                         />
                         <Button
                             style={{marginRight: 20}}
@@ -479,12 +505,60 @@ class _ListQuoteRequestsPage extends React.Component {
                             tooltipOptions={{position: 'top'}}
                             icon="pi pi-users"
                             className="p-button-rounded p-button-info"
+                            onClick={
+                                () => this.downloadLineUp(qr)
+                            }
+                        />
+                    </Col>
+                </Row>
+            </Container>
+        );
+    }
+
+    downloadContract(quoteRequest) {
+        let {showToast, token} = this.state;
+        showToast(ToastUtils.BUILD_TOAST_INFO_BODY('Solicitando PDF'));
+        EventService.GENERATE_CONTRACT(quoteRequest.originQuoteRequestUuid, token)
+            .then(
+                response => {
+                    FileUtil.DOWNLOAD_PDF('contract.pdf', response.data);
+                }
+            ).catch(error => showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)));
+    }
+
+    renderHiredQuoteButtons(qr) {
+        return (
+            <Container>
+                <Row>
+                    <Col>
+                        <Button
+                            style={{marginRight: 20}}
+                            tooltip="Gerar PDF repertório"
+                            tooltipOptions={{position: 'top'}}
+                            icon="pi pi-list"
+                            className="p-button-rounded p-button-info"
+                            onClick={
+                                () => this.downloadPlaylist(qr)
+                            }
+                        />
+                        <Button
+                            style={{marginRight: 20}}
+                            tooltip="Gerar PDF da escalação"
+                            tooltipOptions={{position: 'top'}}
+                            icon="pi pi-users"
+                            className="p-button-rounded p-button-info"
+                            onClick={
+                                () => this.downloadLineUp(qr)
+                            }
                         />
                         <Button
                             style={{marginRight: 20}}
                             tooltip="Gerar PDF do contrato"
                             tooltipOptions={{position: 'top'}}
                             className="contract-button"
+                            onClick={
+                                () => this.downloadContract(qr)
+                            }
                         />
                     </Col>
                 </Row>
@@ -495,8 +569,9 @@ class _ListQuoteRequestsPage extends React.Component {
     renderStatus(qr) {
         switch (qr.status) {
             case QuoteRequestStatusType.NON_ANSWERED:
-                return (<h6>{qr.status.translatedName}</h6>);
             case QuoteRequestStatusType.ANSWERED:
+                return (<h6>{qr.status.translatedName}</h6>);
+            case QuoteRequestStatusType.HIRED:
                 return (<h6 style={{color: 'green'}}>Aceito</h6>);
             case QuoteRequestStatusType.DECLINED:
                 return (<h6 style={{color: 'red'}}>Negado</h6>);

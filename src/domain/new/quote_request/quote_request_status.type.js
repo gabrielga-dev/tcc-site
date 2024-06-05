@@ -11,4 +11,8 @@ export const QuoteRequestStatusType = {
         translatedName: "Respondido",
         name: "ANSWERED"
     },
+    HIRED: {
+        translatedName: "Contratado",
+        name: "HIRED"
+    },
 }

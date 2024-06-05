@@ -12,6 +12,7 @@ import {Container} from "react-bootstrap";
 import {QuoteRequestService} from "../../../../../service/new/quote_request.service";
 import {QuoteRequestTypeResponse} from "../../../../../domain/new/quote_request/response/quote_request_type.response";
 import {QuoteRequestsTableComponent} from "./quote_request_table.component";
+import {ConfirmDialog} from "primereact/confirmdialog";
 
 const ListEventQuoteRequestsPage = ({token, user}) => {
     const toast = useRef(null);
@@ -100,12 +101,13 @@ class _ListEventQuoteRequestsPage extends React.Component {
         if (this.state.isMasterLoading) {
             return (<ActivityIndicatorComponent/>);
         }
-        let {currentEvent, navigateTo, isLoading} = this.state;
+        let {currentEvent, isLoading} = this.state;
         return (
             <HomeTemplate steps={['Home', 'Eventos', 'Meus eventos', currentEvent.name, 'Pedidos de Orçamento']}>
                 <Card>
                     <Container>
-                        {this.renderQuoteRequestTables()}
+                        <ConfirmDialog />
+                        {isLoading ? <ActivityIndicatorComponent/> : this.renderQuoteRequestTables()}
                     </Container>
                 </Card>
             </HomeTemplate>
@@ -121,9 +123,45 @@ class _ListEventQuoteRequestsPage extends React.Component {
                     quoteRequests={type.quoteRequests}
                     isLoading={this.state.isLoading}
                     token={this.state.token}
+                    hireQuote={(quote, type) => this.hireQuote(quote, type)}
+                    declineQuote={(quote, type) => this.declineQuote(quote, type)}
                 />
             )
         );
+    }
+
+    hireQuote(quote){
+        this.setState({isLoading: true});
+        let {token, showToast} = this.state;
+        EventService.HIRE_QUOTE(quote.quoteRequestUuid, token)
+            .then(
+                () => {
+                    showToast(ToastUtils.BUILD_TOAST_SUCCESS_BODY('Orçamento contratado com sucesso!'));
+                    this.findQuoteRequests();
+                }
+            ).catch(
+            error => {
+                showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error));
+                this.setState({isLoading: false})
+            }
+        )
+    }
+
+    declineQuote(quote, type){
+        this.setState({isLoading: true});
+        let {token, showToast} = this.state;
+        EventService.DECLINE_QUOTE(quote.quoteRequestUuid, token)
+            .then(
+                () => {
+                    showToast(ToastUtils.BUILD_TOAST_SUCCESS_BODY('Orçamento negado com sucesso!'));
+                    this.findQuoteRequests();
+                }
+            ).catch(
+            error => {
+                showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error));
+                this.setState({isLoading: false})
+            }
+        )
     }
 }
 

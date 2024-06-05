@@ -5,6 +5,9 @@ import {Column} from "primereact/column";
 import {ToastUtils} from "../../../../../util/toast.utils";
 import {Button} from "primereact/button";
 import {QuoteRequestStatusType} from "../../../../../domain/new/quote_request/quote_request_status.type";
+import {confirmDialog} from "primereact/confirmdialog";
+import {EventService} from "../../../../../service/new/event.service";
+import {FileUtil} from "../../../../../util/file.util";
 
 export const QuoteRequestsTableComponent = (
     {
@@ -12,7 +15,13 @@ export const QuoteRequestsTableComponent = (
         quoteRequests = [],
         isLoading = false,
         token = '',
-        showToast, navigateTo
+        showToast, navigateTo,
+        hireQuote = (q, type) => {
+            console.log(q, type)
+        },
+        declineQuote = (q, type) => {
+            console.log(q, type)
+        },
     }
 ) => (
     <_QuoteRequestsTableComponent
@@ -22,6 +31,8 @@ export const QuoteRequestsTableComponent = (
         token={token}
         showToast={showToast}
         navigateTo={navigateTo}
+        hireQuote={hireQuote}
+        declineQuote={declineQuote}
     />
 );
 
@@ -33,6 +44,9 @@ class _QuoteRequestsTableComponent extends React.Component {
             token: props.token,
             showToast: props.showToast,
             navigateTo: props.navigateTo,
+
+            hireQuote: props.hireQuote,
+            declineQuote: props.declineQuote,
 
             type: props.type,
             quoteRequests: props.quoteRequests,
@@ -118,19 +132,97 @@ class _QuoteRequestsTableComponent extends React.Component {
     }
 
     renderActions(quoteRequest) {
-        let {navigateTo, eventUuid} = this.state;
+        let {hireQuote, declineQuote, token, showToast} = this.state;
         switch (quoteRequest.status) {
             case QuoteRequestStatusType.ANSWERED:
                 return (
-                    <Col sm={12} md={4} style={{marginBottom: 10}}>
+                    <Col style={{marginBottom: 10}}>
                         <Button
-                            tooltip="Visualizar perfil do Evento"
+                            tooltip="Visualizar resposta"
                             tooltipOptions={{position: 'top'}}
-                            icon="pi pi-user"
+                            icon="pi pi-eye"
                             className="p-button-rounded p-button-info"
-                            onClick={() => navigateTo(`/eventos/${eventUuid}/quote-request/${quoteRequest.quoteUuid}`)}
+                            onClick={
+                                () => confirmDialog({
+                                    header: 'Visualizar resposta',
+                                    message: `Preço: ${quoteRequest.price} \n ${quoteRequest.observation}`,
+                                    icon: 'pi pi-info-circle',
+                                    acceptLabel: 'Contratar',
+                                    acceptClassName: 'p-button-success',
+                                    accept: () => hireQuote(quoteRequest),
+                                    rejectLabel: 'Não contratar ainda',
+                                    rejectClassName: 'p-button-danger p-button-text',
+                                    reject: () => {
+                                    }
+                                })
+                            }
+                        />
+                        <Button
+                            style={{marginLeft: 5}}
+                            tooltip="Contratar"
+                            tooltipOptions={{position: 'top'}}
+                            icon="pi pi-check"
+                            className="p-button-rounded p-button-success"
+                            onClick={
+                                () => confirmDialog({
+                                    header: 'Contratar orçamento',
+                                    message: `Você deseja contratar o orçamento de preço ${quoteRequest.price}?`,
+                                    icon: 'pi pi-info-circle',
+                                    acceptLabel: 'Contratar',
+                                    acceptClassName: 'p-button-success',
+                                    accept: () => hireQuote(quoteRequest),
+                                    rejectLabel: 'Não contratar ainda',
+                                    rejectClassName: 'p-button-danger',
+                                    reject: () => {
+                                    }
+                                })
+                            }
+                        />
+                        <Button
+                            style={{marginLeft: 5}}
+                            tooltip="Rejeitar"
+                            tooltipOptions={{position: 'top'}}
+                            icon="pi pi-times"
+                            className="p-button-rounded p-button-danger"
+                            onClick={
+                                () => confirmDialog({
+                                    header: 'Rejeitar',
+                                    message: `Você deseja rejeitar o orçamento de ${quoteRequest.price}?`,
+                                    icon: 'pi pi-info-circle',
+                                    acceptLabel: 'Rejeitar',
+                                    acceptClassName: 'p-button-danger',
+                                    accept: () => declineQuote(quoteRequest),
+                                    rejectLabel: 'Não rejeitar ainda',
+                                    rejectClassName: 'p-button-success p-button-text',
+                                    reject: () => {
+                                    }
+                                })
+                            }
                         />
                     </Col>
+                );
+            case QuoteRequestStatusType.HIRED:
+                return (
+                    <Button
+                        style={{marginLeft: 5}}
+                        tooltip="Baixar contrato"
+                        tooltipOptions={{position: 'top'}}
+                        icon="pi pi-file-pdf"
+                        className="p-button-rounded p-button-danger"
+                        onClick={
+                            () => {
+                                EventService.GENERATE_CONTRACT(quoteRequest.quoteRequestUuid, token)
+                                    .then(
+                                        response => {
+                                            showToast(ToastUtils.BUILD_TOAST_SUCCESS_BODY('Contrato gerado com sucesso!'))
+                                            FileUtil.DOWNLOAD_PDF('contrato.pdf', response.data);
+                                        }
+                                    ).catch(
+                                        error => showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error))
+                                    )
+                            }
+                        }
+                    />
                 );
             default:
                 return (

@@ -90,6 +90,13 @@ export const BandService = {
         )
     ),
 
+    DOWNLOAD_LINEUP_PDF: (quoteRequestUuid, token) => (
+        axios.get(
+            `${BASE_URL_BAND}/v1/quote-request/${quoteRequestUuid}/lineup`,
+            BaseService.MAKE_HEADERS_TO_PDF(token)
+        )
+    ),
+
     FIND_ALL_MUSICIANS: (bandUuid, token) => (
         axios.get(`${BASE_URL_BAND}/v1/band/${bandUuid}/musicians`, BaseService.MAKE_HEADERS(token))
     ),
