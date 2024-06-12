@@ -2,6 +2,7 @@ export const RoleEnum = {
     BAND: 'BAND',
     CONTRACTOR: 'CONTRACTOR',
     MUSICIAN: 'MUSICIAN',
+    ANON: 'ANON',
 
     getFromName: (name = '') => {
         let upName = name.toUpperCase();

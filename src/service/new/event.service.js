@@ -46,4 +46,8 @@ export const EventService = {
     GENERATE_CONTRACT: (quoteRequestUuid, token) => (
         axios.get(`${BASE_URL}/v1/quote/${quoteRequestUuid}/contract`, BaseService.MAKE_HEADERS_TO_PDF(token))
     ),
+
+    DASHBOARD: (token) => (
+        axios.get(`${BASE_URL}/v1/quote/dashboard`, BaseService.MAKE_HEADERS(token))
+    ),
 }

@@ -1,6 +1,7 @@
 import axios from "axios";
 import {API_CONSTANTS} from "../../constants/api.constants";
 import {BaseService} from "./base.service";
+import {DateUtil} from "../../util/date.util";
 
 const BASE_URL_BAND = `${API_CONSTANTS.API_BASE_URL}/band`;
 
@@ -18,6 +19,9 @@ export const BandService = {
             url = `${url}&${bandFilter.toRequestParameters()}`
         }
         return axios.get(url, BaseService.MAKE_HEADERS(token));
+    },
+    FIND_AUTHENTICATED_PERSON_BANDS_NAMES: (token) => {
+        return axios.get(`${BASE_URL_BAND}/v1/band/all/name`, BaseService.MAKE_HEADERS(token));
     },
     FIND_BAND_BY_UUID: (bandUuid) => {
         return axios.get(`${BASE_URL_BAND}/v1/band/uuid/${bandUuid}`, BaseService.HEADERS);
@@ -103,5 +107,16 @@ export const BandService = {
 
     ANSWER_QUOTE_REQUEST: (quoteRequestUuid, request, token) => (
         axios.post(`${BASE_URL_BAND}/v1/quote-request/${quoteRequestUuid}`, request, BaseService.MAKE_HEADERS(token))
-    )
+    ),
+
+    DASHBOARD: (bandUuid, startDate, endDate, token) => {
+        let mappedBandUuid = bandUuid ? `bandUuid=${bandUuid}` : '';
+        let startDateEpoch = startDate ? `&startDate=${DateUtil.DATE_TO_EPOCH(startDate)}` : '';
+        let endDateEpoch = endDate ? `&endDateEpoch=${DateUtil.DATE_TO_EPOCH(endDate)}` : '';
+
+        return axios.get(
+                `${BASE_URL_BAND}/v1/quote-request/dashboard?${mappedBandUuid}${startDateEpoch}${endDateEpoch}`,
+                BaseService.MAKE_HEADERS(token)
+            );
+    },
 }

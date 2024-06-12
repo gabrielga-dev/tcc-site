@@ -1,4 +1,5 @@
 import React from "react";
+import '../../App.css';
 import {useNavigate} from "react-router-dom";
 import {updateToken} from "../../service/redux/action/token.action";
 import {connect} from "react-redux";

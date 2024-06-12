@@ -1,4 +1,5 @@
 import React from "react";
+import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {CreateAccountPage} from "./pages/noauth/create_person/create_account.page";
 import {connect} from "react-redux";
