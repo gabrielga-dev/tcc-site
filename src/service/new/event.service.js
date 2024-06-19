@@ -29,4 +29,25 @@ export const EventService = {
     CANCEL: (eventUuid, token) => {
         return axios.delete(`${BASE_URL}/v1/event/${eventUuid}/cancel`, BaseService.MAKE_HEADERS(token));
     },
+
+    FIND_NAMES: (eventUuids, token) => {
+        let params = eventUuids.map(uuid => `eventUuids=${uuid}`).join('&');
+        return axios.get(`${BASE_URL}/v1/event/names?${params}`, BaseService.MAKE_HEADERS(token));
+    },
+
+    HIRE_QUOTE: (quoteRequestUuid, token) => (
+        axios.post(`${BASE_URL}/v1/quote/${quoteRequestUuid}/accept`, {}, BaseService.MAKE_HEADERS(token))
+    ),
+
+    DECLINE_QUOTE: (quoteRequestUuid, token) => (
+        axios.delete(`${BASE_URL}/v1/quote/${quoteRequestUuid}/decline`, BaseService.MAKE_HEADERS(token))
+    ),
+
+    GENERATE_CONTRACT: (quoteRequestUuid, token) => (
+        axios.get(`${BASE_URL}/v1/quote/${quoteRequestUuid}/contract`, BaseService.MAKE_HEADERS_TO_PDF(token))
+    ),
+
+    DASHBOARD: (token) => (
+        axios.get(`${BASE_URL}/v1/quote/dashboard`, BaseService.MAKE_HEADERS(token))
+    ),
 }

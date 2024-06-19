@@ -120,6 +120,7 @@ class _ListOwnBandsPage extends React.Component {
                                     size="small"
                                     rowClassName={this.rowClass}
                                     rowHover={true}
+                                    emptyMessage='Nenhuma banda encontrada 😢'
                                 >
                                     <Column
                                         style={{width: '20%'}}
@@ -246,8 +247,7 @@ class _ListOwnBandsPage extends React.Component {
                             disabled={!band.active}
                             tooltip="Administrar músicos"
                             tooltipOptions={{position: 'top'}}
-                            icon="pi pi-users"
-                            className="p-button-rounded p-button-warning"
+                            className="musician-button"
                             onClick={() => navigateTo(`/bandas/${band.uuid}/gerenciar-musicos`)}
                         />
                     </Col>
@@ -256,9 +256,18 @@ class _ListOwnBandsPage extends React.Component {
                             disabled={!band.active}
                             tooltip="Administrar músicas"
                             tooltipOptions={{position: 'top'}}
-                            icon="pi pi-users"
-                            className="p-button-rounded p-button-info"
+                            className="music-button"
                             onClick={() => navigateTo(`/bandas/${band.uuid}/gerenciar-musicas`)}
+                        />
+                    </Col>
+                    <Col style={{marginBottom: 10}}>
+                        <Button
+                            disabled={!band.active}
+                            tooltip="Pedidos de orçamentos"
+                            tooltipOptions={{position: 'top'}}
+                            icon="pi pi-dollar"
+                            className="p-button-rounded p-button-success"
+                            onClick={() => navigateTo(`/bandas/${band.uuid}/pedidos-de-orcamento`)}
                         />
                     </Col>
                 </Row>

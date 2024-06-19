@@ -8,7 +8,7 @@ export class QuoteRequestTypeResponse {
     quoteRequests = [];
 
     constructor(data) {
-        if (data){
+        if (data) {
             this.name = data.name;
             this.serviceType = ServiceType[data['businessType']];
             this.quoteRequests = data.quoteRequests.map(r => (new QuoteRequestResponse(r)));

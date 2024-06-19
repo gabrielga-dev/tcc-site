@@ -18,6 +18,7 @@ import {ContactType} from "../../../../domain/new/enum/contact_type.enum";
 import {Tag} from "primereact/tag";
 import {RoleEnum} from "../../../../domain/new/enum/role.enum";
 import './band_profile_style.css';
+import '../../../../App.css';
 
 const BandProfilePage = ({token, user}) => {
     const toast = useRef(null);

@@ -1,4 +1,7 @@
 export const ToastUtils = {
+    BUILD_TOAST_INFO_BODY: (message) => (
+        {severity: 'info', summary: 'Atenção', detail: message, life: 3000}
+    ),
     BUILD_TOAST_SUCCESS_BODY: (message) => (
         {severity: 'success', summary: 'Sucesso!', detail: message, life: 3000}
     ),

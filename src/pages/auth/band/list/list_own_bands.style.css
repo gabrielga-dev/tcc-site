@@ -1,17 +1,35 @@
 .row-accessories {
     background-color: pink !important;
 }
+
 .row-accessories img {
     opacity: 0.6 !important;
 }
-.main-card{
+
+.main-card {
     background-color: transparent;
 }
 
-.band-img{
-    width:110px;
-    height:110px;
+.band-img {
+    width: 110px;
+    height: 110px;
     border-radius: 90px;
     border-color: #000;
     overflow: hidden;
+}
+
+.musician-button {
+    background-image: url("/public/images/icon/musician.png") !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    border-radius:  100px !important;
+}
+
+.music-button {
+    background-image: url("/public/images/icon/music.png") !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    border-radius:  100px !important;
 }

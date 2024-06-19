@@ -84,8 +84,12 @@ class _ListEventsPage extends React.Component {
                     let events = response.data.content.map(e => (new EventResponse(e)));
                     this.setState({events: events});
                 }
-            ).catch(error => showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error)))
-            .finally(() => this.setLoading(false))
+            ).catch(
+                error => {
+                    console.log(error)
+                    showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error))
+                }
+        ).finally(() => this.setLoading(false))
     }
 
     rowClass(event) {

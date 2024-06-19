@@ -10,7 +10,9 @@ export const DateUtil = {
             month = `0${month}`
         }
         let year = date.getFullYear();
-        return `${day}/${month}/${year}`;
+        let hour = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours();
+        let minutes = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
+        return `${day}/${month}/${year} - ${hour}:${minutes}`;
     },
 
     DATE_TO_EPOCH: (date) => {

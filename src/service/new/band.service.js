@@ -1,6 +1,7 @@
 import axios from "axios";
 import {API_CONSTANTS} from "../../constants/api.constants";
 import {BaseService} from "./base.service";
+import {DateUtil} from "../../util/date.util";
 
 const BASE_URL_BAND = `${API_CONSTANTS.API_BASE_URL}/band`;
 
@@ -18,6 +19,9 @@ export const BandService = {
             url = `${url}&${bandFilter.toRequestParameters()}`
         }
         return axios.get(url, BaseService.MAKE_HEADERS(token));
+    },
+    FIND_AUTHENTICATED_PERSON_BANDS_NAMES: (token) => {
+        return axios.get(`${BASE_URL_BAND}/v1/band/all/name`, BaseService.MAKE_HEADERS(token));
     },
     FIND_BAND_BY_UUID: (bandUuid) => {
         return axios.get(`${BASE_URL_BAND}/v1/band/uuid/${bandUuid}`, BaseService.HEADERS);
@@ -65,5 +69,54 @@ export const BandService = {
     FIND_NAMES: (uuids = [], token) => {
         let params = uuids.map(uuid => `bandsUuids=${uuid}`).join('&');
         return axios.get(`${BASE_URL_BAND}/v1/band/name?${params}`, BaseService.MAKE_HEADERS(token));
+    },
+
+    FIND_QUOTE_REQUESTS: (bandUuid, criteria, pagination, token) => {
+        let url = `${BASE_URL_BAND}/v1/band/${bandUuid}/quote-request?${pagination.toRequestParameters()}`;
+        if (!!criteria) {
+            url = `${url}&${criteria.toRequestParameters()}`
+        }
+        return axios.get(url, BaseService.MAKE_HEADERS(token));
+    },
+
+    FIND_QUOTE_REQUEST_BY_UUID: (quoteRequestUuid, token) => (
+        axios.get(`${BASE_URL_BAND}/v1/quote-request/${quoteRequestUuid}`, BaseService.MAKE_HEADERS(token))
+    ),
+
+    DECLINE_QUOTE_REQUEST: (quoteRequestUuid, token) => (
+        axios.delete(`${BASE_URL_BAND}/v1/quote-request/${quoteRequestUuid}`, BaseService.MAKE_HEADERS(token))
+    ),
+
+    DOWNLOAD_PLAYLIST_PDF: (quoteRequestUuid, token) => (
+        axios.get(
+            `${BASE_URL_BAND}/v1/quote-request/${quoteRequestUuid}/playlist`,
+            BaseService.MAKE_HEADERS_TO_PDF(token)
+        )
+    ),
+
+    DOWNLOAD_LINEUP_PDF: (quoteRequestUuid, token) => (
+        axios.get(
+            `${BASE_URL_BAND}/v1/quote-request/${quoteRequestUuid}/lineup`,
+            BaseService.MAKE_HEADERS_TO_PDF(token)
+        )
+    ),
+
+    FIND_ALL_MUSICIANS: (bandUuid, token) => (
+        axios.get(`${BASE_URL_BAND}/v1/band/${bandUuid}/musicians`, BaseService.MAKE_HEADERS(token))
+    ),
+
+    ANSWER_QUOTE_REQUEST: (quoteRequestUuid, request, token) => (
+        axios.post(`${BASE_URL_BAND}/v1/quote-request/${quoteRequestUuid}`, request, BaseService.MAKE_HEADERS(token))
+    ),
+
+    DASHBOARD: (bandUuid, startDate, endDate, token) => {
+        let mappedBandUuid = bandUuid ? `bandUuid=${bandUuid}` : '';
+        let startDateEpoch = startDate ? `&startDate=${DateUtil.DATE_TO_EPOCH(startDate)}` : '';
+        let endDateEpoch = endDate ? `&endDateEpoch=${DateUtil.DATE_TO_EPOCH(endDate)}` : '';
+
+        return axios.get(
+                `${BASE_URL_BAND}/v1/quote-request/dashboard?${mappedBandUuid}${startDateEpoch}${endDateEpoch}`,
+                BaseService.MAKE_HEADERS(token)
+            );
     },
 }
