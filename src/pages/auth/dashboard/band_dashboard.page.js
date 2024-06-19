@@ -404,6 +404,9 @@ class _BandDashboardPage extends React.Component {
                                                 className='p-button-rounded'
                                                 icon='pi pi-arrow-left'
                                                 disabled={quotePricesCurrentYear === 0}
+                                                onClick={() => {
+                                                    this.setState({quotePricesCurrentYear: quotePricesCurrentYear - 1})
+                                                }}
                                             />
                                             <span style={{marginLeft: 10, marginRight: 10}}>
                                                 {quotePricesPossibleYears[quotePricesCurrentYear]}
@@ -414,6 +417,9 @@ class _BandDashboardPage extends React.Component {
                                                 disabled={
                                                     quotePricesCurrentYear === (quotePricesPossibleYears.length - 1)
                                                 }
+                                                onClick={() => {
+                                                    this.setState({quotePricesCurrentYear: quotePricesCurrentYear + 1})
+                                                }}
                                             />
                                         </>
                                     )

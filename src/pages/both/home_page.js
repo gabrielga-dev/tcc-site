@@ -10,6 +10,7 @@ import {RoleEnum} from "../../domain/new/enum/role.enum";
 import {Col, Container, Row} from "react-bootstrap";
 import {BandDashboardPage} from "../auth/dashboard/band_dashboard.page";
 import {DashboardFailPage} from "../auth/dashboard/dashboard_fail.page";
+import {ContractorDashboardPage} from "../auth/dashboard/contractor_dashboard.page";
 
 const HomePage = ({token, updateToken, user}) => {
     const navigate = useNavigate();
@@ -104,6 +105,14 @@ class _HomePage extends React.Component {
             case RoleEnum.BAND:
                 return (
                     <BandDashboardPage
+                        dashboard={dashboard}
+                        token={token}
+                        user={authenticatedUser}
+                    />
+                );
+            case RoleEnum.CONTRACTOR:
+                return (
+                    <ContractorDashboardPage
                         dashboard={dashboard}
                         token={token}
                         user={authenticatedUser}
