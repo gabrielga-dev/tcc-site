@@ -214,7 +214,6 @@ class _QuoteRequestsTableComponent extends React.Component {
                                 EventService.GENERATE_CONTRACT(quoteRequest.quoteRequestUuid, token)
                                     .then(
                                         response => {
-                                            showToast(ToastUtils.BUILD_TOAST_SUCCESS_BODY('Contrato gerado com sucesso!'))
                                             FileUtil.DOWNLOAD_PDF('contrato.pdf', response.data);
                                         }
                                     ).catch(
