@@ -75,12 +75,6 @@ function generateNonLoggedUser(updateToken, updateUser, redirectTo) {
                 command: () => redirectTo('/servicos'),
                 style: MENU_ITEM_STYLE
             },
-            {
-                label: 'Sobre nós',
-                icon: 'pi pi-fw pi-info',
-                command: () => redirectTo('/sobre-nos'),
-                style: MENU_ITEM_STYLE
-            },
         ]
     );
 }

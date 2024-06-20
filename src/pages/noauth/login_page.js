@@ -1,15 +1,10 @@
 import React, {useRef} from "react";
-
-import {InputText} from 'primereact/inputtext';
-import {Password} from 'primereact/password';
-import {Card} from 'primereact/card';
 import {Button} from "primereact/button";
 
 import "primeflex/primeflex.css"
-import {MarginStyle} from "../../style/margin.style";
 import {UserService} from "../../service/new/ms_auth/user.service";
 import {Toast} from "primereact/toast";
-import {Container} from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {ToastUtils} from "../../util/toast.utils";
 import {updateToken} from "../../service/redux/action/token.action";
@@ -18,6 +13,12 @@ import {updateUser} from "../../service/redux/action/user.action";
 import {Divider} from "primereact/divider";
 import {UserAuthRequest} from "../../domain/new/person/request/user_auth_request";
 import {AuthConstants} from "../../util/auth.constants";
+import {TextFieldComponent} from "../../components/form/input/text_field.component";
+import {PasswordFieldComponent} from "../../components/form/input/password_field.component";
+import {StyleConstants} from "../../service/style.constants";
+import HomeTemplate from "../template/home_template";
+import {Card} from "primereact/card";
+import './login_page.style.css';
 
 const LoginPage = ({updateToken, updateUser}) => {
     const toast = useRef(null);
@@ -70,61 +71,92 @@ class _LoginPage extends React.Component {
         let {username, password} = this.state.request
         let {navigateTo} = this.state
         return (
-            <Container>
-                <Card header={this.renderHeader()}>
-                    <form onSubmit={(e) => this.submitLogin(e)} className="p-fluid">
-                        <div style={MarginStyle.makeMargin(0, 10, 0, 10)}>
-                            <h5>Email:</h5>
-                            <InputText
-                                value={username}
-                                maxLength={100}
-                                onChange={(e) => this.setUsername(e.target.value)}
-                            />
-                        </div>
-                        <div style={MarginStyle.makeMargin(0, 10, 0, 10)}>
-                            <h5>Senha:</h5>
-                            <Password
-                                value={password}
-                                maxLength={100}
-                                onChange={(e) => this.setPassword(e.target.value)}
-                                toggleMask={true}
-                                feedback={false}
-                            />
-                        </div>
-                        <Button type="submit" label="Enviar"/>
-                        <Divider type="dashed" align="center">
-                            <span>ou</span>
-                        </Divider>
-                        <Button
-                            label="Crie sua conta!"
-                            className="p-button-outlined"
-                            onClick={() => navigateTo('/tipos-cadastro')}
-                        />
-                        <Button
-                            label="Esqueci minha senha!"
-                            className="p-button-text p-button-danger"
-                            onClick={() => navigateTo('/esqueci-senha')}
-                        />
-                        <a href="/cadastre-se"></a>
-                    </form>
+            <HomeTemplate steps={['Login']}>
+                <Card className='main-card'>
+                    <Container>
+                        <Row>
+                            <Col sm={0} md={4}/>
+                            <Col sm={12} md={4}>
+                                <Container>
+                                    <Row>
+                                        <Col>
+                                            <h2 align="center">MyEvents</h2>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <TextFieldComponent
+                                                label='Email'
+                                                value={username}
+                                                maxLength={100}
+                                                onChange={(newValue) => this.setUsername(newValue)}
+                                            />
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <PasswordFieldComponent
+                                                label='Senha'
+                                                placeHolder=''
+                                                maxLength={100}
+                                                toggleMask={true}
+                                                feedback={false}
+                                                value={password}
+                                                onChange={(newValue) => this.setPassword(newValue)}
+                                            />
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <Button
+                                                style={StyleConstants.WIDTH_100_PERCENT}
+                                                onClick={() => this.submitLogin()}
+                                                label="Enviar"
+                                            />
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <Divider type="dashed" align="center">
+                                                <span>ou</span>
+                                            </Divider>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <Button
+                                                style={StyleConstants.WIDTH_100_PERCENT}
+                                                label="Crie sua conta!"
+                                                className="p-button-outlined"
+                                                onClick={() => navigateTo('/tipos-cadastro')}
+                                            />
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <Button
+                                                style={StyleConstants.WIDTH_100_PERCENT}
+                                                label="Esqueci minha senha!"
+                                                className="p-button-text p-button-danger"
+                                                onClick={() => navigateTo('/esqueci-senha')}
+                                            />
+                                            <a href="/cadastre-se"></a>
+                                        </Col>
+                                    </Row>
+                                </Container>
+                            </Col>
+                            <Col sm={0} md={4}/>
+                        </Row>
+                    </Container>
                 </Card>
-            </Container>
+            </HomeTemplate>
         )
     }
 
-    renderHeader() {
-        return (
-            <div style={{marginTop: 25}}>
-                <p align="center" style={{fontSize: 40}}>Login</p>
-            </div>
-        );
-    }
-
-    submitLogin(e) {
+    submitLogin() {
         let {navigateTo} = this.state
         UserService.LOGIN(this.state.request).then(
             response => {
-                e.preventDefault()
                 this.state.showToast(
                     ToastUtils.BUILD_TOAST_SUCCESS_BODY("Login efetuado com sucesso!")
                 )
@@ -150,7 +182,6 @@ class _LoginPage extends React.Component {
         ).catch(
             error => this.state.showToast(ToastUtils.BUILD_TOAST_ERROR_BODY(error))
         )
-        e.preventDefault()
     }
 }
 
