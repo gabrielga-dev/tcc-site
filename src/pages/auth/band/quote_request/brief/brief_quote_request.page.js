@@ -172,7 +172,7 @@ class _BriefQuoteRequestPage extends React.Component {
     }
 
     renderBaseActions(){
-        let {quoteUuid} = this.state;
+        let {quoteUuid, bandUuid, navigateTo} = this.state;
         return(
             <Row>
                 <Col md={8} sm={0}/>
@@ -206,6 +206,20 @@ class _BriefQuoteRequestPage extends React.Component {
                         icon="pi pi-check"
                         label="Aceitar"
                         tooltipOptions={{position: 'top'}}
+                        onClick={
+                            () => confirmDialog({
+                                message: 'Tem certeza que deseja que deseja aceitar este pedido de orçamento?',
+                                header: 'Aceitar pedido de orçamento',
+                                icon: 'pi pi-exclamation-triangle',
+                                acceptClassName: 'p-button-success',
+                                rejectClassName: 'p-button-danger p-button-text',
+                                accept: () => {
+                                    navigateTo(`/bandas/${bandUuid}/pedidos-de-orcamento/${quoteUuid}/escalacao`)
+                                },
+                                reject: () => {
+                                }
+                            })
+                        }
                     />
                 </Col>
             </Row>

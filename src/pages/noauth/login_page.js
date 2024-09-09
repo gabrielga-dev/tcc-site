@@ -87,6 +87,7 @@ class _LoginPage extends React.Component {
                                         <Col>
                                             <TextFieldComponent
                                                 label='Email'
+                                                placeHolder='Email'
                                                 value={username}
                                                 maxLength={100}
                                                 onChange={(newValue) => this.setUsername(newValue)}

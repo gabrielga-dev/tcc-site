@@ -117,15 +117,19 @@ class _ContractorDashboardPage extends React.Component {
         let {eventQuantityCurrentYear, eventQuantityPossibleYears} = this.state;
         let {eventQuantityPerMonth} = this.state.dashboard;
 
+        let selectedEventQuantityPerMonth = eventQuantityPerMonth.data.filter(
+            d => (d.year === eventQuantityPossibleYears[eventQuantityCurrentYear])
+        );
+
         return {
             labels: eventQuantityPerMonth.labels,
             datasets: [
                 {
                     label: eventQuantityPerMonth.label,
                     backgroundColor: eventQuantityPerMonth.backgroundColor,
-                    data: eventQuantityPerMonth.data.filter(
-                        d => (d.year === eventQuantityPossibleYears[eventQuantityCurrentYear])
-                    )[0].values,
+                    data: selectedEventQuantityPerMonth.length === 0
+                        ? []
+                        : selectedEventQuantityPerMonth[0].values,
                 }
             ],
         };
@@ -175,7 +179,7 @@ class _ContractorDashboardPage extends React.Component {
                     </Col>
                     <Col sm={12} md={8}>
                         <Card style={CARD_MARGIN}>
-                            <h4>Próximos eventops</h4>
+                            <h4>Próximos eventos</h4>
                             <DataTable value={dashboard['nextEvents']} responsiveLayout="scroll">
                                 <Column header="Evento" field="name"/>
                                 <Column
